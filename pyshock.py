@@ -26,41 +26,42 @@ def read_responses():
             time.sleep(0.1)
             continue
         data = ser.read(2)
-        if (data[0] == Action.ACKNOWLEDGE):
+        if (data[0] == Action.ACKNOWLEDGE.value):
             break
         params = ser.read(data[1])
         print(data[0])
         print(params)
         print(" ")
 
-def send():
+def send(data):
     ser.write(data)
     read_responses()
 
+def command(action, channel, level, duration):
+    l = [action.value, 4, channel, level, int(duration / 256), duration % 256]
+    data = bytes(l)
+    send(data)
 
 ser = serial.Serial('/dev/ttyACM0')
 ser.flushInput()
 
-send(bytes.fromhex("C900"))
+#command(Action.BEEP, 0, 5, 5000)
 
 """
 for i in range (0, 20):
   send(bytes.fromhex("0A 04  00 04  00 00"))
   time.sleep(30);
 for i in range (0, 20):
-  send(bytes.fromhex("0B 04  00 04  00 00"))
+  command(Action.VIB, 0, 1, 0)
   time.sleep(2);
-
-send(bytes.fromhex("0C 04  00 01  00 00"))
 """
 
-time.sleep(10);
-for i in range (1, 9):
-  send(bytes.fromhex("0B 04  00 04  00 00"))
-  time.sleep(1);
-  send(bytes.fromhex("0D 04  00 0" + str(i) + "  00 00"))
-  time.sleep(10);
 
+for i in range (1, 10):
+  time.sleep(10);
+  command(Action.BEEP, 0, 0, 0)
+  time.sleep(1);
+  command(Action.VIB, 0, i, 0)
 
 ser.close();
 
