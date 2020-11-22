@@ -6,22 +6,22 @@ from enum import Enum
 from config import devices
 
 class Action(Enum):
-  LED = 10
-  BEEP = 11
-  VIB = 12
-  ZAP = 13
+    LED = 10
+    BEEP = 11
+    VIB = 12
+    ZAP = 13
 
-  BOOT = 100
-  BOOTED = 101
-  ADD = 102
+    BOOT = 100
+    BOOTED = 101
+    ADD = 102
 
-  ACKNOWLEDGE = 200
-  PING = 201
-  PONG = 202
+    ACKNOWLEDGE = 200
+    PING = 201
+    PONG = 202
 
-  DEBUG = 253
-  ERROR = 254
-  CRASH = 255
+    DEBUG = 253
+    ERROR = 254
+    CRASH = 255
 
 ser = serial.Serial('/dev/ttyACM0')
 
@@ -79,14 +79,13 @@ for i in range (0, 20):
 
 """
 for i in range (1, 10):
-  time.sleep(10);
-  command(Action.BEEP, 0, 0, 0)
-  time.sleep(1);
-  command(Action.VIB, 0, i, 0)
+    time.sleep(10);
+    command(Action.BEEP, 0, 0, 0)
+    time.sleep(1);
+    command(Action.VIB, 0, i, 0)
 """
 
 command(Action.VIB, 0, 0, 0)
 command(Action.VIB, 1, 0, 0)
 
 ser.close();
-
