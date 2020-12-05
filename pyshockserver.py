@@ -6,11 +6,16 @@ import json
 import sys
 
 import config
-from pyshocklib import Pyshock, Action
+from pyshocklib import Pyshock, PyshockMock, Action
 
 
-pyshock = Pyshock()
+if len(sys.argv) > 1 and sys.argv[1] == "mock":
+    pyshock = PyshockMock()
+else:
+    pyshock = Pyshock()
 pyshock.boot()
+
+
 
 class PyshockRequestHandler(BaseHTTPRequestHandler):
 
@@ -50,6 +55,6 @@ class PyshockRequestHandler(BaseHTTPRequestHandler):
             self.answer(500, str(sys.exc_info()[0]) + ": " + str(sys.exc_info()[1]))
 
 
-server = ThreadingHTTPServer(('localhost', 7777), PyshockRequestHandler)
+server = ThreadingHTTPServer(('0.0.0.0', 7777), PyshockRequestHandler)
 server.serve_forever()
 

@@ -76,3 +76,9 @@ class Pyshock:
                 self.send(bytes([Action.ADD.value, 4, device[0], device[1], device[2], device[3]]))
 
 
+class PyshockMock:
+    def command(self, action, device, level, duration):
+        print("command: " + str(action) + ", device: " + str(device) + ", level: " + str(level) + ", duration: " + str(duration))
+    
+    def boot(self):
+        print("Loaded mock")
