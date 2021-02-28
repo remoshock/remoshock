@@ -44,14 +44,23 @@ class PyshockRequestHandler(BaseHTTPRequestHandler):
 
 
     def do_GET(self):
+        files = ["/index.html", "/remote.css", "/remote.js", "/favicon.png"]
+        types = ["text/html; charset=utf-8", "text/css", "application/javascript", "image/png"]
         params = parse_qs(urlparse(self.path).query)
         try:
             if self.path.startswith("/pyshock"):
                 self.handle_command(params)
                 self.answer(200, "ok")
+            elif self.path in files:
+                self.send_response(200)
+                self.send_header("Content-Type", types[files.index(self.path)])
+                self.end_headers()
+                with open("." + self.path, "r") as fin:
+                    self.wfile.write(fin.read().encode("UTF-8"))
             else:
                 self.answer(404, "unknown path: " + self.path)
         except Exception:
+            print(str(sys.exc_info()[0]) + ": " + str(sys.exc_info()[1]))
             self.answer(500, str(sys.exc_info()[0]) + ": " + str(sys.exc_info()[1]))
 
 
