@@ -7,6 +7,11 @@ from threading import RLock
 
 import config
 
+# type            code, code, channel
+#  0  Pettainer,            sender code first byte, seonder code second byte, channel
+#  1  Opto-isolator 1,      beep pin,               vib pin,                  shock pin
+#  2  Opto-isolator 2,      beep modifier pin,      ignored,                  pin
+
 class Action(Enum):
     LED = 10
     BEEP = 11
