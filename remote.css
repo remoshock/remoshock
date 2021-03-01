@@ -19,15 +19,22 @@ h2 {
 }
 
 .device {
+	float: left;
 	border: 1px solid #AAA;
 	border-radius: 10px;
 	padding: 0.5em;
-	max-width: 13em
+	max-width: 13em;
+	margin: 0 1em 1em 0;
+}
+
+hr {
+	clear: both;
 }
 
 button {
 	width: 3.2em;
 	height: 2em;
 	padding: 0;
-	font-size: 125%
+	font-size: 120%;
+	margin-top: .5em;
 }
