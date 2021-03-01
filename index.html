@@ -12,9 +12,9 @@
 
 <template id="device-template">
 <div class="device">
-<h2>Device 1</h2>
-<div class="power"><input type="number" value="10"> / 64</div>
-<div class="durtion"><input type="number" value="500" step="250"> ms</div>
+<h2>Device</h2>
+<div><input class="power" type="number" min="0" max="100" value="-1"> / <span class="maxPower">-1</span></div>
+<div><input class="duration" type="number" min="0" max="10000" value="0" step="0"> ms</div>
 <div class="action"><button class="beep">🔉</button> <button class="led">🚥</button> <button class="vib">📳</button> <button class="delay">⏲️</button><button class="zap">⚡</button> <button class="beepzap">🔉⚡</button> </div>
 </div>
 </template>
