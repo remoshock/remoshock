@@ -2,9 +2,21 @@
 
 import subprocess
 
+button_codes = [
+     #9 23 24
+    [0, 0, 0],  # E/P left
+    [0, 1, 1],  # B1  right 1
+    [0, 1, 0],  # B2  right 2, E/P right
+    [1, 1, 0],  # B3  right 3
+    [1, 0, 0],  # B4  left 1
+    [0, 0, 1],  # B5  left 2
+    [1, 0, 1],  # B6  left 3
+    [1, 1, 1]   # unused
+]
+
 def generate(code, intensity, button, beep):
-    pre_checksum = code[0:2] + intensity + button[0] + code[2:]
-    post_checksum = beep + button[1:]
+    pre_checksum = code[0:2] + intensity + str(button_codes[button][0]) + code[2:]
+    post_checksum = str(beep) + str(button_codes[button][1]) + str(button_codes[button][2])
     data = pre_checksum + "SSSSS" + post_checksum
 
     # a b c d e f g h i  j  k  l  m  n  o  p q   r  s
@@ -41,21 +53,25 @@ def send(data):
         "--messages", data]
     print(cmd)
     subprocess.run(cmd)
-    
+
+def assertThat(message, expected, actual):
+    if expected == actual:
+        print(message + ": pass")
+    else:
+        print(message + ": FAILED")
+        print("   Expected: " + expected)
+        print("   Actual  : " + actual)
+
 def test_encoding():
-    expected = "010101010101010111110110010010110010010110010010010010110110110110110110110110010110110110010"
-    data = "100100100001111111101110"
+    expected = "010101010101010111110010110010110010010110010010010110110010110110010010010010010010110110010"
+    data = "010100100011011000000110"
     encoded = encode(data)
-    print(expected)
-    print(encoded)
-    print(expected == encoded)
+    assertThat("encoding", expected, encoded)
 
 def test_generate():
-    expected = "100100100001111111101110"
-    encoded = generate("100011111", "010010", "010", "1")
-    print(expected)
-    print(encoded)
-    print(expected == encoded)
+    expected = "010100100011011000000110"
+    generated = generate("010110110", "010010", 2, 1)
+    assertThat("generation", expected, generated)
 
 def test():
     test_encoding()
@@ -63,5 +79,4 @@ def test():
 
 # test()
 
-send(encode(generate("100011111", "010010", "010", "1"))
-
+send(encode(generate("010110110", "010010", 2, 1)))
