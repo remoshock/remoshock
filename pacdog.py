@@ -27,6 +27,20 @@ def encode(data):
         res = res + bit + filler
     return res
 
+def send(data):
+    cmd = [
+        "urh_cli",
+        "--transmit",
+        "--device", "HackRF",
+        "--frequency", "27.1e6",
+        "--sample-rate", "2e6",
+        "--carrier-frequency", "27.1e6",
+        "--modulation-type", "FSK",
+        "--samples-per-symbol", "3100",
+        "--parameters", "92e3", "95e3",
+        "--messages", data]
+    print(cmd)
+    subprocess.run(cmd)
     
 def test_encoding():
     expected = "010101010101010111110110010010110010010110010010010010110110110110110110110110010110110110010"
@@ -47,5 +61,7 @@ def test():
     test_encoding()
     test_generate()
 
-test()
+# test()
+
+send(encode(generate("100011111", "010010", "010", "1"))
 
