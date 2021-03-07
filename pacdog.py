@@ -3,7 +3,7 @@
 import subprocess
 
 button_codes = [
-     #9 23 24
+    #9 23 24
     [0, 0, 0],  # E/P left
     [0, 1, 1],  # B1  right 1
     [0, 1, 0],  # B2  right 2, E/P right
@@ -15,21 +15,26 @@ button_codes = [
 ]
 
 def generate(code, intensity, button, beep):
-    pre_checksum = code[0:2] + intensity + str(button_codes[button][0]) + code[2:]
+    pre_checksum = code[0:2] + calculate_intensity_code(intensity) + str(button_codes[button][0]) + code[2:]
     post_checksum = str(beep) + str(button_codes[button][1]) + str(button_codes[button][2])
-    data = pre_checksum + "SSSSS" + post_checksum
+    data = pre_checksum + "CCCCC" + post_checksum
+    return pre_checksum + calculate_checksum(data) + post_checksum
 
+def calculate_intensity_code(intensity):
+    res = ""
+    for i in range(0, 6):
+        res = res + str(intensity // 2**i % 2)
+    return res
+
+def calculate_checksum(data):
     # a b c d e f g h i  j  k  l  m  n  o  p q   r  s
     # 7 6 5 4 3 2 1 0 15 14 13 12 11 10 09 8 23 22 21
-
-    temp = pre_checksum
-    temp = temp + str((int(data[0]) + int(data[ 8])) % 2)
-    temp = temp + str((int(data[1]) + int(data[ 9]) + int(data[21])) % 2)
-    temp = temp + str((int(data[2]) + int(data[10]) + int(data[22])) % 2)
-    temp = temp + str((int(data[3]) + int(data[11]) + int(data[23])) % 2)
-    temp = temp + str((int(data[4]) + int(data[12])) % 2)
-    temp = temp + post_checksum
-    return temp
+    res =       str((int(data[0]) + int(data[ 8])) % 2)
+    res = res + str((int(data[1]) + int(data[ 9]) + int(data[21])) % 2)
+    res = res + str((int(data[2]) + int(data[10]) + int(data[22])) % 2)
+    res = res + str((int(data[3]) + int(data[11]) + int(data[23])) % 2)
+    res = res + str((int(data[4]) + int(data[12])) % 2)
+    return res
 
 def encode(data):
     prefix = "0101010101010101111"
@@ -50,6 +55,7 @@ def send(data):
         "--modulation-type", "FSK",
         "--samples-per-symbol", "3100",
         "--parameters", "92e3", "95e3",
+        "--pause", "262924",
         "--messages", data]
     print(cmd)
     subprocess.run(cmd)
@@ -70,13 +76,25 @@ def test_encoding():
 
 def test_generate():
     expected = "010100100011011000000110"
-    generated = generate("010110110", "010010", 2, 1)
+    generated = generate("010110110", 18, 2, 1)
     assertThat("generation", expected, generated)
+
+def test_calculate_intensity_code():
+    assertThat("intensity  1", "100000", calculate_intensity_code(1))
+    assertThat("intensity 32", "000001", calculate_intensity_code(32))
 
 def test():
     test_encoding()
     test_generate()
+    test_calculate_intensity_code()
 
-# test()
+"""
+message = encode(generate("011100000", 20, 0, 1)) + "/1s"
+for i in range(0, 4):
+    message = message + " " + encode(generate("011100000", 20, 0, 0))
 
-send(encode(generate("010110110", "010010", 2, 1)))
+send(message)
+"""
+
+test()
+
