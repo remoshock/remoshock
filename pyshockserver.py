@@ -4,6 +4,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse, parse_qs
 import json
 import sys
+import shutil
 
 import config
 from pyshocklib import Pyshock, PyshockMock, Action
@@ -55,8 +56,8 @@ class PyshockRequestHandler(BaseHTTPRequestHandler):
                 self.send_response(200)
                 self.send_header("Content-Type", types[files.index(self.path)])
                 self.end_headers()
-                with open("." + self.path, "r") as fin:
-                    self.wfile.write(fin.read().encode("UTF-8"))
+                with open("." + self.path, "rb") as content:
+                    shutil.copyfileobj(content, self.wfile)
             else:
                 self.answer(404, "unknown path: " + self.path)
         except Exception:

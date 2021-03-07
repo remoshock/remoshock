@@ -13,7 +13,8 @@ h2 {
 }
 
 .led,
-.vib,
+.vib2,
+.beepzap,
 .delay {
 	display: none
 }
