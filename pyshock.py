@@ -3,7 +3,8 @@
 import random
 import time
 
-from pyshocklib import Pyshock, Action
+from pyshocklib import Pyshock
+from pyshocklibdevices import Action 
 
 pyshock = Pyshock()
 pyshock.boot()
@@ -62,5 +63,4 @@ def r():
 
 #test();
 r();
-
 

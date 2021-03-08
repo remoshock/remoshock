@@ -1,27 +1,9 @@
 #!/usr/bin/python3
 
 from enum import Enum
-from pyshocklibdevices import ArduinoManager
+from pyshocklibdevices import Action, ArduinoManager
 
 import config
-
-class Action(Enum):
-    LED = 10
-    BEEP = 11
-    VIB = 12
-    ZAP = 13
-
-    BOOT = 100
-    BOOTED = 101
-    ADD = 102
-
-    ACKNOWLEDGE = 200
-    PING = 201
-    PONG = 202
-
-    DEBUG = 253
-    ERROR = 254
-    CRASH = 255
 
 class Pyshock:
     def boot(self):

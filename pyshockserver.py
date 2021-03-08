@@ -7,8 +7,8 @@ import sys
 import shutil
 
 import config
-from pyshocklib import Pyshock, PyshockMock, Action
-
+from pyshocklib import Pyshock, PyshockMock
+from pyshocklibdevices import Action
 
 if len(sys.argv) > 1 and sys.argv[1] == "mock":
     pyshock = PyshockMock()
