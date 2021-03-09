@@ -63,6 +63,7 @@ class Pacdog(Device):
             "--samples-per-symbol", "3100",
             "--parameters", "92e3", "95e3",
             "--pause", "262924",
+            # "--if-gain", "47",
             "--messages", data]
         print(cmd)
         subprocess.run(cmd)

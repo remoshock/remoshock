@@ -54,11 +54,13 @@ async function clickHandler(e) {
 	let button = e.target;
 	let device = button.parentNode.parentNode;
 	let action = button.className.toUpperCase();
-	let power = device.querySelector(".power").value;
-	let duration = device.querySelector(".duration").value;
+	let power = device.querySelector(".power_input").value;
+	let duration = device.querySelector(".duration_input").value;
 	
-	console.log(action, device, power, duration);
-	await  command(device.dataset.device, action, power, duration);
+	let res = await command(device.dataset.device, action, power, duration);
+	if (res.status == 200) {
+		navigator.vibrate([50]);
+	}
 }
 
 let devices = [
