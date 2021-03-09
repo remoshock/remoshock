@@ -8,11 +8,12 @@ function addDevice(index) {
 	clone.querySelector(".device").style.backgroundColor = device.backgroundColor;
 	clone.querySelector(".device").dataset.device = index;
 	clone.querySelector("h2").innerText = device.name;
-	clone.querySelector(".power").value = device.power;
-	clone.querySelector(".power").max = device.maxPower;
-	clone.querySelector(".maxPower").innerText = device.maxPower;
-	clone.querySelector(".duration").value = device.duration;
-	clone.querySelector(".duration").step = device.durationIncrement;
+	clone.querySelector(".power_input").value = device.power;
+	clone.querySelector(".power_range").value = device.power;
+	clone.querySelector(".duration_input").value = device.duration;
+	clone.querySelector(".duration_input").step = device.durationIncrement;
+	clone.querySelector(".duration_range").value = device.duration;
+	clone.querySelector(".duration_range").step = device.durationIncrement;
 	
 	document.getElementById("devices").appendChild(clone);   
 }
@@ -36,6 +37,14 @@ async function trigger() {
 	await command(config.deviceIndex, "BEEP", 0, config.beepDuration);
 	await sleep(config.pauseDuration);
 	await command(config.deviceIndex, "ZAP", config.zapLevel, config.zapDuration);
+}
+
+async function inputHandler(e) {
+	let input = e.target;
+	let value = input.value;
+	console.log(value);
+	input.parentNode.querySelector("input[type=number]").value = value;
+	input.parentNode.querySelector("input[type=range]").value = value;
 }
 
 async function clickHandler(e) {
@@ -140,3 +149,5 @@ for (let i = 0; i < devices.length; i++) {
 }
 
 document.getElementById("devices").addEventListener("click", clickHandler);
+document.getElementById("devices").addEventListener("input", inputHandler);
+
