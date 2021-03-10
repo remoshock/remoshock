@@ -15,6 +15,7 @@ class Action(Enum):
     BEEP = 11
     VIB = 12
     ZAP = 13
+    BEEPZAP = 99
 
     BOOT = 100
     BOOTED = 101
@@ -61,6 +62,10 @@ class ArduinoBasedDevice(Device):
         self.index = arduino_manager.register_device(self.device_type.value, self.arg1, self.arg2, self.arg3)
 
     def command(self, action, level, duration):
+        if action == Action.BEEPZAP:
+            self.arduino_manager.command(Action.BEEP, self.index, 0, 0)
+            time.sleep(1)
+            action = Action.ZAP
         self.arduino_manager.command(action, self.index, level, duration)
 
 

@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import time
 from enum import Enum
 from pyshocklibdevices import Action, ArduinoManager
 

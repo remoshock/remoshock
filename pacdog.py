@@ -62,18 +62,21 @@ class Pacdog(Device):
             "--modulation-type", "FSK",
             "--samples-per-symbol", "3100",
             "--parameters", "92e3", "95e3",
-            "--pause", "262924",
+            "--pause", str(2 * 262924),
             # "--if-gain", "47",
             "--messages", data]
         print(cmd)
         subprocess.run(cmd)
 
     def command(self, action, level, duration):
+        message = ""
+        if action == Action.BEEPZAP:
+            message = self.encode(self.generate(self.code, 0, self.button, 1)) + "/1s"
+
         beep = 1
-        if action == Action.ZAP:
+        if action == Action.ZAP or action == Action.BEEPZAP:
             beep = 0
 
-        message = ""
         for i in range(0, (duration + 5) // 250):
             message = message + " " + self.encode(self.generate(self.code, level * 63 // 100, self.button, beep))
 
