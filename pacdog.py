@@ -2,6 +2,9 @@
 
 import subprocess
 from pyshocklibdevices import Action, Device
+from threading import RLock
+
+lock = RLock()
 
 class Pacdog(Device):
 
@@ -53,21 +56,22 @@ class Pacdog(Device):
         return res
 
     def send(self, data):
-        cmd = [
-            "urh_cli",
-            "--transmit",
-            "--device", "HackRF",
-            "--frequency", "27.1e6",
-            "--sample-rate", "2e6",
-            "--carrier-frequency", "27.1e6",
-            "--modulation-type", "FSK",
-            "--samples-per-symbol", "3100",
-            "--parameters", "92e3", "95e3",
-            "--pause", str(2 * 262924),
-            # "--if-gain", "47",
-            "--messages", data]
-        print(cmd)
-        subprocess.run(cmd)
+        with self.serLock:
+            cmd = [
+                "urh_cli",
+                "--transmit",
+                "--device", "HackRF",
+                "--frequency", "27.1e6",
+                "--sample-rate", "2e6",
+                "--carrier-frequency", "27.1e6",
+                "--modulation-type", "FSK",
+                "--samples-per-symbol", "3100",
+                "--parameters", "92e3", "95e3",
+                "--pause", str(2 * 262924),
+                # "--if-gain", "47",
+                "--messages", data]
+            print(cmd)
+            subprocess.run(cmd)
 
     def command(self, action, level, duration):
         message = ""
@@ -78,7 +82,7 @@ class Pacdog(Device):
         if action == Action.ZAP or action == Action.BEEPZAP:
             beep = 0
 
-        for i in range(0, (duration + 5) // 250):
+        for _ in range(0, (duration + 5) // 250):
             message = message + " " + self.encode(self.generate(self.code, level * 63 // 100, self.button, beep))
 
         self.send(message)
