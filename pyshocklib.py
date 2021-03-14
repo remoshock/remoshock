@@ -1,8 +1,6 @@
 #!/usr/bin/python3
 
-import time
-from enum import Enum
-from pyshocklibdevices import Action, ArduinoManager
+from pyshocklibdevices import ArduinoManager
 
 import config
 
@@ -26,8 +24,14 @@ class Pyshock:
     def command(self, action, device, level, duration):
         config.devices[device].command(action, level, duration)
 
+    def get_config(self):
+        result = []
+        for device in config.devices:
+            result.append(device.get_config())
+        return result
 
-class PyshockMock:
+
+class PyshockMock(Pyshock):
     def command(self, action, device, level, duration):
         print("command: " + str(action) + ", device: " + str(device) + ", level: " + str(level) + ", duration: " + str(duration))
     

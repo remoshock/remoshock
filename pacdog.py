@@ -17,7 +17,8 @@ class Pacdog(Device):
         [1, 1, 1]   # unused
     ]
 
-    def __init__(self, code, button):
+    def __init__(self, name, color, code, button):
+        super().__init__(name, color)
         self.code = code
         self.button = button
 

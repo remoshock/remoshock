@@ -33,10 +33,10 @@ def beepZapMixed(device, duration):
     time.sleep(1.5); # Beep lasts for a while after the message was sent, so add some additional time to 1s
     pyshock.command(Action.ZAP, device + 2, 0, duration)
 
-def beepZap(device, duration):
+def beepZap(device, power, duration):
     pyshock.command(Action.BEEP, device, 0, 300)
     time.sleep(1);
-    pyshock.command(Action.ZAP, device, 0, duration)
+    pyshock.command(Action.ZAP, device, power, duration)
 
 def test():
     pyshock.command(Action.BEEP, 0, 0, 300)
@@ -58,8 +58,8 @@ time.sleep(300)
 
 def r():
     while True:
-        time.sleep(random.randrange(120))
-        beepZap(random.randrange(2), 1150)
+        time.sleep(random.randrange(30 * 60))
+        beepZap(random.randrange(2), 40, 1000)
 
 #test();
 r();

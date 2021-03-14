@@ -37,6 +37,10 @@ class DeviceType(Enum):
 
 
 class Device:
+    def __init__(self, name, color):
+        self.name = name
+        self.color = color
+
     def is_arduino_required(self):
         return False
 
@@ -46,9 +50,20 @@ class Device:
     def command(self, action, level, duration):
         pass
 
+    def get_config(self):
+        config = {
+            "name": self.name,
+            "color": self.color,
+            "power": 10,
+            "duration": 500,
+            "durationIncrement": 250
+        }
+        return config
+
 
 class ArduinoBasedDevice(Device):
-    def __init__(self, device_type, arg1, arg2, arg3):
+    def __init__(self, name, color, device_type, arg1, arg2, arg3):
+        super().__init__(name, color)
         self.device_type = device_type
         self.arg1 = arg1
         self.arg2 = arg2
@@ -70,18 +85,18 @@ class ArduinoBasedDevice(Device):
 
 
 class ArduinoPetainer(ArduinoBasedDevice):
-    def __init__(self, code_first_byte, code_second_byte, channel):
-        super().__init__(DeviceType.PETAINER, code_first_byte, code_second_byte, channel)
+    def __init__(self, name, color, code_first_byte, code_second_byte, channel):
+        super().__init__(name, color, DeviceType.PETAINER, code_first_byte, code_second_byte, channel)
 
 
 class ArduinoOptocoupler(ArduinoBasedDevice):
-    def __init__(self, pin_beep, pin_vib, pin_zap):
-        super().__init__(DeviceType.OPTOCOUPLER, pin_beep, pin_vib, pin_zap)
+    def __init__(self, name, color, pin_beep, pin_vib, pin_zap):
+        super().__init__(name, color, DeviceType.OPTOCOUPLER, pin_beep, pin_vib, pin_zap)
 
 
 class ArduinoOptocouplerBeepModifier(ArduinoBasedDevice):
-    def __init__(self, pin_modifier_beep, pin_button):
-        super().__init__(DeviceType.OPTOCOUPLER_BEEP_MODIFIER, pin_modifier_beep, 0, pin_button)
+    def __init__(self, name, color, pin_modifier_beep, pin_button):
+        super().__init__(name, color, DeviceType.OPTOCOUPLER_BEEP_MODIFIER, pin_modifier_beep, 0, pin_button)
 
 
 class ArduinoManager():

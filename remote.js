@@ -5,7 +5,7 @@ function addDevice(index) {
 	let deviceTemplate = document.getElementById("device-template");
 	let clone = deviceTemplate.content.cloneNode(true);
 
-	clone.querySelector(".device").style.backgroundColor = device.backgroundColor;
+	clone.querySelector(".device").style.backgroundColor = device.color;
 	clone.querySelector(".device").dataset.device = index;
 	clone.querySelector("h2").innerText = device.name;
 	clone.querySelector(".power_input").value = device.power;
@@ -25,7 +25,7 @@ function sleep(ms) {
 
 async function command(device, action, power, duration) {
 	let token = window.location.hash.substring(7);
-	let url = "/pyshock?token=" + escape(token)
+	let url = "/pyshock/command?token=" + escape(token)
             + "&device=" + escape(device)
             + "&action=" + escape(action)
             + "&power=" + escape(power)
@@ -63,93 +63,14 @@ async function clickHandler(e) {
 	}
 }
 
-let devices = [
-	{
-		"name": "Device 1",
-		"power": 10,
-		"duration": 500,
-		"maxPower": 63,
-		"durationIncrement": 250,
-		"backgroundColor": "#FFD"
-	},
-	{
-		"name": "Device 2",
-		"power": 10,
-		"duration": 500,
-		"maxPower": 63,
-		"durationIncrement": 250,
-		"backgroundColor": "#FFD"
-	},
-	{
-		"name": "Device 3",
-		"power": 10,
-		"duration": 500,
-		"maxPower": 63,
-		"durationIncrement": 250,
-		"backgroundColor": "#FFD"
-	},
-	{
-		"name": "Device 4",
-		"power": 10,
-		"duration": 500,
-		"maxPower": 63,
-		"durationIncrement": 250,
-		"backgroundColor": "#FFD"
-	},
-	{
-		"name": "Device 5",
-		"power": 10,
-		"duration": 500,
-		"maxPower": 63,
-		"durationIncrement": 250,
-		"backgroundColor": "#EFE"
-	},
-	{
-		"name": "Device 6",
-		"power": 10,
-		"duration": 500,
-		"maxPower": 63,
-		"durationIncrement": 250,
-		"backgroundColor": "#EFE"
-	},
-	{
-		"name": "Device 7",
-		"power": 10,
-		"duration": 500,
-		"maxPower": 63,
-		"durationIncrement": 250,
-		"backgroundColor": "#EFE"
-	},
-	{
-		"name": "Device 8",
-		"power": 10,
-		"duration": 500,
-		"maxPower": 63,
-		"durationIncrement": 250,
-		"backgroundColor": "#EFE"
-	},
-	{
-		"name": "Device 9",
-		"power": 10,
-		"duration": 500,
-		"maxPower": 63,
-		"durationIncrement": 250,
-		"backgroundColor": "#EEF"
-	},
-	{
-		"name": "Device 10",
-		"power": 10,
-		"duration": 500,
-		"maxPower": 63,
-		"durationIncrement": 250,
-		"backgroundColor": "#FEE"
+async function init() {
+	let response = await fetch('/pyshock/config.json');
+	window.devices = await response.json();
+	for (let i = 0; i < devices.length; i++) {
+		addDevice(i);
 	}
-];
-
-for (let i = 0; i < devices.length; i++) {
-	addDevice(i);
+	document.getElementById("devices").addEventListener("click", clickHandler);
+	document.getElementById("devices").addEventListener("input", inputHandler);
 }
 
-document.getElementById("devices").addEventListener("click", clickHandler);
-document.getElementById("devices").addEventListener("input", inputHandler);
-
+init();
