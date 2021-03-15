@@ -56,7 +56,7 @@ class Pacdog(Device):
         return res
 
     def send(self, data):
-        with self.serLock:
+        with lock:
             cmd = [
                 "urh_cli",
                 "--transmit",

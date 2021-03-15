@@ -42,7 +42,6 @@ async function trigger() {
 async function inputHandler(e) {
 	let input = e.target;
 	let value = input.value;
-	console.log(value);
 	input.parentNode.querySelector("input[type=number]").value = value;
 	input.parentNode.querySelector("input[type=range]").value = value;
 }
