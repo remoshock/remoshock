@@ -28,6 +28,9 @@ from urh.dev.native.lib import hackrf
 from multiprocessing import Array
 
 
+def log(msg):
+#    print(str(datetime.datetime.now().time()) + " " + msg)
+    pass
 
 class SendConfig(object):
     def __init__(self, send_buffer, total_samples: int):
@@ -105,23 +108,28 @@ class Sender:
         
         self.args = args
         hackrf.setup(None)
+        self.reset()
 
     def reset(self):
         bandwidth = self.args.sample_rate if self.args.bandwidth is None else self.args.bandwidth
         gain = 20 if self.args.gain is None else self.args.gain
         if_gain = 20 if self.args.if_gain is None else self.args.if_gain
 
+        hackrf.TIMEOUT = 0
         hackrf.set_freq(self.args.frequency)
         hackrf.set_sample_rate(self.args.sample_rate)
         hackrf.set_baseband_filter_bandwidth(bandwidth)
         hackrf.set_rf_gain(gain)
         hackrf.set_if_tx_gain(if_gain)
+        hackrf.TIMEOUT = 0.1
 
     def modulate_messages(self, messages):
+        log("modulate messages")
         self.args.messages = [messages]
         messages_to_send = urh_cli.read_messages_to_send(self.args)
-        return urh_cli.modulate_messages(messages_to_send, self.modulator)
-
+        samples = urh_cli.modulate_messages(messages_to_send, self.modulator)
+        log("modulate messages done")
+        return samples
 
     @staticmethod
     def iq_to_bytes(samples: np.ndarray):
@@ -137,8 +145,8 @@ class Sender:
         return SendConfig(send_buffer, total_samples)
 
     def send(self, samples_to_send: np.ndarray):
-        self.reset()
         send_config = self.init_send_parameters(samples_to_send)
+        log("send send config generated")
 
         try:
             ret = hackrf.start_tx_mode(send_config.get_data_to_send)
@@ -151,8 +159,13 @@ class Sender:
                     time.sleep(0.01)
                 except KeyboardInterrupt:
                     pass
+            log("send completed")
         finally:
+            time.sleep(0.2)
             hackrf.stop_tx_mode()
+        log("send mode stopped")
+        self.reset()
+        log("send reset done")
 
 
     def shutdown_device(self):
@@ -169,7 +182,6 @@ if __name__ == '__main__':
         sender.send(samples_to_send)
         time.sleep(1)
     
-        sender.reset()
         sender.send(samples_to_send)
     
     finally:    
