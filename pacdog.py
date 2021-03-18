@@ -93,8 +93,12 @@ class Pacdog(Device):
         if action == Action.ZAP or action == Action.BEEPZAP:
             beep = 0
 
+        if (duration < 250):
+            duration = 250
+
+        message_template = self.encode(self.generate(self.code, level * 63 // 100, self.button, beep))
         for _ in range(0, (duration + 5) // 250):
-            message = message + " " + self.encode(self.generate(self.code, level * 63 // 100, self.button, beep))
+            message = message + " " + message_template
 
         self.send(message)
 
