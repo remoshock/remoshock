@@ -3,8 +3,11 @@
 import subprocess
 from pyshocklibdevices import Action, Device
 from threading import RLock
+from sdr import Sender
 
 lock = RLock()
+
+sender = Sender()
 
 class Pacdog(Device):
 
@@ -55,7 +58,8 @@ class Pacdog(Device):
             res = res + bit + filler
         return res
 
-    def send(self, data):
+
+    def send_cli(self, data):
         with lock:
             cmd = [
                 "urh_cli",
@@ -72,6 +76,13 @@ class Pacdog(Device):
                 "--messages", data]
             print(cmd)
             subprocess.run(cmd)
+
+
+    def send(self, data):
+        with lock:
+            samples = sender.modulate_messages(data)
+            sender.send(samples)
+
 
     def command(self, action, level, duration):
         message = ""
