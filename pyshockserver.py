@@ -5,6 +5,7 @@ from urllib.parse import urlparse, parse_qs
 import json
 import sys
 import shutil
+import traceback
 
 import config
 from pyshocklib import Pyshock, PyshockMock
@@ -62,8 +63,8 @@ class PyshockRequestHandler(BaseHTTPRequestHandler):
                     shutil.copyfileobj(content, self.wfile)
             else:
                 self.answer(404, "unknown path: " + self.path)
-        except Exception:
-            print(str(sys.exc_info()[0]) + ": " + str(sys.exc_info()[1]))
+        except Exception as ex:
+            print("".join(traceback.TracebackException.from_exception(ex).format()))
             self.answer(500, { "error": str(sys.exc_info()[0]) + ": " + str(sys.exc_info()[1])})
 
 
