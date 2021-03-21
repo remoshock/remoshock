@@ -8,6 +8,7 @@ import shutil
 import traceback
 
 import config
+
 from pyshocklib import Pyshock, PyshockMock
 from pyshocklibdevices import Action
 
@@ -16,7 +17,6 @@ if len(sys.argv) > 1 and sys.argv[1] == "mock":
 else:
     pyshock = Pyshock()
 pyshock.boot()
-
 
 
 class PyshockRequestHandler(BaseHTTPRequestHandler):
@@ -48,6 +48,10 @@ class PyshockRequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         files = ["/index.html", "/remote.css", "/remote.js", "/favicon.png"]
         types = ["text/html; charset=utf-8", "text/css", "application/javascript", "image/png"]
+
+        if self.path == "/":
+            self.path = "/index.html"
+
         params = parse_qs(urlparse(self.path).query)
         try:
             if self.path.startswith("/pyshock/command"):
@@ -59,7 +63,7 @@ class PyshockRequestHandler(BaseHTTPRequestHandler):
                 self.send_response(200)
                 self.send_header("Content-Type", types[files.index(self.path)])
                 self.end_headers()
-                with open("." + self.path, "rb") as content:
+                with open("web/" + self.path, "rb") as content:
                     shutil.copyfileobj(content, self.wfile)
             else:
                 self.answer(404, "unknown path: " + self.path)
