@@ -3,11 +3,8 @@
 import subprocess
 from pyshocklibdevices import Action, Device
 from threading import RLock
-from sdr import Sender
 
 lock = RLock()
-
-sender = Sender()
 
 class Pacdog(Device):
 
@@ -27,6 +24,12 @@ class Pacdog(Device):
         super().__init__(name, color)
         self.code = code
         self.button = button
+
+    def is_sdr_required(self):
+        return True
+
+    def boot(self, _arduino_manader, sdr_sender):
+        self.sender = sdr_sender
 
     def generate(self, code, intensity, button, beep):
         pre_checksum = code[0:2] + self.calculate_intensity_code(intensity) + str(self.button_codes[button][0]) + code[2:]
@@ -80,8 +83,8 @@ class Pacdog(Device):
 
     def send(self, data):
         with lock:
-            samples = sender.modulate_messages(data)
-            sender.send(samples)
+            samples = self.sender.modulate_messages(data)
+            self.sender.send(samples)
 
 
     def command(self, action, level, duration):

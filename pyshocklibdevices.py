@@ -44,7 +44,10 @@ class Device:
     def is_arduino_required(self):
         return False
 
-    def boot(self, ignore):
+    def is_sdr_required(self):
+        return False
+
+    def boot(self, _arduino_manager, _sdr_sender):
         pass
 
     def command(self, action, level, duration):
@@ -72,7 +75,7 @@ class ArduinoBasedDevice(Device):
     def is_arduino_required(self):
         return True
 
-    def boot(self, arduino_manager):
+    def boot(self, arduino_manager, _sdr_sender):
         self.arduino_manager = arduino_manager
         self.index = arduino_manager.register_device(self.device_type.value, self.arg1, self.arg2, self.arg3)
 
