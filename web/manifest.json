@@ -1,0 +1,17 @@
+{
+  "short_name": "Remote",
+  "name": "Remote",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "type": "image/png",
+      "sizes": "80x80"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#FFF",
+  "display": "standalone",
+  "scope": "/",
+  "theme_color": "#FFF",
+  "description": "Remote"
+}

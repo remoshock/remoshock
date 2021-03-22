@@ -4,12 +4,12 @@
 <title>Remote</title>
 <link rel="stylesheet" href="remote.css">
 <link rel="shortcut icon" href="favicon.png">
+<link rel="manifest" href="manifest.json">
 <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
 </head>
 <body>
 
-<div id="devices">
-</devices>
+<div id="devices"></div>
 
 <template id="device-template">
 <div class="device">
@@ -20,7 +20,6 @@
 <input class="power_range" type="range" value="1" min="0" max="100" step="1" list="tickmarks_percent">
 </div>
 
-</input>
 <div>
 <label for="duration_input" title="Duration">⏲️</label>
 <input class="duration_input" type="number" min="250" max="2000" value="0" step="250"> ms
