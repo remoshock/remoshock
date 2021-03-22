@@ -11,6 +11,13 @@ input[type=range] {
 	width: 100%
 }
 
+input[type=range] {
+	pointer-events: none;
+}
+input[type=range]::-webkit-slider-thumb, input[type=range]::div {
+	pointer-events:auto;
+}
+
 h2 {
 	padding: 0;
 	margin: 0;

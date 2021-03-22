@@ -39,11 +39,16 @@ async function trigger() {
 	await command(config.deviceIndex, "ZAP", config.zapLevel, config.zapDuration);
 }
 
+let lastNavigatorVibrate = 0;
 async function inputHandler(e) {
 	let input = e.target;
 	let value = input.value;
 	input.parentNode.querySelector("input[type=number]").value = value;
 	input.parentNode.querySelector("input[type=range]").value = value;
+	if (navigator.vibrate && Date.now() - lastNavigatorVibrate > 100) {
+		navigator.vibrate([5]);
+		lastNavigatorVibrate = Date.now();
+	}
 }
 
 async function clickHandler(e) {
@@ -57,7 +62,7 @@ async function clickHandler(e) {
 	let duration = device.querySelector(".duration_input").value;
 	
 	let res = await command(device.dataset.device, action, power, duration);
-	if (res.status == 200) {
+	if (res.status == 200 && navigator.vibrate) {
 		navigator.vibrate([50]);
 	}
 }
