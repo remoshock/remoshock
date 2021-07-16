@@ -77,8 +77,8 @@ class Sender:
         args.encoding = None
         args.hex = False
         args.pause = 262924
-        args.gain = None
-        args.if_gain = None
+        args.gain = 47 #None
+        args.if_gain = 47 #None
         args.bandwidth = None
         args.baseband_gain = None
         args.modulation_type = "FSK"
