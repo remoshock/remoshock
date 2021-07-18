@@ -39,13 +39,9 @@ def beepZap(device, power, duration):
     pyshock.command(Action.ZAP, device, power, duration)
 
 def test():
-    pyshock.command(Action.BEEP, 0, 0, 300)
+    pyshock.command(Action.BEEPZAP, 0, 40, 1050)
     time.sleep(1);
-    pyshock.command(Action.ZAP, 0, 0, 300)
-    time.sleep(1);
-    pyshock.command(Action.BEEP, 1, 0, 300)
-    time.sleep(1);
-    pyshock.command(Action.ZAP, 1, 0, 300)
+    pyshock.command(Action.BEEPZAP, 1, 40, 1050)
     time.sleep(1);
 
 """
@@ -58,9 +54,23 @@ time.sleep(300)
 
 def r():
     while True:
-        time.sleep(random.randrange(30 * 60))
-        beepZap(random.randrange(2), 40, 1000)
+#        time.sleep(random.randrange(5 * 60))
+        time.sleep(random.randrange(20 * 60) + 20 * 60)
+        pyshock.command(Action.BEEPZAP, random.randrange(2), 40, 1050)
 
-#test();
-r();
 
+def test2():
+        pyshock.command(Action.BEEP, 4, 1, 0)
+
+def r2():
+    while True:
+        time.sleep(random.randrange(20 * 60) + 20 * 60)
+        pyshock.command(Action.ZAP, 4, 0, 130)
+
+
+#test2();
+#r2();
+
+time.sleep(30)
+test()
+r()
