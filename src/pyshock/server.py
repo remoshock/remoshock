@@ -1,4 +1,8 @@
 #!/usr/bin/python3
+#
+# Copyright nilswinter 2020-2021. License: AGPL
+#_______________________________________________
+
 
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse, parse_qs
@@ -9,8 +13,8 @@ import traceback
 
 import config
 
-from pyshock.pyshocklib import Pyshock, PyshockMock
-from pyshock.pyshocklibdevices import Action
+from pyshock.core.pyshock import Pyshock, PyshockMock
+from pyshock.core.action import Action
 
 __pyshock = None
 
@@ -89,8 +93,5 @@ class PyshockServer:
 
     def start(self):
         self.__boot_pyshock()
-        self.__start_server()
+        self.__start_web_server()
 
-
-
-PyshockServer().start()

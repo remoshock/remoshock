@@ -1,10 +1,14 @@
 #!/usr/bin/python3
+#
+# Copyright nilswinter 2020-2021. License: AGPL
+#_______________________________________________
+
 
 import random
 import time
 
-from pyshock.pyshocklib import Pyshock
-from pyshock.pyshocklibdevices import Action 
+from pyshock.core.pyshock import Pyshock
+from pyshock.core.action import Action 
 
 pyshock = Pyshock()
 pyshock.boot()

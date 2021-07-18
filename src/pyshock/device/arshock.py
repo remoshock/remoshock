@@ -1,16 +1,23 @@
 #!/usr/bin/python3
+#
+# Copyright nilswinter 2020-2021. License: AGPL
+#_______________________________________________
+
 
 import serial
 import time
 from enum import Enum
 from threading import RLock
 
+from pyshock.core.action import Action
+from pyshock.device.device import Device
+
 # type            code, code, channel
 #  0  Pettainer,            sender code first byte, seonder code second byte, channel
 #  1  Opto-isolator 1,      beep pin,               vib pin,                  shock pin
 #  2  Opto-isolator 2,      beep modifier pin,      ignored,                  pin
 
-class Action(Enum):
+class ProtocolAction(Enum):
     LED = 10
     BEEP = 11
     VIB = 12
@@ -34,34 +41,6 @@ class DeviceType(Enum):
     PETAINER = 0
     OPTOCOUPLER = 1
     OPTOCOUPLER_BEEP_MODIFIER = 2
-
-
-class Device:
-    def __init__(self, name, color):
-        self.name = name
-        self.color = color
-
-    def is_arduino_required(self):
-        return False
-
-    def is_sdr_required(self):
-        return False
-
-    def boot(self, _arduino_manager, _sdr_sender):
-        pass
-
-    def command(self, action, level, duration):
-        pass
-
-    def get_config(self):
-        config = {
-            "name": self.name,
-            "color": self.color,
-            "power": 10,
-            "duration": 500,
-            "durationIncrement": 250
-        }
-        return config
 
 
 class ArduinoBasedDevice(Device):
@@ -103,7 +82,7 @@ class ArduinoOptocouplerBeepModifier(ArduinoBasedDevice):
 
 
 class ArduinoManager():
-    def read_responses(self, readUntil = Action.ACKNOWLEDGE):
+    def read_responses(self, readUntil = ProtocolAction.ACKNOWLEDGE):
         while (True):
             if (self.ser.in_waiting < 2):
                 time.sleep(0.1)
@@ -113,7 +92,7 @@ class ArduinoManager():
                 break
 
             params = self.ser.read(data[1])
-            if (data[0] != Action.DEBUG.value):
+            if (data[0] != ProtocolAction.DEBUG.value):
                 print(data[0])
             print(params)
             print(" ")
@@ -146,13 +125,13 @@ class ArduinoManager():
             time.sleep(1)
             self.ser.flushInput()
 
-            self.ser.write(bytes([Action.BOOT.value, 0]))
-            self.read_responses(Action.BOOTED)
+            self.ser.write(bytes([ProtocolAction.BOOT.value, 0]))
+            self.read_responses(ProtocolAction.BOOTED)
             self.read_responses()
 
     def register_device(self, device_type, arg1, arg2, arg3):
         with self.serLock:
-            self.send(bytes([Action.ADD.value, 4, device_type, arg1, arg2, arg3]))
+            self.send(bytes([ProtocolAction.ADD.value, 4, device_type, arg1, arg2, arg3]))
         self.device_index = self.device_index + 1
         return self.device_index
 

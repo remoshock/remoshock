@@ -1,7 +1,11 @@
 #!/usr/bin/python3
+#
+# Copyright nilswinter 2020-2021. License: AGPL
+#_______________________________________________
 
-from pyshock.pyshocklibdevices import ArduinoManager
-from pyshock.sdr import Sender
+
+from pyshock.device.arshock import ArduinoManager
+from pyshock.device.sdr import Sender
 
 import config
 

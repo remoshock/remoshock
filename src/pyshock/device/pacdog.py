@@ -1,8 +1,14 @@
 #!/usr/bin/python3
+#
+# Copyright nilswinter 2020-2021. License: AGPL
+#_______________________________________________
+
 
 import subprocess
-from pyshock.pyshocklibdevices import Action, Device
 from threading import RLock
+
+from pyshock.core.action import Action
+from pyshock.device.device import Device
 
 lock = RLock()
 
