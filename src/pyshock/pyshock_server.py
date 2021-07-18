@@ -90,3 +90,7 @@ class PyshockServer:
     def start(self):
         self.__boot_pyshock()
         self.__start_server()
+
+
+
+PyshockServer().start()
