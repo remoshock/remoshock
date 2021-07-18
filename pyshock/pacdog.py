@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 import subprocess
-from pyshocklibdevices import Action, Device
+from pyshock.pyshocklibdevices import Action, Device
 from threading import RLock
 
 lock = RLock()

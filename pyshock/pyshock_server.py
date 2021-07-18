@@ -9,15 +9,10 @@ import traceback
 
 import config
 
-from pyshocklib import Pyshock, PyshockMock
-from pyshocklibdevices import Action
+from pyshock.pyshocklib import Pyshock, PyshockMock
+from pyshock.pyshocklibdevices import Action
 
-if len(sys.argv) > 1 and sys.argv[1] == "mock":
-    pyshock = PyshockMock()
-else:
-    pyshock = Pyshock()
-pyshock.boot()
-
+__pyshock = None
 
 class PyshockRequestHandler(BaseHTTPRequestHandler):
 
@@ -42,7 +37,7 @@ class PyshockRequestHandler(BaseHTTPRequestHandler):
         if not action in [Action.LED, Action.BEEP, Action.VIB, Action.ZAP, Action.BEEPZAP]:
             raise Exception("Invalid action")
 
-        pyshock.command(action, device, power, duration)
+        __pyshock.command(action, device, power, duration)
 
 
     def do_GET(self):
@@ -58,7 +53,7 @@ class PyshockRequestHandler(BaseHTTPRequestHandler):
                 self.handle_command(params)
                 self.answer(200, { "status": "ok"})
             elif self.path.startswith("/pyshock/config"):
-                self.answer(200, pyshock.get_config())
+                self.answer(200, __pyshock.get_config())
             elif self.path in files:
                 self.send_response(200)
                 self.send_header("Content-Type", types[files.index(self.path)])
@@ -71,15 +66,27 @@ class PyshockRequestHandler(BaseHTTPRequestHandler):
             print("".join(traceback.TracebackException.from_exception(ex).format()))
             self.answer(500, { "error": str(sys.exc_info()[0]) + ": " + str(sys.exc_info()[1])})
 
+class PyshockServer:
+    
+    def __boot_pyshock(self):
+        global __pyshock
+        if len(sys.argv) > 1 and sys.argv[1] == "mock":
+            pyshock = PyshockMock()
+        else:
+            pyshock = Pyshock()
+        pyshock.boot()
+        __pyshock = pyshock
 
-def start_server():
-    port = 7777
-    port = int(config.web_port)
-    print()
-    print("Open http://127.0.0.1:" + str(port) + "/#token=" + config.web_authentication_token)
-    print()
+    def __start_web_server(self):
+        port = int(config.web_port)
+        print()
+        print("Open http://127.0.0.1:" + str(port) + "/#token=" + config.web_authentication_token)
+        print()
 
-    server = ThreadingHTTPServer(('0.0.0.0', port), PyshockRequestHandler)
-    server.serve_forever()
+        server = ThreadingHTTPServer(('0.0.0.0', port), PyshockRequestHandler)
+        server.serve_forever()
 
-start_server()
+
+    def start(self):
+        self.__boot_pyshock()
+        self.__start_server()

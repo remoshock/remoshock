@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
-from pyshocklibdevices import ArduinoManager
-from sdr import Sender
+from pyshock.pyshocklibdevices import ArduinoManager
+from pyshock.sdr import Sender
 
 import config
 

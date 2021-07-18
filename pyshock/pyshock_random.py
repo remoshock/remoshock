@@ -3,8 +3,8 @@
 import random
 import time
 
-from pyshocklib import Pyshock
-from pyshocklibdevices import Action 
+from pyshock.pyshocklib import Pyshock
+from pyshock.pyshocklibdevices import Action 
 
 pyshock = Pyshock()
 pyshock.boot()
