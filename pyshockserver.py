@@ -46,8 +46,8 @@ class PyshockRequestHandler(BaseHTTPRequestHandler):
 
 
     def do_GET(self):
-        files = ["/index.html", "/remote.css", "/remote.js", "/favicon.png"]
-        types = ["text/html; charset=utf-8", "text/css", "application/javascript", "image/png"]
+        files = ["/index.html", "/remote.css", "/remote.js", "/favicon.png", "/manifest.json"]
+        types = ["text/html; charset=utf-8", "text/css", "application/javascript", "image/png", "application/json"]
 
         if self.path == "/":
             self.path = "/index.html"
@@ -72,6 +72,14 @@ class PyshockRequestHandler(BaseHTTPRequestHandler):
             self.answer(500, { "error": str(sys.exc_info()[0]) + ": " + str(sys.exc_info()[1])})
 
 
-server = ThreadingHTTPServer(('0.0.0.0', 7777), PyshockRequestHandler)
-server.serve_forever()
+def start_server():
+    port = 7777
+    port = int(config.web_port)
+    print()
+    print("Open http://127.0.0.1:" + str(port) + "/#token=" + config.web_authentication_token)
+    print()
 
+    server = ThreadingHTTPServer(('0.0.0.0', port), PyshockRequestHandler)
+    server.serve_forever()
+
+start_server()
