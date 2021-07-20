@@ -10,7 +10,7 @@ from enum import Enum
 from threading import RLock
 
 from pyshock.core.action import Action
-from pyshock.device.device import Device
+from pyshock.receiver.receiver import Receiver
 
 # type            code, code, channel
 #  0  Pettainer,            sender code first byte, seonder code second byte, channel
@@ -37,16 +37,16 @@ class ProtocolAction(Enum):
     CRASH = 255
 
 
-class DeviceType(Enum):
+class ReceiverType(Enum):
     PETAINER = 0
     OPTOCOUPLER = 1
     OPTOCOUPLER_BEEP_MODIFIER = 2
 
 
-class ArduinoBasedDevice(Device):
-    def __init__(self, name, color, device_type, arg1, arg2, arg3):
+class ArduinoBasedReceiver(Receiver):
+    def __init__(self, name, color, receiver_type, arg1, arg2, arg3):
         super().__init__(name, color)
-        self.device_type = device_type
+        self.receiver_type = receiver_type
         self.arg1 = arg1
         self.arg2 = arg2
         self.arg3 = arg3
@@ -56,7 +56,7 @@ class ArduinoBasedDevice(Device):
 
     def boot(self, arduino_manager, _sdr_sender):
         self.arduino_manager = arduino_manager
-        self.index = arduino_manager.register_device(self.device_type.value, self.arg1, self.arg2, self.arg3)
+        self.index = arduino_manager.register_receiver(self.receiver_type.value, self.arg1, self.arg2, self.arg3)
 
     def command(self, action, level, duration):
         if action == Action.BEEPZAP:
@@ -66,19 +66,19 @@ class ArduinoBasedDevice(Device):
         self.arduino_manager.command(action, self.index, level, duration)
 
 
-class ArduinoPetainer(ArduinoBasedDevice):
+class ArduinoPetainer(ArduinoBasedReceiver):
     def __init__(self, name, color, code_first_byte, code_second_byte, channel):
-        super().__init__(name, color, DeviceType.PETAINER, code_first_byte, code_second_byte, channel)
+        super().__init__(name, color, ReceiverType.PETAINER, code_first_byte, code_second_byte, channel)
 
 
-class ArduinoOptocoupler(ArduinoBasedDevice):
+class ArduinoOptocoupler(ArduinoBasedReceiver):
     def __init__(self, name, color, pin_beep, pin_vib, pin_zap):
-        super().__init__(name, color, DeviceType.OPTOCOUPLER, pin_beep, pin_vib, pin_zap)
+        super().__init__(name, color, ReceiverType.OPTOCOUPLER, pin_beep, pin_vib, pin_zap)
 
 
-class ArduinoOptocouplerBeepModifier(ArduinoBasedDevice):
+class ArduinoOptocouplerBeepModifier(ArduinoBasedReceiver):
     def __init__(self, name, color, pin_modifier_beep, pin_button):
-        super().__init__(name, color, DeviceType.OPTOCOUPLER_BEEP_MODIFIER, pin_modifier_beep, 0, pin_button)
+        super().__init__(name, color, ReceiverType.OPTOCOUPLER_BEEP_MODIFIER, pin_modifier_beep, 0, pin_button)
 
 
 class ArduinoManager():
@@ -108,18 +108,18 @@ class ArduinoManager():
             self.read_responses()
 
 
-    def command(self, action, device, level, duration):
-        l = [action.value, 4, device, level, int(duration / 256), duration % 256]
+    def command(self, action, receiver, level, duration):
+        l = [action.value, 4, receiver, level, int(duration / 256), duration % 256]
         data = bytes(l)
         self.send(data)
 
 
     def boot(self):
-        """Boots the Arduino and registers devices"""
+        """Boots the Arduino and registers receivers"""
 
         self.ser = serial.Serial('/dev/ttyACM0')
         self.serLock = RLock()
-        self.device_index = -1
+        self.receiver_index = -1
 
         with self.serLock:
             time.sleep(1)
@@ -129,9 +129,9 @@ class ArduinoManager():
             self.read_responses(ProtocolAction.BOOTED)
             self.read_responses()
 
-    def register_device(self, device_type, arg1, arg2, arg3):
+    def register_receiver(self, receiver_type, arg1, arg2, arg3):
         with self.serLock:
-            self.send(bytes([ProtocolAction.ADD.value, 4, device_type, arg1, arg2, arg3]))
-        self.device_index = self.device_index + 1
-        return self.device_index
+            self.send(bytes([ProtocolAction.ADD.value, 4, receiver_type, arg1, arg2, arg3]))
+        self.receiver_index = self.receiver_index + 1
+        return self.receiver_index
 

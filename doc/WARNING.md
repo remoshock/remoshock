@@ -36,7 +36,7 @@ learn Arduino. After I got familiar with hardware-near programming,
 I bought a pair of cheap shock collars which are operating on 433 MHz.
 This worked well from the software point of view.
 
-But I am quite unhappy about those devices. They seem to be significantly
+But I am quite unhappy about those receivers. They seem to be significantly
 more dangerous than a PAC collar with regard to damaging the skin.
 They have a very different pulse-form and - I think - significantly higher
 current in addition to high voltage.

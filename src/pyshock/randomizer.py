@@ -24,23 +24,23 @@ for i in range (0, 20):
 """
 for i in range (1, 10):
     time.sleep(10);
-    device = random.randrange(2)
-    pyshock.command(Action.BEEP, device, 0, 0)
+    receiver = random.randrange(2)
+    pyshock.command(Action.BEEP, receiver, 0, 0)
     time.sleep(1);
-    pyshock.command(Action.ZAP, device, 1, 0)
+    pyshock.command(Action.ZAP, receiver, 1, 0)
 """
 #pyshock.command(Action.VIB, 0, 5, 5000)
 #pyshock.command(Action.VIB, 1, 0, 0)
 
-def beepZapMixed(device, duration):
-    pyshock.command(Action.BEEP, device, 0, 0)
+def beepZapMixed(receiver, duration):
+    pyshock.command(Action.BEEP, receiver, 0, 0)
     time.sleep(1.5); # Beep lasts for a while after the message was sent, so add some additional time to 1s
-    pyshock.command(Action.ZAP, device + 2, 0, duration)
+    pyshock.command(Action.ZAP, receiver + 2, 0, duration)
 
-def beepZap(device, power, duration):
-    pyshock.command(Action.BEEP, device, 0, 300)
+def beepZap(receiver, power, duration):
+    pyshock.command(Action.BEEP, receiver, 0, 300)
     time.sleep(1);
-    pyshock.command(Action.ZAP, device, power, duration)
+    pyshock.command(Action.ZAP, receiver, power, duration)
 
 def test():
     pyshock.command(Action.BEEPZAP, 0, 40, 1050)

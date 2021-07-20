@@ -4,7 +4,7 @@
 #_______________________________________________
 
 
-class Device:
+class Receiver:
     def __init__(self, name, color):
         self.name = name
         self.color = color

@@ -8,11 +8,11 @@ import re
 import threading
 
 from pyshock.core.action import Action
-from pyshock.device.device import Device
+from pyshock.receiver.receiver import Receiver
 
 lock = threading.RLock()
 
-class Pacdog(Device):
+class Pacdog(Receiver):
 
     button_codes = [
         #8 22 23

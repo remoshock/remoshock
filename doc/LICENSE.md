@@ -4,7 +4,7 @@ Pyshock is copyrighted by Nils Winter <nils.winter@yahoo.com> 2019-2021
 
 Section 13 applies to the communication between the sending computer
 and the embedded computer in the receiver. The wearer of
-a shock device is considered a user and has all the permission granted
+a shocking device is considered a user and has all the permission granted
 by this license. Most notable the right to receive a copy of the source
 code with all modifications.
 

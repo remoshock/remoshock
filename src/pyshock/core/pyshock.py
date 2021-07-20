@@ -8,29 +8,29 @@ import sys
 
 from pyshock.core.config import ConfigManager
 
-from pyshock.device.arshock import ArduinoManager
-from pyshock.device.pacdog import Pacdog
+from pyshock.receiver.arshock import ArduinoManager
+from pyshock.receiver.pacdog import Pacdog
 
 class Pyshock:
 
     def __init__(self, args):
         self.args = args
 
-    def __instantiate_device(self, section):
-        device_type = self.config.get(section, "type")
+    def __instantiate_receiver(self, section):
+        receiver_type = self.config.get(section, "type")
         name = self.config.get(section, "name")
         color = self.config.get(section, "color")
         code = self.config.get(section, "transmitter_code")
         button = self.config.getint(section, "button")
 
-        if device_type.lower() == "pac":
-            device = Pacdog(name, color, code, button)
+        if receiver_type.lower() == "pac":
+            receiver = Pacdog(name, color, code, button)
         else:
-            print("ERROR: Unknown receiver type \"" + device_type + "\" in pyshock.ini. Supported types: pac")
+            print("ERROR: Unknown receiver type \"" + receiver_type + "\" in pyshock.ini. Supported types: pac")
             return None
 
-        if device.validate_config():
-            return device
+        if receiver.validate_config():
+            return receiver
 
         return None
 
@@ -76,21 +76,21 @@ class Pyshock:
 
     def _setup_from_config(self):
         self.config = ConfigManager().config
-        devices = []
-        for device in self.config.sections():
-            if device.startswith("device"):
+        receivers = []
+        for receiver in self.config.sections():
+            if receiver.startswith("receiver"):
                 try:
-                    device = self.__instantiate_device(device)
-                    if device != None:
-                        devices.append(device)
+                    receiver = self.__instantiate_receiver(receiver)
+                    if receiver != None:
+                        receivers.append(receiver)
                 except configparser.NoOptionError as e:
                     print("Error reading configuration file: " + str(e))
 
-        if len(devices) == 0:
+        if len(receivers) == 0:
             print()
-            print("ERROR: No valid devices configured in pyshock.ini")
+            print("ERROR: No valid receivers configured in pyshock.ini")
             sys.exit(1)
-        self.devices = devices
+        self.receivers = receivers
 
 
     def boot(self):
@@ -98,10 +98,10 @@ class Pyshock:
         arduino_required = False
         sdr_required = False
         
-        for device in self.devices:
-            if device.is_arduino_required():
+        for receiver in self.receivers:
+            if receiver.is_arduino_required():
                 arduino_required = True
-            if device.is_sdr_required():
+            if receiver.is_sdr_required():
                 sdr_required = True
 
         arduino_manager = None
@@ -113,18 +113,18 @@ class Pyshock:
         if sdr_required:
             sdr_sender = self.__instantitate_sdr_sender()
 
-        for device in self.devices:
-            device.boot(arduino_manager, sdr_sender)
+        for receiver in self.receivers:
+            receiver.boot(arduino_manager, sdr_sender)
 
 
-    def command(self, action, device, level, duration):
-        self.devices[device].command(action, level, duration)
+    def command(self, action, receiver, level, duration):
+        self.receivers[receiver].command(action, level, duration)
 
 
     def get_config(self):
         result = []
-        for device in self.devices:
-            result.append(device.get_config())
+        for receiver in self.receivers:
+            result.append(receiver.get_config())
         return result
 
 
@@ -134,8 +134,8 @@ class PyshockMock(Pyshock):
     def __init__(self, args):
         self.args = args
 
-    def command(self, action, device, level, duration):
-        print("command: " + str(action) + ", device: " + str(device) + ", level: " + str(level) + ", duration: " + str(duration))
+    def command(self, action, receiver, level, duration):
+        print("command: " + str(action) + ", receiver: " + str(receiver) + ", level: " + str(level) + ", duration: " + str(duration))
 
 
     def boot(self):

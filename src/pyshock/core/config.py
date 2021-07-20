@@ -9,11 +9,11 @@ import os
 import secrets
 import string
 
-class MultiDeviceSectionSupport(collections.OrderedDict):
+class MultireceiverSectionSupport(collections.OrderedDict):
     index = 0   # class variable
 
     def __setitem__(self, key, val):
-        if isinstance(val, dict) and key == "device":
+        if isinstance(val, dict) and key == "receiver":
             self.index = self.index + 1
             key += str(self.index)
         collections.OrderedDict.__setitem__(self, key, val)
@@ -47,47 +47,33 @@ web_authentication_token = [web_authentication_token]
 
 
 
-[device]
+[receiver]
 type=pac
-name=PAC_1
+name=PAC1
 color=#FFD
 transmitter_code=[transmitter_code]
 button=1
 
-[device]
+[receiver]
 type=pac
-name=PAC_2
+name=PAC2
 color=#FFE
 transmitter_code=[transmitter_code]
 button=2
 
-[device]
+[receiver]
 type=pac
-name=PAC_3
+name=PAC3
 color=#FDF
 transmitter_code=[transmitter_code]
 button=3
 
-[device]
+[receiver]
 type=pac
-name=PAC_4
+name=PAC4
 color=#DFF
 transmitter_code=[transmitter_code]
 button=4
-
-[device]
-type=pac
-name=PAC_5
-color=#FFD
-transmitter_code=[transmitter_code]
-button=5
-
-[device]
-type=pac
-name=PAC_6
-color=#FDF
-transmitter_code=[transmitter_code]
-button=6
 
 """
         config = default.replace("[web_authentication_token]", self.__generate_web_authentication_token())
@@ -112,7 +98,7 @@ button=6
 
     def __read_configuration_from_file(self):
         print("Using configuration file " + self.filename)
-        config = configparser.ConfigParser(defaults=None, dict_type=MultiDeviceSectionSupport, strict=False, default_section="default")
+        config = configparser.ConfigParser(defaults=None, dict_type=MultireceiverSectionSupport, strict=False, default_section="default")
         config.read(self.filename, "UTF-8")
         self.config = config
 

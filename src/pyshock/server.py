@@ -34,14 +34,14 @@ class PyshockRequestHandler(BaseHTTPRequestHandler):
             raise Exception("Invalid authentication token")
 
         action = Action[params["action"][0]]
-        device = int(params["device"][0])
+        receiver = int(params["receiver"][0])
         power = int(params["power"][0])
         duration = int(params["duration"][0])
 
         if not action in [Action.LED, Action.BEEP, Action.VIB, Action.ZAP, Action.BEEPZAP]:
             raise Exception("Invalid action")
 
-        pyshock.command(action, device, power, duration)
+        pyshock.command(action, receiver, power, duration)
 
 
     def do_GET(self):
