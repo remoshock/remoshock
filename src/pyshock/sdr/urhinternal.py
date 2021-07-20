@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 #
-# Copyright nilswinter 2020-2021. License: AGPL
+# Most code in this file is copied from https://github.com/jopohl/urh
+# which is GPL. Please see https://github.com/jopohl/urh/blob/master/LICENSE
 #_______________________________________________
 
 
