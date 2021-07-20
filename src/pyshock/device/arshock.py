@@ -115,7 +115,7 @@ class ArduinoManager():
 
 
     def boot(self):
-        """Boots the Arduino and registers devices defined in config.py"""
+        """Boots the Arduino and registers devices"""
 
         self.ser = serial.Serial('/dev/ttyACM0')
         self.serLock = RLock()
