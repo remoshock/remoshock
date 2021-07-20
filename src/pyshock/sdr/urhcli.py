@@ -13,8 +13,9 @@ lock = threading.RLock()
 
 class UrhCliSender(SdrSender):
 
-    def __init__(self, sdr):
+    def __init__(self, sdr, verbose):
         self.sdr = sdr
+        self.verbose = verbose
 
     def send(self, frequency, sample_rate, carrier_frequency, 
                  modulation_type, samples_per_symbol, low_frequency,
@@ -34,5 +35,9 @@ class UrhCliSender(SdrSender):
                 "--pause", str(pause),
                 "--if-gain", "47",
                 "--messages", data]
-            print(cmd)
-            subprocess.run(cmd)
+
+            stdout = subprocess.DEVNULL
+            if self.verbose:
+                print(cmd)
+                stdout = None
+            subprocess.run(cmd, stdout=stdout)

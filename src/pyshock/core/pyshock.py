@@ -13,6 +13,9 @@ from pyshock.device.pacdog import Pacdog
 
 class Pyshock:
 
+    def __init__(self, args):
+        self.args = args
+
     def __instantiate_device(self, section):
         device_type = self.config.get(section, "type")
         name = self.config.get(section, "name")
@@ -59,7 +62,7 @@ class Pyshock:
             print("...")
             
             from pyshock.sdr.urhinternal import UrhInternalSender
-            return UrhInternalSender()
+            return UrhInternalSender(self.args.verbose)
             print("Yeah! Driver initialized successfully.")
             print()
 
@@ -68,7 +71,7 @@ class Pyshock:
 
         print("Using " + sdr + " via urh_cli")
         from pyshock.sdr.urhcli import UrhCliSender
-        return UrhCliSender(sdr)
+        return UrhCliSender(sdr, self.args.verbose)
 
 
     def _setup_from_config(self):
@@ -127,6 +130,9 @@ class Pyshock:
 
 
 class PyshockMock(Pyshock):
+
+    def __init__(self, args):
+        self.args = args
 
     def command(self, action, device, level, duration):
         print("command: " + str(action) + ", device: " + str(device) + ", level: " + str(level) + ", duration: " + str(duration))

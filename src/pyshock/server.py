@@ -6,6 +6,7 @@
 
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse, parse_qs
+import argparse
 import json
 import sys
 import shutil
@@ -74,9 +75,9 @@ class PyshockServer:
     def __boot_pyshock(self):
         global pyshock
         if len(sys.argv) > 1 and sys.argv[1] == "mock":
-            pyshock = PyshockMock()
+            pyshock = PyshockMock(argparse.Namespace())
         else:
-            pyshock = Pyshock()
+            pyshock = Pyshock(argparse.Namespace())
         pyshock.boot()
 
     def __start_web_server(self):

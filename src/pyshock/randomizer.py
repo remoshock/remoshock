@@ -3,14 +3,14 @@
 # Copyright nilswinter 2020-2021. License: AGPL
 #_______________________________________________
 
-
+import argparse
 import random
 import time
 
 from pyshock.core.pyshock import Pyshock
 from pyshock.core.action import Action 
 
-pyshock = Pyshock()
+pyshock = Pyshock(argparse.Namespace())
 pyshock.boot()
 
 #command(Action.BEEP, 0, 5, 5000)

@@ -6,6 +6,7 @@
 
 
 import argparse
+import datetime
 import logging
 import os
 import sys
@@ -33,9 +34,12 @@ from urh.dev.native.lib import hackrf
 from multiprocessing import Array
 
 
+log_enabled = False
+
 def log(msg):
-#    print(str(datetime.datetime.now().time()) + " " + msg)
-    pass
+    if log_enabled:
+        print(str(datetime.datetime.now().time()) + " " + msg)
+
 
 class SendConfig(object):
     def __init__(self, send_buffer, total_samples: int):
@@ -186,8 +190,10 @@ lock = threading.RLock()
 
 class UrhInternalSender(SdrSender):
 
-    def __init__(self):
-        self.sender = Sender() 
+    def __init__(self, verbose):
+        global log_enabled
+        self.sender = Sender()
+        log_enabled = verbose
     
     def send(self, frequency, sample_rate, carrier_frequency, 
                  modulation_type, samples_per_symbol, low_frequency,
