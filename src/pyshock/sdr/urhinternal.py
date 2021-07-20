@@ -193,14 +193,14 @@ class UrhInternalSender(SdrSender):
                  high_frequency, pause, data):
 
         with lock:
-            sender.args.pause = pause
-            sender.args.modulation_type = modulation_type
-            sender.args.samples_per_symbol = samples_per_symbol
-            sender.args.carrier_frequency = carrier_frequency
-            sender.args.parameters = [low_frequency, high_frequency]
-            sender.args.sample_rate = sample_rate
-            sender.args.frequency = frequency
-            sender.reset()
+            self.sender.args.pause = pause
+            self.sender.args.modulation_type = modulation_type
+            self.sender.args.samples_per_symbol = samples_per_symbol
+            self.sender.args.carrier_frequency = carrier_frequency
+            self.sender.args.parameters = [low_frequency, high_frequency]
+            self.sender.args.sample_rate = sample_rate
+            self.sender.args.frequency = frequency
+            self.sender.reset()
             samples = self.sender.modulate_messages(data)
             self.sender.send(samples)
 

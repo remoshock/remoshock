@@ -4,7 +4,6 @@
 #_______________________________________________
 
 
-import subprocess
 from threading import RLock
 
 from pyshock.core.action import Action
@@ -68,15 +67,15 @@ class Pacdog(Device):
         return res
 
 
-    def send_cli(self, data):
+    def send(self, data):
         self.sender.send(
-            frequency="27.1e6",
-            sample_rate="2e6",
-            carrier_frequency="27.1e6",
+            frequency=27.1e6,
+            sample_rate=2e6,
+            carrier_frequency=27.1e6,
             modulation_type="FSK",
-            samples_per_symbol="3100",
-            low_frequency="92e3",
-            high_frequency="95e3",
+            samples_per_symbol=3100,
+            low_frequency=92e3,
+            high_frequency=95e3,
             pause=262924,   # TODO: Why was this 2*?
             data=data)
 
