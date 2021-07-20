@@ -21,10 +21,15 @@ class Pyshock:
         button = self.config.getint(section, "button")
 
         if device_type.lower() == "pac":
-            return Pacdog(name, color, code, button)
+            device = Pacdog(name, color, code, button)
         else:
-            print("Unknown receiver type \"" + device_type + "\" in pyshock.ini. Supported types: pac")
+            print("ERROR: Unknown receiver type \"" + device_type + "\" in pyshock.ini. Supported types: pac")
             return None
+
+        if device.validate_config():
+            return device
+
+        return None
 
 
     def __instantitate_sdr_sender(self):
@@ -55,7 +60,7 @@ class Pyshock:
             
             from pyshock.sdr.urhinternal import UrhInternalSender
             return UrhInternalSender()
-            print("Yeah! Driver initialized successfully")
+            print("Yeah! Driver initialized successfully.")
             print()
 
         if sdr.lower() == "hackrfcli":
@@ -78,6 +83,10 @@ class Pyshock:
                 except configparser.NoOptionError as e:
                     print("Error reading configuration file: " + str(e))
 
+        if len(devices) == 0:
+            print()
+            print("ERROR: No valid devices configured in pyshock.ini")
+            sys.exit(1)
         self.devices = devices
 
 

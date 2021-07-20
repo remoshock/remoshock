@@ -4,12 +4,13 @@
 #_______________________________________________
 
 
-from threading import RLock
+import re
+import threading
 
 from pyshock.core.action import Action
 from pyshock.device.device import Device
 
-lock = RLock()
+lock = threading.RLock()
 
 class Pacdog(Device):
 
@@ -29,6 +30,19 @@ class Pacdog(Device):
         super().__init__(name, color)
         self.code = code
         self.button = button
+
+    def validate_config(self):
+        if re.fullmatch("^[01]{9}$", self.code) == None:
+            print("ERROR: Invalid transmitter_code \"" + self.code + "\" in pyshock.ini.")
+            print("The transmitter_code must be sequence of length 9 consisting of the characters 0 and 1")
+            return False
+
+        if self.button < 0 or self.button > 7:
+            print("ERROR: Invalid button \"" + str(self.button) + "\" in pyshock.ini.")
+            print("This parameter needs to be a whole number between 0 and 7 inclusive.")
+            return False
+
+        return True
 
     def is_sdr_required(self):
         return True
