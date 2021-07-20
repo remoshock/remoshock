@@ -5,7 +5,6 @@
 
 
 from pyshock.device.arshock import ArduinoManager
-from pyshock.device.sdr import Sender
 
 import config
 
@@ -27,7 +26,8 @@ class Pyshock:
 
         sdr_sender = None
         if sdr_required:
-            sdr_sender = Sender()
+            from pyshock.sdr.urhinternal import UrhInternalSender
+            sdr_sender = UrhInternalSender()
 
         for device in config.devices:
             device.boot(arduino_manager, sdr_sender)

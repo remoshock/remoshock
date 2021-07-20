@@ -176,6 +176,34 @@ class Sender:
         hackrf.close()
         hackrf.exit()
 
+import threading
+
+from pyshock.sdr.sdrsender import SdrSender
+
+
+lock = threading.RLock()
+
+class UrhInternalSender(SdrSender):
+
+    def __init__(self):
+        self.sender = Sender() 
+    
+    def send(self, frequency, sample_rate, carrier_frequency, 
+                 modulation_type, samples_per_symbol, low_frequency,
+                 high_frequency, pause, data):
+
+        with lock:
+            sender.args.pause = pause
+            sender.args.modulation_type = modulation_type
+            sender.args.samples_per_symbol = samples_per_symbol
+            sender.args.carrier_frequency = carrier_frequency
+            sender.args.parameters = [low_frequency, high_frequency]
+            sender.args.sample_rate = sample_rate
+            sender.args.frequency = frequency
+            sender.reset()
+            samples = self.sender.modulate_messages(data)
+            self.sender.send(samples)
+
 
 if __name__ == '__main__':
     sender = Sender()

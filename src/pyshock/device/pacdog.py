@@ -69,28 +69,16 @@ class Pacdog(Device):
 
 
     def send_cli(self, data):
-        with lock:
-            cmd = [
-                "urh_cli",
-                "--transmit",
-                "--device", "HackRF",
-                "--frequency", "27.1e6",
-                "--sample-rate", "2e6",
-                "--carrier-frequency", "27.1e6",
-                "--modulation-type", "FSK",
-                "--samples-per-symbol", "3100",
-                "--parameters", "92e3", "95e3",
-                "--pause", str(2 * 262924),
-                # "--if-gain", "47",
-                "--messages", data]
-            print(cmd)
-            subprocess.run(cmd)
-
-
-    def send(self, data):
-        with lock:
-            samples = self.sender.modulate_messages(data)
-            self.sender.send(samples)
+        self.sender.send(
+            frequency="27.1e6",
+            sample_rate="2e6",
+            carrier_frequency="27.1e6",
+            modulation_type="FSK",
+            samples_per_symbol="3100",
+            low_frequency="92e3",
+            high_frequency="95e3",
+            pause=262924,   # TODO: Why was this 2*?
+            data=data)
 
 
     def command(self, action, level, duration):
