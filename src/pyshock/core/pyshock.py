@@ -62,9 +62,10 @@ class Pyshock:
             print("...")
             
             from pyshock.sdr.urhinternal import UrhInternalSender
-            return UrhInternalSender(self.args.verbose)
+            sender = UrhInternalSender(self.args.verbose)
             print("Yeah! Driver initialized successfully.")
             print()
+            return sender
 
         if sdr.lower() == "hackrfcli":
             sdr = "HackRF"
