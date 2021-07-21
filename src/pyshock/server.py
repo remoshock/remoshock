@@ -8,6 +8,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse, parse_qs
 import argparse
 import json
+import ssl
 import sys
 import shutil
 import traceback
@@ -15,6 +16,7 @@ import traceback
 
 from pyshock.core.pyshock import Pyshock, PyshockMock
 from pyshock.core.action import Action
+from pyshock.core.version import VERSION
 
 pyshock = None
 
@@ -70,15 +72,37 @@ class PyshockRequestHandler(BaseHTTPRequestHandler):
             print("".join(traceback.TracebackException.from_exception(ex).format()))
             self.answer(500, { "error": str(sys.exc_info()[0]) + ": " + str(sys.exc_info()[1])})
 
+
+
 class PyshockServer:
+
+    def __parse_args(self):
+        parser = argparse.ArgumentParser(description="Shock collar remote control",
+                                         epilog="Please see https://github.com/pyshock/pyshock for documentation.")
+        parser.add_argument("--mock",
+                            action="store_true",
+                            help=argparse.SUPPRESS)
+        parser.add_argument("-v", "--verbose",
+                            action="store_true",
+                            help="prints debug messages")
+        parser.add_argument("--certfile",
+                            metavar="cert_and_key.pem",
+                            help="point to a file, which contain a private SSL key and its matching certificate to enable https")
+        parser.add_argument("--version",
+                            action="version",
+                            version=VERSION)
     
+        self.args = parser.parse_args()
+
+
     def __boot_pyshock(self):
         global pyshock
-        if len(sys.argv) > 1 and sys.argv[1] == "mock":
-            pyshock = PyshockMock(argparse.Namespace())
+        if self.args.mock:
+            pyshock = PyshockMock(self.args)
         else:
-            pyshock = Pyshock(argparse.Namespace())
+            pyshock = Pyshock(self.args)
         pyshock.boot()
+
 
     def __start_web_server(self):
         port = pyshock.config.getint("global", "web_port", fallback=7777)
@@ -87,10 +111,12 @@ class PyshockServer:
         print()
 
         server = ThreadingHTTPServer(('0.0.0.0', port), PyshockRequestHandler)
+        if (self.args.certfile):
+            server.socket = ssl.wrap_socket(server.socket, certfile=self.args.certfile, server_side=True)
         server.serve_forever()
 
 
     def start(self):
+        self.__parse_args()
         self.__boot_pyshock()
         self.__start_web_server()
-
