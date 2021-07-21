@@ -12,16 +12,14 @@ nerve system as well as damage to the skin.
 
 ### Skin
 
-<div style="padding:1em; border: 1px #AAA solid; width: 250px; margin-right: 1em; float: left">
-<a href="https://drive.google.com/uc?export=view&id=1YVrQO8TloMBpe2i0QaXTLIrsSX8WOVE8">
-<img alt="Skin damage the day after" src="https://drive.google.com/uc?export=view&id=1YVrQO8TloMBpe2i0QaXTLIrsSX8WOVE8" width="200"></a><br>
+<div style="padding:1em; border: 1px #AAA solid; width: 220px; margin-right: 1em; float: left">
+<img alt="Skin damage the day after" src="https://drive.google.com/uc?export=view&id=1rIxe512f4U99w-d3UyO9osXgcslo4aUV" width="200"><br>
 Skin damage the day after
 </div>
 
-<div style="padding:1em; border: 1px #AAA solid; width: 250px; float: left">
-<a href="https://drive.google.com/uc?export=view&id=1m0cx6GpMXiYx8VCjsc0x1PPyQTmt7PWX">
-<img alt="Skin damage after 9 month" src="https://drive.google.com/uc?export=view&id=1m0cx6GpMXiYx8VCjsc0x1PPyQTmt7PWX" width="200"></a><br>
-Skin damage after 9 month
+<div style="padding:1em; border: 1px #AAA solid; width: 220px; float: left">
+<img alt="Skin damage after 8 month" src="https://drive.google.com/uc?export=view&id=1crnB7FcD3w_kUqqiNC0t9Hj6Sz86gjp1" width="200"><br>
+Skin damage after 8 month
 </div>
 
 <br style="clear: both">

@@ -4,7 +4,7 @@
 <img style="border: 1px #AAA solid; margin-left: 2em; margin-right: 0.2em" alt="Remote" src="doc/remote.png" width="200">
 </div>
 
-## ℹ️ About the project
+![License: AGPL](https://img.shields.io/badge/License-AGPL-%23AAF)
 
 Pyshock is a computer based remote control for shock collars.
 
@@ -34,9 +34,7 @@ Reset your collar into pairing mode and invoke `./pyshockcli` again.
 After successful pairing, run it a third time, to issue a "beep" command.
 
 
-## Programs
-
-### 🖥 Command line interface (pyshockcli)
+## 🖥 Command line interface (pyshockcli)
 
 pyshockcli allows you to send commands using the command line ("terminal window").
 
@@ -44,7 +42,7 @@ By default, it will send a BEEP command to the first receiver configured in `pys
 
 For example, to send a shock of 250ms duration with 10% power to the second receiver:
 
-`./pyshockcli.py -a ZAP -d 250 -p 10 -r 1`
+`./pyshockcli.py --action ZAP --duration 250 --power 10 --receiver 1`
 
 The following actions are supported:
 
@@ -73,11 +71,39 @@ Please see https://github.com/pyshock/pyshock for documentation.
 ~~~~
 
 
-### 📱 Interactive Remote Control (pyshockserver)
+## 📱 Interactive Remote Control (pyshockserver)
 
-TODO: documemt this
+pyshockserver will start a web server, that will provide a user interface
+as shown on the screenshot.
 
-### 🎲 Randomizer (pyshockrnd)
+The webpage will work on mobile devices, provided that the mobile device
+can reach the IP address of the computer. For example because both devices
+are in the same Wifi network.
+
+You may make the server available via Internet, if your computer has a public
+IP-address, either directly or via a tunnel. Furthermore SSH reverse port
+forwarding does work. This documentation, however, will not go into detail
+on how to make a server available to the Internet. 
+
+`./pyshockserver.py` will start the server and print the URL. The port and
+authentication token may beconfigured in pyshock.ini.
+
+~~~~
+usage: pyshockserver.py [-h] [-v] [--certfile cert_and_key.pem] [--version]
+
+Shock collar remote control
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -v, --verbose         prints debug messages
+  --certfile cert_and_key.pem
+                        point to a file, which contains a private SSL key and its matching certificate to enable https
+  --version             show program's version number and exit
+
+Please see https://github.com/pyshock/pyshock for documentation.
+~~~~
+
+## 🎲 Randomizer (pyshockrnd)
 
 pyshockrnd sends timed commands that can be randomized. For example it may
 send a beep followed a shock very 15 minutes. For a completely deterministic
@@ -162,13 +188,13 @@ Each receiver section has the following parameters:
 - **name**: A name to display in the user interface
 - **color**: A HTML color code used by the user interface
 - **transmitter_code**: The transmitter bit code. You can use a random value of exactly 9 bits. Or it can be the same code as your real device. Use network bit order.
-- **button**: The button number as used by the DXT remote (top right is 1, button left is 6). In E/P-mode the left side is code 0, and the right side is code 2. Button code 7 does work as well.
+- **button**: The button number as used by the DXT remote (top right is 1, button left is 6). In E/P-mode the left side is code 0, and the right side is code 2. Button code 7 works as well.
 
-There may be also be a section for the randomer, which is documented above.
+There may be sections for the randomizer, which are documented above.
 
 ## 🐞 Bugs and Feature Ideas
 
-Please report bugs and feature ideas as issues on https://github.com/pyshock/pyshock
+Please report bugs and feature ideas as issues on [https://github.com/pyshock/pyshock](https://github.com/pyshock/pyshock)
 If you do not want to create an account on GitHub, you can also reach me at 
 https://fetlife.com/conversations/new?with=1561493
 
