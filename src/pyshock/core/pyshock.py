@@ -44,8 +44,8 @@ class Pyshock:
             print()
             print("Please edit pyshock.ini and add an entry sdr=... in the [global] section.")
             print()
-            print("Supported devices are (upper/lower case is imporant):") 
-            print("AirSpy R2, AirSpy Mini, BladeRF, FUNcube, HackRF, LimeSDR, PlutoSDR, SDRPlay, USRP")
+            print("Supported devices are (upper/lower case is important):") 
+            print("HackRF, LimeSDR")
             print()
             sys.exit(1)
 
