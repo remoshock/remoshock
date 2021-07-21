@@ -40,8 +40,8 @@ class ConfigManager:
 web_port = 7777    
 web_authentication_token = [web_authentication_token]
 
-# URH supports the following hardware (upper/lower case is important): 
-# AirSpy R2, AirSpy Mini, BladeRF, FUNcube, HackRF, LimeSDR, PlutoSDR, SDRPlay, USRP
+# URH supports the following hardware, that can transmit on 27.195 MHz (upper/lower case is important): 
+# HackRF, LimeSDR
 
 # sdr=HackRF
 
