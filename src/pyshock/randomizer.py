@@ -7,74 +7,87 @@ import argparse
 import random
 import time
 
-from pyshock.core.pyshock import Pyshock
+
+from pyshock.core.pyshock import Pyshock, PyshockMock
 from pyshock.core.action import Action 
 
-pyshock = Pyshock(argparse.Namespace())
-pyshock.boot()
+class PyshockRandomizer:
 
-#command(Action.BEEP, 0, 5, 5000)
-
-"""
-for i in range (0, 20):
-  pyshock.command(Action.VIB, 0, 1, 0)
-  time.sleep(2);
-"""
-
-"""
-for i in range (1, 10):
-    time.sleep(10);
-    receiver = random.randrange(2)
-    pyshock.command(Action.BEEP, receiver, 0, 0)
-    time.sleep(1);
-    pyshock.command(Action.ZAP, receiver, 1, 0)
-"""
-#pyshock.command(Action.VIB, 0, 5, 5000)
-#pyshock.command(Action.VIB, 1, 0, 0)
-
-def beepZapMixed(receiver, duration):
-    pyshock.command(Action.BEEP, receiver, 0, 0)
-    time.sleep(1.5); # Beep lasts for a while after the message was sent, so add some additional time to 1s
-    pyshock.command(Action.ZAP, receiver + 2, 0, duration)
-
-def beepZap(receiver, power, duration):
-    pyshock.command(Action.BEEP, receiver, 0, 300)
-    time.sleep(1);
-    pyshock.command(Action.ZAP, receiver, power, duration)
-
-def test():
-    pyshock.command(Action.BEEPZAP, 0, 40, 1050)
-    time.sleep(1);
-    pyshock.command(Action.BEEPZAP, 1, 40, 1050)
-    time.sleep(1);
-
-"""
-pyshock.command(Action.ZAP, 2, 0, 500)
-time.sleep(1)
-pyshock.command(Action.ZAP, 3, 0, 500)
-time.sleep(300)
-
-"""
-
-def r():
-    while True:
-#        time.sleep(random.randrange(5 * 60))
-        time.sleep(random.randrange(20 * 60) + 20 * 60)
-        pyshock.command(Action.BEEPZAP, random.randrange(2), 40, 1050)
+    def __parse_args(self):
+        parser = argparse.ArgumentParser(description="Shock collar remote randomizer",
+                                         epilog="Please see https://github.com/pyshock/pyshock for documentation.")
+        parser.add_argument("--mock",
+                            action="store_true",
+                            help=argparse.SUPPRESS)
+        parser.add_argument("-v", "--verbose",
+                            action="store_true",
+                            help="prints debug messages")
+        parser.add_argument("--version",
+                            action="version",
+                            version="0.1")
+    
+        self.args = parser.parse_args()
 
 
-def test2():
-        pyshock.command(Action.BEEP, 4, 1, 0)
+    def __boot_pyshock(self):
+        if self.args.mock:
+            self.pyshock = PyshockMock(self.args)
+        else:
+            self.pyshock = Pyshock(self.args)
+        self.pyshock.boot()
 
-def r2():
-    while True:
-        time.sleep(random.randrange(20 * 60) + 20 * 60)
-        pyshock.command(Action.ZAP, 4, 0, 130)
+
+    def __load_config(self):
+        self.beep_probability_percent = self.pyshock.config.getint("randomizer", "beep_probability_percent")
+        self.zap_probability_percent = self.pyshock.config.getint("randomizer", "zap_probability_percent")
+        self.zap_min_duration_ms = self.pyshock.config.getint("randomizer", "zap_min_duration_ms")
+        self.zap_max_duration_ms = self.pyshock.config.getint("randomizer", "zap_max_duration_ms")
+        self.zap_min_power_percent = self.pyshock.config.getint("randomizer", "zap_min_power_percent")
+        self.zap_max_power_percent = self.pyshock.config.getint("randomizer", "zap_max_power_percent")
+        self.pause_min_s = self.pyshock.config.getint("randomizer", "pause_min_s")
+        self.pause_max_s = self.pyshock.config.getint("randomizer", "pause_max_s")
 
 
-#test2();
-#r2();
+    def __test_receivers(self):
 
-time.sleep(30)
-test()
-r()
+        for i in range(0, len(self.pyshock.receivers)):
+            print("Testing receiver " + str(i))
+            self.pyshock.command(i, Action.BEEP, 0, 250)
+            time.sleep(1)
+        print("Beep command sent to all known receivers. Starting randomizer... Press Ctrl+c to stop.")
+
+    
+    def __determine_action(self):
+        if random.randrange(100) < self.beep_probability_percent:
+            if random.randrange(100) < self.zap_probability_percent:
+                return Action.BEEPZAP
+            else:
+                return Action.BEEP
+        else:
+            if random.randrange(100) < self.zap_probability_percent:
+                return Action.ZAP
+            return Action.LED
+
+
+    def __execute(self):
+        while True:
+            time.sleep(random.randint(self.pause_min_s, self.pause_max_s))
+
+            action = self.__determine_action()
+            power = random.randint(self.zap_min_power_percent, self.zap_max_power_percent)
+            if action == Action.BEEP:
+                duration = 250
+            else:
+                duration = random.randint(self.zap_min_duration_ms, self.zap_max_duration_ms)
+            receiver = random.randrange(len(self.pyshock.receivers))
+   
+            self.pyshock.command(action, receiver, power, duration)
+
+
+    def start(self):
+        self.__parse_args()
+        self.__boot_pyshock()
+        self.__load_config()
+        self.__test_receivers()
+        self.__execute()
+

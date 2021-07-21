@@ -46,6 +46,16 @@ web_authentication_token = [web_authentication_token]
 # sdr=HackRF
 
 
+[randomizer]
+beep_probability_percent = 100
+zap_probability_percent = 100
+zap_min_duration_ms = 250
+zap_max_duration_ms = 250
+zap_min_power_percent = 5
+zap_max_power_percent = 10
+pause_min_s = 300
+pause_max_s = 900
+
 
 [receiver]
 type=pac
