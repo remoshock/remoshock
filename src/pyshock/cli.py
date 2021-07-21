@@ -9,6 +9,7 @@ import sys
 
 from pyshock.core.pyshock import Pyshock, PyshockMock
 from pyshock.core.action import Action
+from pyshock.core.version import VERSION
 
 class PyshockCli:
 
@@ -42,7 +43,7 @@ class PyshockCli:
                             help="prints debug messages")
         parser.add_argument("--version",
                             action="version",
-                            version="0.1")
+                            version=VERSION)
     
         self.args = parser.parse_args()
         print("Command: " + sys.argv[0] + " --receiver " + str(self.args.receiver) + " --action " + self.args.action

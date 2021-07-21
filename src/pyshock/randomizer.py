@@ -10,6 +10,7 @@ import time
 
 from pyshock.core.pyshock import Pyshock, PyshockMock
 from pyshock.core.action import Action 
+from pyshock.core.version import VERSION
 
 class PyshockRandomizer:
 
@@ -27,7 +28,7 @@ class PyshockRandomizer:
                             help="prints debug messages")
         parser.add_argument("--version",
                             action="version",
-                            version="0.1")
+                            version=VERSION)
     
         self.args = parser.parse_args()
 
