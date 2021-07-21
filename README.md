@@ -4,69 +4,175 @@
 <img style="border: 1px #AAA solid; margin-left: 2em; margin-right: 0.2em" alt="Remote" src="doc/remote.png" width="200">
 </div>
 
-## About the project
+## ℹ️ About the project
 
-Pyshock is a computer based remote control for shock collars. It supports
-a user interface, a web-based API and command line interface.
+Pyshock is a computer based remote control for shock collars.
+
+It consists of
+- a web-based user interface, that works on mobile
+- a randomzier program
+- a command line interface.
+- a web-based API
 
 
-## Requirements
+## ✔️ Requirements
 
 - One or more PAC shock collars (Pacdog ACX or BCX collar or anything compatible with ATX or DTX remote).
-- A Software Defined Radio (SDR) transmitter such as HackRF.
+- A Software Defined Radio (SDR) transmitter (tested using a HackRF device).
 - Linux with Python 3 (tested on Ubuntu 20.04)
 - Universal Radio Hacker (`apt install python3-pip; pip3 install urh`).
 
 
-## Getting Started
+## 🔧 Getting Started
 
 Make sure that `urh` is working and does recognize your SDR device.
 
-Run `pyshockcli` (when installed) or `./pyshockcli.py` (from the src folder of the source code).
-
-This command will generate a `pyshock.ini` configuration file.
+Run `./pyshockcli.py`. This command will generate a `pyshock.ini` configuration file.
 Please edit this file to specify your SDR transmitting hardware.
 
-Reset your collar and invoke `pyshockcli` again. The collar should now be paired.
-Run it a third time, to issue a "beep" command.
+Reset your collar into pairing mode and invoke `./pyshockcli` again.
+After successful pairing, run it a third time, to issue a "beep" command.
 
-## pyshock.ini
-
-Each receiver has the following parameters:
-
-| Parameter |  Description |
-| --------- + ------------ |
-| name      | A name to display in the user interface |
-| color     | A HTML color code used by the user interface |
-| code      | The transmitter bit code. You can use a random value or the code of your real device |
-| button    | The button number as used by the DXT remote (top right is 1, button left is 6). In E/P-mode the left side is code 0, and the right side is code 2               | 
-
-<!--
-
-
-### Command line interface (pyshock-server)
-
-TODO: code this
 
 ## Programs
 
-### Interactive Remote Control (pyshock-cli)
+### 🖥 Command line interface (pyshockcli)
+
+pyshockcli allows you to send commands using the command line ("terminal window").
+
+By default, it will send a BEEP command to the first receiver configured in `pyshock.ini`.
+
+For example, to send a shock of 250ms duration with 10% power to the second receiver:
+
+`./pyshockcli.py -a ZAP -d 250 -p 10 -r 1`
+
+The following actions are supported:
+
+- **LED**:  blinks the light. Note: This might cause a tiny shock on PAC collars.
+- **BEEP**: plays the beep sound
+- **VIP**:  reserved for future use. Note: This will beep on PAC collars.
+- **ZAP**:  a shock.
+- **BEEPZAP**: plays one beep sound, waits one second, and then triggers a shock according to parameters.
+
+~~~~
+usage: pyshockcli.py [-h] [-r n] [-a {LED,BEEP,VIB,ZAP,BEEPZAP}] [-d n] [-p n] [-v] [--version]
+
+Shock collar remote
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -a {LED,BEEP,VIB,ZAP,BEEPZAP}, --action {LED,BEEP,VIB,ZAP,BEEPZAP}
+                        Action to perform
+  -d n, --duration n    duration in ms (Note: PAC uses an impulse duration of 250ms)
+  -p n, --power n       power level (0-100)
+  -r n, --receiver n    index of receiver entry from pyshock.ini, starting at 0
+  -v, --verbose         prints debug messages
+  --version             show program's version number and exit
+
+Please see https://github.com/pyshock/pyshock for documentation.
+~~~~
+
+
+### 📱 Interactive Remote Control (pyshockserver)
 
 TODO: documemt this
 
-### Random (pyshock-random)
+### 🎲 Randomizer (pyshockrnd)
 
-TODO: code this
+pyshockrnd sends timed commands that can be randomized. For example it may
+send a beep followed a shock very 15 minutes. For a completely deterministic
+experiences, set min and max to the same value.
 
-## Developer documentation
+Example configuration section:
 
-### REST API documention
+~~~~
+[randomizer]
+beep_probability_percent = 100
+zap_probability_percent = 100
+zap_min_duration_ms = 250
+zap_max_duration_ms = 500
+zap_min_power_percent = 5
+zap_max_power_percent = 10
+pause_min_s = 300
+pause_max_s = 900
+~~~~
 
-TODO: API documentation
+This configuration will ensure that there is always (100% probability) a beep
+followed by a shock. The shock duration will vary between 250ms and 500ms. On
+a PAC collar this equals to either one or two impulses. The power of the
+shocks will vary between 5% and 10%. And finally the timer will be set to a
+random value between 5 minutes (300s) and 15 minutes (900s). After the event
+the timer will be set to a new random value in this range.
 
--->
+`./pyshockrnd.py`
 
-## See also
+You can setup multiple rules by using different [section]-names in pyshock.ini:
+
+`./pyshockrnd.py -s other_section`
+
+~~~~
+usage: pyshockrnd.py [-h] [-s SECTION] [-v] [--version]
+
+Shock collar remote randomizer
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -s SECTION, --section SECTION
+                        name of [section] in pyshock.ini to use. Default is [randomizer].
+  -v, --verbose         prints debug messages
+  --version             show program's version number and exit
+
+Please see https://github.com/pyshock/pyshock for documentation.
+~~~~
+
+## 📝 pyshock.ini
+
+The file `pyshock.ini` is automatically created with random tokens and codes
+when you start pyshock for the first time.
+
+
+~~~~
+[global]
+web_port = 7777    
+web_authentication_token = [random unguessable value]
+
+# URH supports the following hardware, that can transmit on 27.195 MHz (upper/lower case is important): 
+# HackRF, LimeSDR
+
+# sdr=HackRF
+~~~~
+
+The [global] contains general settings. `web_port` and `web_authentication_token`
+are used by the web-based remote control user interface.
+
+Please configure the name of your SDR transmitter in the configuration
+setting `sdr` (without the leading # in the above example).
+
+~~~~
+[receiver]
+type=pac
+name=PAC1
+color=#FFD
+transmitter_code=[random 9 bit value]
+button=1
+~~~~
+
+Each receiver section has the following parameters:
+
+- **name**: A name to display in the user interface
+- **color**: A HTML color code used by the user interface
+- **transmitter_code**: The transmitter bit code. You can use a random value of exactly 9 bits. Or it can be the same code as your real device. Use network bit order.
+- **button**: The button number as used by the DXT remote (top right is 1, button left is 6). In E/P-mode the left side is code 0, and the right side is code 2. Button code 7 does work as well.
+
+There may be also be a section for the randomer, which is documented above.
+
+## 🐞 Bugs and Feature Ideas
+
+Please report bugs and feature ideas as issues on https://github.com/pyshock/pyshock
+If you do not want to create an account on GitHub, you can also reach me at 
+https://fetlife.com/conversations/new?with=1561493
+
+## 🔎 See also
 
 - [doc/LICENSE.md](doc/LICENSE.md)
 - [doc/WARNING.md](doc/WARNING.md)
