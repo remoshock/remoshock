@@ -19,6 +19,9 @@ class PyshockRandomizer:
         parser.add_argument("--mock",
                             action="store_true",
                             help=argparse.SUPPRESS)
+        parser.add_argument("-s", "--section",
+                            default="randomizer",
+                            help="name of [section] in pyshock.ini to use. Default is [randomizer].")
         parser.add_argument("-v", "--verbose",
                             action="store_true",
                             help="prints debug messages")
@@ -37,19 +40,22 @@ class PyshockRandomizer:
         self.pyshock.boot()
 
 
+    def __getvalue(self, key):
+        return self.pyshock.config.getint(self.args.section, key)
+
+
     def __load_config(self):
-        self.beep_probability_percent = self.pyshock.config.getint("randomizer", "beep_probability_percent")
-        self.zap_probability_percent = self.pyshock.config.getint("randomizer", "zap_probability_percent")
-        self.zap_min_duration_ms = self.pyshock.config.getint("randomizer", "zap_min_duration_ms")
-        self.zap_max_duration_ms = self.pyshock.config.getint("randomizer", "zap_max_duration_ms")
-        self.zap_min_power_percent = self.pyshock.config.getint("randomizer", "zap_min_power_percent")
-        self.zap_max_power_percent = self.pyshock.config.getint("randomizer", "zap_max_power_percent")
-        self.pause_min_s = self.pyshock.config.getint("randomizer", "pause_min_s")
-        self.pause_max_s = self.pyshock.config.getint("randomizer", "pause_max_s")
+        self.beep_probability_percent = self.__get_config_value("beep_probability_percent")
+        self.zap_probability_percent = self.__get_config_value("zap_probability_percent")
+        self.zap_min_duration_ms = self.__get_config_value("zap_min_duration_ms")
+        self.zap_max_duration_ms = self.__get_config_value("zap_max_duration_ms")
+        self.zap_min_power_percent = self.__get_config_value("zap_min_power_percent")
+        self.zap_max_power_percent = self.__get_config_value("zap_max_power_percent")
+        self.pause_min_s = self.__get_config_value("pause_min_s")
+        self.pause_max_s = self.__get_config_value("pause_max_s")
 
 
     def __test_receivers(self):
-
         for i in range(0, len(self.pyshock.receivers)):
             print("Testing receiver " + str(i))
             self.pyshock.command(i, Action.BEEP, 0, 250)
