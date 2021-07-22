@@ -50,7 +50,7 @@ is designed with this kind of extension in mind.
 **What transmitter hardware do I need?**
 
 You need a SDR (software defined radio) device, that
-- is able to transmit (most SDR are only receivers)
+- is able to transmit (most SDRs are receivers only)
 - is able to operate on the required frequency (27.195 MHz for PAC)
 - is supported by the software Universal Radio Hacker
 

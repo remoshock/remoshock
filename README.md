@@ -4,21 +4,24 @@
 <img style="border: 1px #AAA solid; margin-left: 2em; margin-right: 0.2em" alt="Remote" src="doc/remote.png" width="200">
 </div>
 
-![License: AGPL](https://img.shields.io/badge/License-AGPL-%23AAF)
+<a href="https://github.com/pyshock/pyshock/blob/master/doc/LICENSE.md"> 
+![License: AGPL](https://img.shields.io/badge/License-AGPL-%23AAF)</a>
+<a href="https://github.com/pyshock/pyshock/releases/download/0.1/pyshock-0.1.zip">
+![Download](https://img.shields.io/badge/Download-0.1-%23AFA)</a>
 
 Pyshock is a computer based remote control for shock collars.
 
 It consists of
 - a web-based user interface, that works on mobile
-- a randomzier program
-- a command line interface.
+- a randomizer program
+- a command line interface program.
 - a web-based API
 
 
 ## ✔️ Requirements
 
 - One or more PAC shock collars (Pacdog ACX or BCX collar or anything compatible with ATX or DTX remote).
-- A Software Defined Radio (SDR) transmitter (tested using a HackRF device).
+- A Software Defined Radio (SDR) transmitter that works on the required frequencies (tested using a HackRF device).
 - Linux with Python 3 (tested on Ubuntu 20.04)
 - Universal Radio Hacker (`apt install python3-pip; pip3 install urh`).
 
@@ -80,13 +83,13 @@ The webpage will work on mobile devices, provided that the mobile device
 can reach the IP address of the computer. For example because both devices
 are in the same Wifi network.
 
-You may make the server available via Internet, if your computer has a public
+You may make the server available on the Internet, if your computer has a public
 IP-address, either directly or via a tunnel. Furthermore SSH reverse port
 forwarding does work. This documentation, however, will not go into detail
 on how to make a server available to the Internet. 
 
 `./pyshockserver.py` will start the server and print the URL. The port and
-authentication token may beconfigured in pyshock.ini.
+authentication token may be configured in pyshock.ini.
 
 ~~~~
 usage: pyshockserver.py [-h] [-v] [--certfile cert_and_key.pem] [--version]
@@ -96,8 +99,6 @@ Shock collar remote control
 optional arguments:
   -h, --help            show this help message and exit
   -v, --verbose         prints debug messages
-  --certfile cert_and_key.pem
-                        point to a file, which contains a private SSL key and its matching certificate to enable https
   --version             show program's version number and exit
 
 Please see https://github.com/pyshock/pyshock for documentation.
@@ -106,7 +107,7 @@ Please see https://github.com/pyshock/pyshock for documentation.
 ## 🎲 Randomizer (pyshockrnd)
 
 pyshockrnd sends timed commands that can be randomized. For example it may
-send a beep followed a shock very 15 minutes. For a completely deterministic
+send a beep followed a shock every 5 to 15 minutes. For a completely deterministic
 experiences, set min and max to the same value.
 
 Example configuration section:
@@ -123,7 +124,7 @@ pause_min_s = 300
 pause_max_s = 900
 ~~~~
 
-This configuration will ensure that there is always (100% probability) a beep
+This sample configuration will ensure that there is always (100% probability) a beep
 followed by a shock. The shock duration will vary between 250ms and 500ms. On
 a PAC collar this equals to either one or two impulses. The power of the
 shocks will vary between 5% and 10%. And finally the timer will be set to a
@@ -132,7 +133,7 @@ the timer will be set to a new random value in this range.
 
 `./pyshockrnd.py`
 
-You can setup multiple rules by using different [section]-names in pyshock.ini:
+You can prepare multiple rules by using different [section]-names in pyshock.ini:
 
 `./pyshockrnd.py -s other_section`
 
@@ -195,10 +196,12 @@ There may be sections for the randomizer, which are documented above.
 ## 🐞 Bugs and Feature Ideas
 
 Please report bugs and feature ideas as issues on [https://github.com/pyshock/pyshock](https://github.com/pyshock/pyshock)
+
 If you do not want to create an account on GitHub, you can also reach me at 
 https://fetlife.com/conversations/new?with=1561493
 
 ## 🔎 See also
 
-- [doc/LICENSE.md](doc/LICENSE.md)
-- [doc/WARNING.md](doc/WARNING.md)
+- [doc/LICENSE.md](https://github.com/pyshock/pyshock/blob/master/doc/LICENSE.md)
+- [doc/WARNING.md](https://github.com/pyshock/pyshock/blob/master/doc/WARNING.md)
+- [doc/FAQ.md](https://github.com/pyshock/pyshock/blob/master/doc/FAQ.md)
