@@ -6,8 +6,8 @@
 from enum import Enum
 
 class Action(Enum):
-    LED = 10
+    LIGHT = 10
     BEEP = 11
-    VIB = 12
-    ZAP = 13
-    BEEPZAP = 99
+    VIBRATE = 12
+    SHOCK = 13
+    BEEPSHOCK = 99

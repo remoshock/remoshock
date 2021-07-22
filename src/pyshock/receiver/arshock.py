@@ -18,17 +18,17 @@ from pyshock.receiver.receiver import Receiver
 
 # type            code, code, channel
 #  0  Pettainer,            sender code first byte, seonder code second byte, channel
-#  1  Opto-isolator 1,      beep pin,               vib pin,                  shock pin
+#  1  Opto-isolator 1,      beep pin,               vibrate pin,              shock pin
 #  2  Opto-isolator 2,      beep modifier pin,      ignored,                  pin
 
 class ProtocolAction(Enum):
     """actions used by the communication protocl between pyshock and arshock.
     Note: This this enum extends pyshock.core.action.Action"""
-    LED = 10
+    LIGHT = 10
     BEEP = 11
-    VIB = 12
-    ZAP = 13
-    BEEPZAP = 99
+    VIBRATE = 12
+    SHOCK = 13
+    BEEPSHOCK = 99
 
     BOOT = 100
     BOOTED = 101
@@ -71,10 +71,10 @@ class ArduinoBasedReceiver(Receiver):
 
 
     def command(self, action, power, duration):
-        if action == Action.BEEPZAP:
+        if action == Action.BEEPSHOCK:
             self.arduino_manager.command(Action.BEEP, self.index, 0, 0)
             time.sleep(1)
-            action = Action.ZAP
+            action = Action.SHOCK
         self.arduino_manager.command(action, self.index, power, duration)
 
 
@@ -84,8 +84,8 @@ class ArduinoPetainer(ArduinoBasedReceiver):
 
 
 class ArduinoOptocoupler(ArduinoBasedReceiver):
-    def __init__(self, name, color, pin_beep, pin_vib, pin_zap):
-        super().__init__(name, color, ReceiverType.OPTOCOUPLER, pin_beep, pin_vib, pin_zap)
+    def __init__(self, name, color, pin_beep, pin_vib, pin_SHOCK):
+        super().__init__(name, color, ReceiverType.OPTOCOUPLER, pin_beep, pin_vib, pin_SHOCK)
 
 
 class ArduinoOptocouplerBeepModifier(ArduinoBasedReceiver):

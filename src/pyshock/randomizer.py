@@ -55,11 +55,11 @@ class PyshockRandomizer:
         """loads configuration from pyshock.ini for the section
         specified on the command line"""
         self.beep_probability_percent = self.__get_config_value("beep_probability_percent")
-        self.zap_probability_percent = self.__get_config_value("zap_probability_percent")
-        self.zap_min_duration_ms = self.__get_config_value("zap_min_duration_ms")
-        self.zap_max_duration_ms = self.__get_config_value("zap_max_duration_ms")
-        self.zap_min_power_percent = self.__get_config_value("zap_min_power_percent")
-        self.zap_max_power_percent = self.__get_config_value("zap_max_power_percent")
+        self.shock_probability_percent = self.__get_config_value("shock_probability_percent")
+        self.shock_min_duration_ms = self.__get_config_value("shock_min_duration_ms")
+        self.shock_max_duration_ms = self.__get_config_value("shock_max_duration_ms")
+        self.shock_min_power_percent = self.__get_config_value("shock_min_power_percent")
+        self.shock_max_power_percent = self.__get_config_value("shock_max_power_percent")
         self.pause_min_s = self.__get_config_value("pause_min_s")
         self.pause_max_s = self.__get_config_value("pause_max_s")
 
@@ -78,14 +78,14 @@ class PyshockRandomizer:
         """determines whether there should be a beep, a shock, both or 
         neither this time based on probabilities for beep and shock"""
         if random.randrange(100) < self.beep_probability_percent:
-            if random.randrange(100) < self.zap_probability_percent:
-                return Action.BEEPZAP
+            if random.randrange(100) < self.shock_probability_percent:
+                return Action.BEEPSHOCK
             else:
                 return Action.BEEP
         else:
-            if random.randrange(100) < self.zap_probability_percent:
-                return Action.ZAP
-            return Action.LED
+            if random.randrange(100) < self.shock_probability_percent:
+                return Action.SHOCK
+            return Action.LIGHT
 
 
     def __execute(self):
@@ -94,11 +94,11 @@ class PyshockRandomizer:
             time.sleep(random.randint(self.pause_min_s, self.pause_max_s))
 
             action = self.__determine_action()
-            power = random.randint(self.zap_min_power_percent, self.zap_max_power_percent)
+            power = random.randint(self.shock_min_power_percent, self.shock_max_power_percent)
             if action == Action.BEEP:
                 duration = 250
             else:
-                duration = random.randint(self.zap_min_duration_ms, self.zap_max_duration_ms)
+                duration = random.randint(self.shock_min_duration_ms, self.shock_max_duration_ms)
             receiver = random.randrange(len(self.pyshock.receivers))
    
             self.pyshock.command(action, receiver, power, duration)

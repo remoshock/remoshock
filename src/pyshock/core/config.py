@@ -61,11 +61,11 @@ web_authentication_token = [web_authentication_token]
 
 [randomizer]
 beep_probability_percent = 100
-zap_probability_percent = 100
-zap_min_duration_ms = 250
-zap_max_duration_ms = 250
-zap_min_power_percent = 5
-zap_max_power_percent = 10
+shock_probability_percent = 100
+shock_min_duration_ms = 250
+shock_max_duration_ms = 250
+shock_min_power_percent = 5
+shock_max_power_percent = 10
 pause_min_s = 300
 pause_max_s = 900
 

@@ -45,24 +45,24 @@ By default, it will send a BEEP command to the first receiver configured in `pys
 
 For example, to send a shock of 250ms duration with 10% power to the second receiver:
 
-`./pyshockcli.py --action ZAP --duration 250 --power 10 --receiver 1`
+`./pyshockcli.py --action SHOCK --duration 250 --power 10 --receiver 1`
 
 The following actions are supported:
 
-- **LED**:  blinks the light. Note: This might cause a tiny shock on PAC collars.
+- **LIGHT**:  blinks the light. Note: This might cause a tiny shock on PAC collars.
 - **BEEP**: plays the beep sound
 - **VIP**:  reserved for future use. Note: This will beep on PAC collars.
-- **ZAP**:  a shock.
-- **BEEPZAP**: plays one beep sound, waits one second, and then triggers a shock according to parameters.
+- **SHOCK**:  a shock.
+- **BEEPSHOCK**: plays one beep sound, waits one second, and then triggers a shock according to parameters.
 
 ~~~~
-usage: pyshockcli.py [-h] [-r n] [-a {LED,BEEP,VIB,ZAP,BEEPZAP}] [-d n] [-p n] [-v] [--version]
+usage: pyshockcli.py [-h] [-r n] [-a {LIGHT,BEEP,VIBRATE,SHOCK,BEEPSHOCK}] [-d n] [-p n] [-v] [--version]
 
 Shock collar remote
 
 optional arguments:
   -h, --help            show this help message and exit
-  -a {LED,BEEP,VIB,ZAP,BEEPZAP}, --action {LED,BEEP,VIB,ZAP,BEEPZAP}
+  -a {LIGHT,BEEP,VIBRATE,SHOCK,BEEPSHOCK}, --action {LIGHT,BEEP,VIBRATE,SHOCK,BEEPSHOCK}
                         Action to perform
   -d n, --duration n    duration in ms (Note: PAC uses an impulse duration of 250ms)
   -p n, --power n       power level (0-100)
@@ -115,11 +115,11 @@ Example configuration section:
 ~~~~
 [randomizer]
 beep_probability_percent = 100
-zap_probability_percent = 100
-zap_min_duration_ms = 250
-zap_max_duration_ms = 500
-zap_min_power_percent = 5
-zap_max_power_percent = 10
+shock_probability_percent = 100
+shock_min_duration_ms = 250
+shock_max_duration_ms = 500
+shock_min_power_percent = 5
+shock_max_power_percent = 10
 pause_min_s = 300
 pause_max_s = 900
 ~~~~

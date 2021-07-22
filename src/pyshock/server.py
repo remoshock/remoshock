@@ -41,7 +41,7 @@ class PyshockRequestHandler(BaseHTTPRequestHandler):
         power = int(params["power"][0])
         duration = int(params["duration"][0])
 
-        if not action in [Action.LED, Action.BEEP, Action.VIB, Action.ZAP, Action.BEEPZAP]:
+        if not action in [Action.LIGHT, Action.BEEP, Action.VIBRATE, Action.SHOCK, Action.BEEPSHOCK]:
             raise Exception("Invalid action")
 
         pyshock.command(action, receiver, power, duration)

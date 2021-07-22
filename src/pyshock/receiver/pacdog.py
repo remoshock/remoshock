@@ -142,13 +142,13 @@ class Pacdog(Receiver):
         """
 
         message = ""
-        if action == Action.BEEPZAP:
+        if action == Action.BEEPSHOCK:
             message = self.encode_for_transmission(self.generate(self.code, 0, self.button, 1)) + "/1s"
 
         beep = 0
-        if action == Action.BEEP or action == Action.VIB:
+        if action == Action.BEEP or action == Action.VIBRATE:
             beep = 1
-        if action == Action.LED:
+        if action == Action.LIGHT:
             # Note: even power 0 creates a tiny shock
             power = 0
 

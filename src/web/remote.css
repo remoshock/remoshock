@@ -23,8 +23,8 @@ h2 {
 	margin: 0;
 }
 
-.led,
-.vib {
+.light,
+.vibrate {
 	display: none
 }
 

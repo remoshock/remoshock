@@ -25,7 +25,7 @@ class PyshockCli:
                             help="index of receiver entry from pyshock.ini, starting at 0")
         parser.add_argument("-a", "--action", 
                             default="BEEP",
-                            choices=["LED", "BEEP", "VIB", "ZAP", "BEEPZAP"], 
+                            choices=["LIGHT", "BEEP", "VIBRATE", "SHOCK", "BEEPSHOCK"], 
                             help="Action to perform")
         parser.add_argument("-d", "--duration", 
                             type=int,
