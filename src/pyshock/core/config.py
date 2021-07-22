@@ -9,8 +9,10 @@ import os
 import secrets
 import string
 
-class MultireceiverSectionSupport(collections.OrderedDict):
-    index = 0   # class variable
+class MultiReceiverSectionSupport(collections.OrderedDict):
+    """This class adds an index number at the end of each [receiver] section."""  
+
+    index = 0
 
     def __setitem__(self, key, val):
         if isinstance(val, dict) and key == "receiver":
@@ -20,25 +22,36 @@ class MultireceiverSectionSupport(collections.OrderedDict):
 
 
 class ConfigManager:
+    """This class loads configuration from pyshock.ini and writes the
+    default configuration with freshly created random values."""
 
     def __init__(self):
         self.filename = self.__determine_filename()
         self.__write_default_configuration_if_missing()
         self.__read_configuration_from_file()
 
+
     def __generate_web_authentication_token(self):
+        """creates a web_authentication_token that is probably unique to this installation."""
         charset = string.ascii_lowercase + string.ascii_uppercase + string.digits
         return ''.join(secrets.choice(charset) for _ in range(20))
 
+
     def __generate_transmitter_code(self):
+        """creates a transmitter_code that is probably unique to this installation."""
         charset = "01"
         return ''.join(secrets.choice(charset) for _ in range(9))
 
+
     def __write_default_configuration(self):
+        """write a default configuration to pyshock.ini.
+        web_authentication_token and transmitter_code are replaced by random values"""
         default = """
 [global]
 web_port = 7777    
 web_authentication_token = [web_authentication_token]
+#for https support:
+#web_server_certile=key_and_cert.pem
 
 # URH supports the following hardware, that can transmit on 27.195 MHz (upper/lower case is important): 
 # HackRF, LimeSDR
@@ -108,7 +121,8 @@ button=4
 
     def __read_configuration_from_file(self):
         print("Using configuration file " + self.filename)
-        config = configparser.ConfigParser(defaults=None, dict_type=MultireceiverSectionSupport, strict=False, default_section="default")
+        config = configparser.ConfigParser(defaults=None, dict_type=MultiReceiverSectionSupport,
+                                           strict=False, default_section="default")
         config.read(self.filename, "UTF-8")
         self.config = config
 

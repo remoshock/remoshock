@@ -23,6 +23,8 @@ class PyshockRandomizer:
         parser.add_argument("-s", "--section",
                             default="randomizer",
                             help="name of [section] in pyshock.ini to use. Default is [randomizer].")
+        parser.add_argument("--sdr",
+                            help=argparse.SUPPRESS)
         parser.add_argument("-v", "--verbose",
                             action="store_true",
                             help="prints debug messages")

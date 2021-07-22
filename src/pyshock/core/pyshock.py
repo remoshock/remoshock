@@ -37,7 +37,8 @@ class Pyshock:
 
     def __instantitate_sdr_sender(self):
         sdr = self.config.get("global", "sdr", fallback=None)
-        # TODO: read sdr from CLI args
+        if "sdr" in self.args:
+            sdr = self.args.sdr
         if sdr == None:
             print()
             print("SDR (software defined radio) hardware is required to send radio signals.")

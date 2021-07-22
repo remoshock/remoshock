@@ -82,12 +82,11 @@ class PyshockServer:
         parser.add_argument("--mock",
                             action="store_true",
                             help=argparse.SUPPRESS)
+        parser.add_argument("--sdr",
+                            help=argparse.SUPPRESS)
         parser.add_argument("-v", "--verbose",
                             action="store_true",
                             help="prints debug messages")
-        parser.add_argument("--certfile",
-                            metavar="cert_and_key.pem",
-                            help="point to a file, which contain a private SSL key and its matching certificate to enable https")
         parser.add_argument("--version",
                             action="version",
                             version=VERSION)
@@ -111,8 +110,9 @@ class PyshockServer:
         print()
 
         server = ThreadingHTTPServer(('0.0.0.0', port), PyshockRequestHandler)
-        if (self.args.certfile):
-            server.socket = ssl.wrap_socket(server.socket, certfile=self.args.certfile, server_side=True)
+        certfile = pyshock.config.get("global", "web_server_certfile", fallback=None) 
+        if certfile:
+            server.socket = ssl.wrap_socket(server.socket, certfile=certfile, server_side=True)
         server.serve_forever()
 
 

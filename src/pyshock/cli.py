@@ -30,13 +30,15 @@ class PyshockCli:
                             default=250,
                             metavar="n",
                             help="duration in ms  (Note: PAC uses an impulse duration of 250ms)")
+        parser.add_argument("--mock",
+                            action="store_true",
+                            help=argparse.SUPPRESS)
         parser.add_argument("-p", "--power",
                             type=int,
                             default=0,
                             metavar="n",
                             help="power level (0-100)")
-        parser.add_argument("--mock",
-                            action="store_true",
+        parser.add_argument("--sdr",
                             help=argparse.SUPPRESS)
         parser.add_argument("-v", "--verbose",
                             action="store_true",
