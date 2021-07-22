@@ -113,6 +113,9 @@ button=4
 
 
     def __determine_filename(self):
+        """configuration file should be used from the .config subfolder
+        of the user's home directory"""
+
         config_folder = os.path.expanduser("~") + "/.config"
         if not os.path.exists(config_folder):
             os.makedirs(config_folder)

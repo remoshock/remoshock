@@ -21,6 +21,7 @@ from pyshock.core.version import VERSION
 pyshock = None
 
 class PyshockRequestHandler(BaseHTTPRequestHandler):
+    """handles requests from web browsers"""
 
     def answer(self, status, data):
         self.send_response(status)
@@ -47,6 +48,7 @@ class PyshockRequestHandler(BaseHTTPRequestHandler):
 
 
     def do_GET(self):
+        """handles a browser request"""
         files = ["/index.html", "/remote.css", "/remote.js", "/favicon.png", "/manifest.json"]
         types = ["text/html; charset=utf-8", "text/css", "application/javascript", "image/png", "application/json"]
 
@@ -75,8 +77,10 @@ class PyshockRequestHandler(BaseHTTPRequestHandler):
 
 
 class PyshockServer:
+    """pyshockserver is a web server that provides the remote-control user-interface """
 
     def __parse_args(self):
+        """parses command line arguments"""
         parser = argparse.ArgumentParser(description="Shock collar remote control",
                                          epilog="Please see https://github.com/pyshock/pyshock for documentation.")
         parser.add_argument("--mock",
@@ -95,6 +99,7 @@ class PyshockServer:
 
 
     def __boot_pyshock(self):
+        """starts up the pyshock infrastructure"""
         global pyshock
         if self.args.mock:
             pyshock = PyshockMock(self.args)
@@ -104,6 +109,7 @@ class PyshockServer:
 
 
     def __start_web_server(self):
+        """starts the webserver on tcp-port configured in pyshock.ini"""
         port = pyshock.config.getint("global", "web_port", fallback=7777)
         print()
         print("Open http://127.0.0.1:" + str(port) + "/#token=" + pyshock.config.get("global", "web_authentication_token"))
@@ -117,6 +123,7 @@ class PyshockServer:
 
 
     def start(self):
+        """starts up pyshockserver"""
         self.__parse_args()
         self.__boot_pyshock()
         self.__start_web_server()

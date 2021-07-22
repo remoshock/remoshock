@@ -12,8 +12,10 @@ from pyshock.core.action import Action
 from pyshock.core.version import VERSION
 
 class PyshockCli:
+    """a commandline tool to send a command to a receiver"""
 
     def __parse_args(self):
+        """parses command line arguments"""
         parser = argparse.ArgumentParser(description="Shock collar remote",
                                          epilog="Please see https://github.com/pyshock/pyshock for documentation.")
         parser.add_argument("-r", "--receiver",
@@ -49,10 +51,11 @@ class PyshockCli:
     
         self.args = parser.parse_args()
         print("Command: " + sys.argv[0] + " --receiver " + str(self.args.receiver) + " --action " + self.args.action
-              + " --duration " + str(self.args.duration) + " --power " + str(self.args.power))
+               + " --power " + str(self.args.power) + " --duration " + str(self.args.duration))
 
 
     def __boot_pyshock(self):
+        """starts up the pyshock infrastructure"""
         if self.args.mock:
             self.pyshock = PyshockMock(self.args)
         else:
@@ -61,11 +64,13 @@ class PyshockCli:
 
 
     def __process_action(self):
+        """sends the specified command to the specified receiver"""
         action = Action[self.args.action]
         self.pyshock.command(action, self.args.receiver, self.args.power, self.args.duration)
 
     
     def start(self):
+        """starts up pyshockcli"""
         self.__parse_args()
         self.__boot_pyshock()
         self.__process_action()

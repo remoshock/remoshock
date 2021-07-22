@@ -33,11 +33,6 @@ async function command(receiver, action, power, duration) {
 	return fetch(url);
 }
  
-async function trigger() {
-	await command(config.receiverIndex, "BEEP", 0, config.beepDuration);
-	await sleep(config.pauseDuration);
-	await command(config.receiverIndex, "ZAP", config.zapLevel, config.zapDuration);
-}
 
 let lastNavigatorVibrate = 0;
 async function inputHandler(e) {

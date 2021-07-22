@@ -4,6 +4,10 @@
 #_______________________________________________
 
 
+# Please ignore this file. It is unfinished and unusable.
+# It requires a connected Arduino with the arshock code.
+ 
+
 import serial
 import time
 from enum import Enum
@@ -18,6 +22,8 @@ from pyshock.receiver.receiver import Receiver
 #  2  Opto-isolator 2,      beep modifier pin,      ignored,                  pin
 
 class ProtocolAction(Enum):
+    """actions used by the communication protocl between pyshock and arshock.
+    Note: This this enum extends pyshock.core.action.Action"""
     LED = 10
     BEEP = 11
     VIB = 12
@@ -38,12 +44,15 @@ class ProtocolAction(Enum):
 
 
 class ReceiverType(Enum):
+    """receiver types supported by arshock"""
     PETAINER = 0
     OPTOCOUPLER = 1
     OPTOCOUPLER_BEEP_MODIFIER = 2
 
 
 class ArduinoBasedReceiver(Receiver):
+    """parent class for receivers controlled via arshock on Arduino"""
+
     def __init__(self, name, color, receiver_type, arg1, arg2, arg3):
         super().__init__(name, color)
         self.receiver_type = receiver_type
@@ -51,19 +60,22 @@ class ArduinoBasedReceiver(Receiver):
         self.arg2 = arg2
         self.arg3 = arg3
 
+
     def is_arduino_required(self):
         return True
+
 
     def boot(self, arduino_manager, _sdr_sender):
         self.arduino_manager = arduino_manager
         self.index = arduino_manager.register_receiver(self.receiver_type.value, self.arg1, self.arg2, self.arg3)
 
-    def command(self, action, level, duration):
+
+    def command(self, action, power, duration):
         if action == Action.BEEPZAP:
             self.arduino_manager.command(Action.BEEP, self.index, 0, 0)
             time.sleep(1)
             action = Action.ZAP
-        self.arduino_manager.command(action, self.index, level, duration)
+        self.arduino_manager.command(action, self.index, power, duration)
 
 
 class ArduinoPetainer(ArduinoBasedReceiver):
@@ -82,6 +94,8 @@ class ArduinoOptocouplerBeepModifier(ArduinoBasedReceiver):
 
 
 class ArduinoManager():
+    """handles communication with arshock running on Arduino connected via USB"""
+
     def read_responses(self, readUntil = ProtocolAction.ACKNOWLEDGE):
         while (True):
             if (self.ser.in_waiting < 2):
@@ -108,8 +122,8 @@ class ArduinoManager():
             self.read_responses()
 
 
-    def command(self, action, receiver, level, duration):
-        l = [action.value, 4, receiver, level, int(duration / 256), duration % 256]
+    def command(self, action, receiver, power, duration):
+        l = [action.value, 4, receiver, power, int(duration / 256), duration % 256]
         data = bytes(l)
         self.send(data)
 

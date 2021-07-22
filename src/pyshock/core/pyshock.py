@@ -12,11 +12,24 @@ from pyshock.receiver.arshock import ArduinoManager
 from pyshock.receiver.pacdog import Pacdog
 
 class Pyshock:
+    """This is the manager class. It basically coordinates everything and
+    delegate the actual work to specialized classes."""
+
 
     def __init__(self, args):
+        """Constructor of the manager class Pyshock
+        
+        @param args the command line arguments as returned by argparser"""
         self.args = args
 
+
     def __instantiate_receiver(self, section):
+        """handles a [receiver] section in pyshock.ini by creating 
+        the appropriate receiver object with the specified parameters.
+        
+        @param section (mangled) name of the section from pyshock.ini
+        """
+
         receiver_type = self.config.get(section, "type")
         name = self.config.get(section, "name")
         color = self.config.get(section, "color")
@@ -36,6 +49,10 @@ class Pyshock:
 
 
     def __instantitate_sdr_sender(self):
+        """creates a sdr_sender based on the configuration in pyshock.ini or the command line.
+        
+        This method triggers a special case handling for HackRF devices.
+        """
         sdr = self.config.get("global", "sdr", fallback=None)
         if "sdr" in self.args:
             sdr = self.args.sdr
@@ -96,6 +113,14 @@ class Pyshock:
 
 
     def boot(self):
+        """starts up pyshock.
+        
+        - read configuration from pyshock.ini
+        - initialize receiver configuration
+        - initialize SDR, if required by a configured receiver
+        - initialize arshock, if required by a configured receiver
+        - initialize configured receivers
+        """
         self._setup_from_config()
         arduino_required = False
         sdr_required = False
@@ -119,11 +144,19 @@ class Pyshock:
             receiver.boot(arduino_manager, sdr_sender)
 
 
-    def command(self, action, receiver, level, duration):
-        self.receivers[receiver].command(action, level, duration)
+    def command(self, action, receiver, power, duration):
+        """sends a command to the indicated receiver
+
+        @param action action perform (e. g. BEEP)
+        @param receiver index of receiver
+        @param power power level (1-100)
+        @param duration duration in ms
+        """
+        self.receivers[receiver].command(action, power, duration)
 
 
     def get_config(self):
+        """get configuration information for website"""
         result = []
         for receiver in self.receivers:
             result.append(receiver.get_config())
@@ -132,14 +165,21 @@ class Pyshock:
 
 
 class PyshockMock(Pyshock):
+    """A mock used for testing without requiring any SDR hardware."""
 
     def __init__(self, args):
+        """Constructor of mock for the the manager class Pyshock
+        
+        @param args the command line arguments as returned by argparser"""
         self.args = args
 
-    def command(self, action, receiver, level, duration):
-        print("command: " + str(action) + ", receiver: " + str(receiver) + ", level: " + str(level) + ", duration: " + str(duration))
+    def command(self, action, receiver, power, duration):
+        print("command: " + str(action) + ", receiver: " + str(receiver) + ", power: " + str(power) + ", duration: " + str(duration))
 
 
     def boot(self):
+        """setup receivers based on configuration, but does not 
+        initialize anything because they will never be accessed
+        using this mock"""
         self._setup_from_config()
         print("Loaded mock")

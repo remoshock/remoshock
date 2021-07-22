@@ -5,23 +5,38 @@
 
 
 class Receiver:
+    """parent class for all receivers"""
+
     def __init__(self, name, color):
+        """constructs a Receiver
+        
+        @param name name used on website
+        @param color background color used on website
+        """
         self.name = name
         self.color = color
 
     def is_arduino_required(self):
+        """does this receiver require arshock on Arduino?"""
         return False
 
     def is_sdr_required(self):
+        """does this receiver require a SDR (software defined radio) transmitter?"""
         return False
 
     def boot(self, _arduino_manager, _sdr_sender):
+        """initializes the receiver, sub-classes will do something useful here"""
         pass
 
-    def command(self, action, level, duration):
+    def command(self, action, power, duration):
+        """transmit a command to the receiver, sub-classes will do something useful here"""
         pass
 
     def get_config(self):
+        """returns configuration information for the website
+        
+        Most notable name, color, initial power and initial duration settings
+        as well as the duration increment (e. g. 250ms for PAC and 500ms for Petainer)."""
         config = {
             "name": self.name,
             "color": self.color,

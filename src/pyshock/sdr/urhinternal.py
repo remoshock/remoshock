@@ -189,6 +189,10 @@ from pyshock.sdr.sdrsender import SdrSender
 lock = threading.RLock()
 
 class UrhInternalSender(SdrSender):
+    """sends commands by directly invoking code from Universal Radio Hacker.
+
+    This code prevents a 1 second delay before each transmission when using
+    HackRF devices. However, it might cause Python errors, if URH is updated"""
 
     def __init__(self, verbose):
         global log_enabled
