@@ -80,7 +80,7 @@ button=1
 [receiver]
 type=pac
 name=PAC2
-color=#FFE
+color=#DDF
 transmitter_code=[transmitter_code]
 button=2
 
@@ -109,7 +109,7 @@ button=4
 
     def __write_default_configuration_if_missing(self):
         if not os.path.exists(self.filename):
-            self.write_default_configuration(self.filename)
+            self.__write_default_configuration()
 
 
     def __determine_filename(self):
