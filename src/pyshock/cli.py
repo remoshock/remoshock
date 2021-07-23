@@ -22,7 +22,7 @@ class PyshockCli:
                             type=int,
                             default=0,
                             metavar="n",
-                            help="index of receiver entry from pyshock.ini, starting at 0")
+                            help="number of receiver entry from pyshock.ini, starting at 1")
         parser.add_argument("-a", "--action", 
                             default="BEEP",
                             choices=["LIGHT", "BEEP", "VIBRATE", "SHOCK", "BEEPSHOCK"], 

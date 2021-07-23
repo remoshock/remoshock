@@ -6,7 +6,7 @@ function addreceiver(index) {
 	let clone = receiverTemplate.content.cloneNode(true);
 
 	clone.querySelector(".receiver").style.backgroundColor = receiver.color;
-	clone.querySelector(".receiver").dataset.receiver = index;
+	clone.querySelector(".receiver").dataset.receiver = index + 1;
 	clone.querySelector("h2").innerText = receiver.name;
 	clone.querySelector(".power_input").value = receiver.power;
 	clone.querySelector(".power_range").value = receiver.power;

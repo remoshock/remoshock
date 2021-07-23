@@ -67,7 +67,7 @@ class PyshockRandomizer:
     def __test_receivers(self):
         """sends a beep command to all registered receivers to allow users
         to verify that all receivers are turned on and setup correctly"""
-        for i in range(0, len(self.pyshock.receivers)):
+        for i in range(1, len(self.pyshock.receivers) + 1):
             print("Testing receiver " + str(i))
             self.pyshock.command(i, Action.BEEP, 0, 250)
             time.sleep(1)
@@ -99,7 +99,7 @@ class PyshockRandomizer:
                 duration = 250
             else:
                 duration = random.randint(self.shock_min_duration_ms, self.shock_max_duration_ms)
-            receiver = random.randrange(len(self.pyshock.receivers))
+            receiver = random.randrange(len(self.pyshock.receivers)) + 1
    
             self.pyshock.command(action, receiver, power, duration)
 

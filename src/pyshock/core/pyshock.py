@@ -148,11 +148,11 @@ class Pyshock:
         """sends a command to the indicated receiver
 
         @param action action perform (e. g. BEEP)
-        @param receiver index of receiver
+        @param receiver number of receiver to use
         @param power power level (1-100)
         @param duration duration in ms
         """
-        self.receivers[receiver].command(action, power, duration)
+        self.receivers[receiver - 1].command(action, power, duration)
 
 
     def get_config(self):

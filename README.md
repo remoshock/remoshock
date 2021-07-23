@@ -43,15 +43,15 @@ pyshockcli allows you to send commands using the command line ("terminal window"
 
 By default, it will send a BEEP command to the first receiver configured in `pyshock.ini`.
 
-For example, to send a shock of 250ms duration with 10% power to the second receiver:
+For example, to send a shock with 10% power for a duration of 250ms duration to the first receiver:
 
-`./pyshockcli.py --action SHOCK --duration 250 --power 10 --receiver 1`
+`./pyshockcli.py --receiver 1 --action SHOCK --power 10 --duration 250`
 
 The following actions are supported:
 
 - **LIGHT**:  blinks the light. Note: This might cause a tiny shock on PAC collars.
-- **BEEP**: plays the beep sound
-- **VIP**:  reserved for future use. Note: This will beep on PAC collars.
+- **BEEP**:   plays the beep sound
+- **VIBRATE**:   reserved for future use. Note: This will beep on PAC collars.
 - **SHOCK**:  a shock.
 - **BEEPSHOCK**: plays one beep sound, waits one second, and then triggers a shock according to parameters.
 
@@ -66,7 +66,7 @@ optional arguments:
                         Action to perform
   -d n, --duration n    duration in ms (Note: PAC uses an impulse duration of 250ms)
   -p n, --power n       power level (0-100)
-  -r n, --receiver n    index of receiver entry from pyshock.ini, starting at 0
+  -r n, --receiver n    index of receiver entry from pyshock.ini, starting at 1
   -v, --verbose         prints debug messages
   --version             show program's version number and exit
 
@@ -92,7 +92,7 @@ on how to make a server available to the Internet.
 authentication token may be configured in pyshock.ini.
 
 ~~~~
-usage: pyshockserver.py [-h] [-v] [--certfile cert_and_key.pem] [--version]
+usage: pyshockserver.py [-h] [-v] [--version]
 
 Shock collar remote control
 
