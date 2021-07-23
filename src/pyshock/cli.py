@@ -20,7 +20,7 @@ class PyshockCli:
                                          epilog="Please see https://github.com/pyshock/pyshock for documentation.")
         parser.add_argument("-r", "--receiver",
                             type=int,
-                            default=0,
+                            default=1,
                             metavar="n",
                             help="number of receiver entry from pyshock.ini, starting at 1")
         parser.add_argument("-a", "--action", 
