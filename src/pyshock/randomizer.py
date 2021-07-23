@@ -5,6 +5,7 @@
 
 import argparse
 import random
+import sys
 import time
 
 
@@ -90,19 +91,22 @@ class PyshockRandomizer:
 
     def __execute(self):
         """the loop in which all the action happens"""
-        while True:
-            time.sleep(random.randint(self.pause_min_s, self.pause_max_s))
 
-            action = self.__determine_action()
-            power = random.randint(self.shock_min_power_percent, self.shock_max_power_percent)
-            if action == Action.BEEP:
-                duration = 250
-            else:
-                duration = random.randint(self.shock_min_duration_ms, self.shock_max_duration_ms)
-            receiver = random.randrange(len(self.pyshock.receivers)) + 1
-   
-            self.pyshock.command(receiver, action, power, duration)
-
+        try:
+            while True:
+                time.sleep(random.randint(self.pause_min_s, self.pause_max_s))
+    
+                action = self.__determine_action()
+                power = random.randint(self.shock_min_power_percent, self.shock_max_power_percent)
+                if action == Action.BEEP:
+                    duration = 250
+                else:
+                    duration = random.randint(self.shock_min_duration_ms, self.shock_max_duration_ms)
+                receiver = random.randrange(len(self.pyshock.receivers)) + 1
+       
+                self.pyshock.command(receiver, action, power, duration)
+        except KeyboardInterrupt:
+            sys.exit(0)
 
     def start(self):
         """starts up pyshockrnd"""
