@@ -70,6 +70,11 @@ class ArduinoBasedReceiver(Receiver):
         self.index = arduino_manager.register_receiver(self.receiver_type.value, self.arg1, self.arg2, self.arg3)
 
 
+    def get_impulse_duration(self):
+        """duration of one impulse in milliseconds"""
+        return 500
+
+
     def command(self, action, power, duration):
         if action == Action.BEEPSHOCK:
             self.arduino_manager.command(Action.BEEP, self.index, 0, 0)

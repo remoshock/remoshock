@@ -4,12 +4,13 @@
 #_______________________________________________
 
 import configparser
+import logging
 import sys
 
 from pyshock.core.config import ConfigManager
 
 from pyshock.receiver.arshock import ArduinoManager
-from pyshock.receiver.pacdog import Pacdog
+from pyshock.receiver.pac import Pac
 
 class Pyshock:
     """This is the manager class. It basically coordinates everything and
@@ -37,7 +38,7 @@ class Pyshock:
         button = self.config.getint(section, "button")
 
         if receiver_type.lower() == "pac":
-            receiver = Pacdog(name, color, code, button)
+            receiver = Pac(name, color, code, button)
         else:
             print("ERROR: Unknown receiver type \"" + receiver_type + "\" in pyshock.ini. Supported types: pac")
             return None
@@ -121,6 +122,11 @@ class Pyshock:
         - initialize arshock, if required by a configured receiver
         - initialize configured receivers
         """
+        logging.basicConfig(
+            format='%(asctime)s %(levelname)-8s %(message)s',
+            level=logging.INFO,
+            datefmt='%Y-%m-%d %H:%M:%S')
+
         self._setup_from_config()
         arduino_required = False
         sdr_required = False
@@ -144,16 +150,40 @@ class Pyshock:
             receiver.boot(arduino_manager, sdr_sender)
 
 
-    def command(self, receiver, action, power, duration):
+        
+    def _process_command(self, receiver, action, power, duration):
         """sends a command to the indicated receiver
 
-        @param action action perform (e. g. BEEP)
+        @param action action to perform (e. g. BEEP)
         @param receiver number of receiver to use
         @param power power level (1-100)
         @param duration duration in ms
         """
         self.receivers[receiver - 1].command(action, power, duration)
 
+
+    def command(self, receiver, action, power, duration):
+        """sends a command to the indicated receiver
+
+        @param action action to perform (e. g. BEEP)
+        @param receiver number of receiver to use
+        @param power power level (1-100)
+        @param duration duration in ms
+        """
+
+        if receiver < 1 or receiver > len(self.receivers):
+            logging.error("Receiver number \"" + str(receiver) + "\" is out of range. It should be between 1 and " + str(len(self.receivers)))
+            return
+
+        if power < 0 or power > 100:
+            logging.error("Power level \"" + str(receiver) + "\" is out of range. It should be between 1 and 100")
+            return
+
+        impulse_duration = self.receivers[receiver - 1].get_impulse_duration() 
+        normalized_duration = round(duration / impulse_duration) * impulse_duration
+        logging.info("receiver: " + str(receiver) + ", action: " + action.name + ", power: " + str(power) + "%, duration: " + str(normalized_duration) + "ms")
+
+        self._process_command(receiver, action, power, duration)
 
     def get_config(self):
         """get configuration information for website"""
@@ -173,8 +203,8 @@ class PyshockMock(Pyshock):
         @param args the command line arguments as returned by argparser"""
         self.args = args
 
-    def command(self, receiver, action, power, duration):
-        print("command: receiver: " + str(receiver) + ", action: " + str(action) + ", power: " + str(power) + ", duration: " + str(duration))
+    def _process_command(self, receiver, action, power, duration):
+        """do nothing as this is a mock only"""
 
 
     def boot(self):

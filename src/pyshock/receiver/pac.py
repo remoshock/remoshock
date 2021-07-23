@@ -12,7 +12,7 @@ from pyshock.receiver.receiver import Receiver
 
 lock = threading.RLock()
 
-class Pacdog(Receiver):
+class Pac(Receiver):
     """communication with PAC ACX collars"""
 
     button_codes = [
@@ -158,7 +158,7 @@ class Pacdog(Receiver):
             duration = 10000
 
         message_template = self.encode_for_transmission(self.generate(self.code, power * 63 // 100, self.button, beep))
-        for _ in range(0, (duration + 5) // 250):
+        for _ in range(0, round(duration / 250)):
             message = message + " " + message_template
 
         self.send(message)

@@ -32,6 +32,10 @@ class Receiver:
         """transmit a command to the receiver, sub-classes will do something useful here"""
         pass
 
+    def get_impulse_duration(self):
+        """duration of one impulse in milliseconds"""
+        return 250
+
     def get_config(self):
         """returns configuration information for the website
         
@@ -42,6 +46,6 @@ class Receiver:
             "color": self.color,
             "power": 10,
             "duration": 500,
-            "durationIncrement": 250
+            "durationIncrement": self.get_impulse_duration()
         }
         return config
