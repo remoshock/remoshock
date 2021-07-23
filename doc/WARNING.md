@@ -12,12 +12,12 @@ nerve system as well as damage to the skin.
 
 ### Skin
 
-<div style="padding:1em; border: 1px #AAA solid; width: 220px; margin-right: 1em; float: left">
+<div style="padding:1em; border: 1px #AAA solid; width: 220px; margin-right: 1em; display: inline-block">
 <img alt="Skin damage the day after" src="https://drive.google.com/uc?export=view&id=1rIxe512f4U99w-d3UyO9osXgcslo4aUV" width="200"><br>
 Skin damage the day after
 </div>
 
-<div style="padding:1em; border: 1px #AAA solid; width: 220px; float: left">
+<div style="padding:1em; border: 1px #AAA solid; width: 220px; display: inline-block">
 <img alt="Skin damage after 8 month" src="https://drive.google.com/uc?export=view&id=1crnB7FcD3w_kUqqiNC0t9Hj6Sz86gjp1" width="200"><br>
 Skin damage after 8 month
 </div>

@@ -1,19 +1,9 @@
 # Pyshock
 
 <a href="https://github.com/pyshock/pyshock/blob/master/doc/LICENSE.md"> 
-![License: AGPL](https://img.shields.io/badge/License-AGPL-%23AAF)</a>
+<img alt="License: AGPL" src="https://img.shields.io/badge/License-AGPL-%23AAF"></a> 
 <a href="https://github.com/pyshock/pyshock/releases/download/v0.1/pyshock-0.1.zip">
-![Download](https://img.shields.io/badge/Download-0.1-%23AFA)</a>
-
-
-Pyshock is a computer based remote control for shock collars.
-
-It consists of
-- a web-based user interface, that works on mobile
-- a randomizer program
-- a command line interface program.
-- a web-based API
-
+<img alt="Download" src="https://img.shields.io/badge/Download-0.1-%23AFA"></a>
 
 <div>
 <a href="https://raw.githubusercontent.com/pyshock/pyshock/master/doc/randomizer.png">
@@ -23,6 +13,14 @@ It consists of
 <a href="https://raw.githubusercontent.com/pyshock/pyshock/master/doc/remote.png">
 <img style="border: 1px #AAA solid; padding: 1em" alt="Remote Control User Interface" src="https://raw.githubusercontent.com/pyshock/pyshock/master/doc/remote.png" height="200"></a>
 </div>
+
+Pyshock is a computer based remote control for shock collars.
+
+It consists of
+- a web-based user interface, that works on mobile
+- a randomizer program
+- a command line interface program.
+- a web-based API
 
 
 ## ✔️ Requirements
