@@ -54,7 +54,7 @@ class Pyshock:
         This method triggers a special case handling for HackRF devices.
         """
         sdr = self.config.get("global", "sdr", fallback=None)
-        if "sdr" in self.args:
+        if "sdr" in self.args and self.args.sdr != None:
             sdr = self.args.sdr
         if sdr == None:
             print()
