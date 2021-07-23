@@ -35,21 +35,28 @@ class PyshockRequestHandler(BaseHTTPRequestHandler):
     
     def answer_json(self, status, data):
         """Sends a JSON response"""
-        self.send_response(status)
-        self.send_header("Content-type", "application/json")
-        self.send_header("Cache-Control", "no-cache")
-        self.send_header("Access-Control-Allow-Origin", "*")
-        self.end_headers()
-        self.wfile.write(json.dumps(data).encode('utf-8'))
-
+        try:
+            self.send_response(status)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Cache-Control", "no-cache")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            self.wfile.write(json.dumps(data).encode('utf-8'))
+        except BrokenPipeError:
+            print("Browser disconnected")
+            pass
 
     def answer_html(self, status, text):
         """Sends a message as HTML-response"""
-        self.send_response(status)
-        self.send_header("Content-type", "text/html; charset=utf-8")
-        self.send_header("Cache-Control", "no-cache")
-        self.end_headers()
-        self.wfile.write(html.escape(text).encode('utf-8'))
+        try:
+            self.send_response(status)
+            self.send_header("Content-type", "text/html; charset=utf-8")
+            self.send_header("Cache-Control", "no-cache")
+            self.end_headers()
+            self.wfile.write(html.escape(text).encode('utf-8'))
+        except BrokenPipeError:
+            print("Browser disconnected")
+            pass
 
 
     def verify_authentication_token(self, params):
