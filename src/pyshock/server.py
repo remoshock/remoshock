@@ -70,7 +70,7 @@ class PyshockRequestHandler(BaseHTTPRequestHandler):
         if not action in [Action.LIGHT, Action.BEEP, Action.VIBRATE, Action.SHOCK, Action.BEEPSHOCK]:
             raise Exception("Invalid action")
 
-        pyshock.command(action, receiver, power, duration)
+        pyshock.command(receiver, action, power, duration)
 
 
     def serve_file(self):

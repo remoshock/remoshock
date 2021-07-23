@@ -46,7 +46,7 @@ class PyshockRandomizer:
         self.pyshock.boot()
 
 
-    def __getvalue(self, key):
+    def __get_config_value(self, key):
         """reads a configuration setting"""
         return self.pyshock.config.getint(self.args.section, key)
 
@@ -101,7 +101,7 @@ class PyshockRandomizer:
                 duration = random.randint(self.shock_min_duration_ms, self.shock_max_duration_ms)
             receiver = random.randrange(len(self.pyshock.receivers)) + 1
    
-            self.pyshock.command(action, receiver, power, duration)
+            self.pyshock.command(receiver, action, power, duration)
 
 
     def start(self):

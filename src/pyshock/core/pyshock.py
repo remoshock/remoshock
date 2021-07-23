@@ -144,7 +144,7 @@ class Pyshock:
             receiver.boot(arduino_manager, sdr_sender)
 
 
-    def command(self, action, receiver, power, duration):
+    def command(self, receiver, action, power, duration):
         """sends a command to the indicated receiver
 
         @param action action perform (e. g. BEEP)
@@ -173,8 +173,8 @@ class PyshockMock(Pyshock):
         @param args the command line arguments as returned by argparser"""
         self.args = args
 
-    def command(self, action, receiver, power, duration):
-        print("command: " + str(action) + ", receiver: " + str(receiver) + ", power: " + str(power) + ", duration: " + str(duration))
+    def command(self, receiver, action, power, duration):
+        print("command: receiver: " + str(receiver) + ", action: " + str(action) + ", power: " + str(power) + ", duration: " + str(duration))
 
 
     def boot(self):

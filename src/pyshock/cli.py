@@ -66,7 +66,7 @@ class PyshockCli:
     def __process_action(self):
         """sends the specified command to the specified receiver"""
         action = Action[self.args.action]
-        self.pyshock.command(action, self.args.receiver, self.args.power, self.args.duration)
+        self.pyshock.command(self.args.receiver, action, self.args.power, self.args.duration)
 
     
     def start(self):
