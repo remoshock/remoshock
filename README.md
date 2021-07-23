@@ -1,6 +1,10 @@
 # Pyshock
 
-<a href="https://github.com/pyshock/pyshock/blob/master/doc/LICENSE.md"> 
+<a href="https://github.com/pyshock/pyshock/blob/master/doc/WARNING.md">
+<img alt="Warning" src="https://img.shields.io/badge/-Warning-red"></a> 
+<a href="https://github.com/pyshock/pyshock/blob/master/doc/FAQ.md">
+<img alt="Warning" src="https://img.shields.io/badge/-FAQ-yellow"></a> 
+<a href="https://github.com/pyshock/pyshock/blob/master/doc/LICENSE.md">
 <img alt="License: AGPL" src="https://img.shields.io/badge/License-AGPL-%23AAF"></a> 
 <a href="https://github.com/pyshock/pyshock/releases/download/v0.1/pyshock-0.1.zip">
 <img alt="Download" src="https://img.shields.io/badge/Download-0.1-%23AFA"></a>
