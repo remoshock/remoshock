@@ -1,13 +1,10 @@
 # Pyshock
 
-<div style="float: right">
-<img style="border: 1px #AAA solid; margin-left: 2em; margin-right: 0.2em" alt="Remote" src="doc/remote.png" width="200">
-</div>
-
 <a href="https://github.com/pyshock/pyshock/blob/master/doc/LICENSE.md"> 
 ![License: AGPL](https://img.shields.io/badge/License-AGPL-%23AAF)</a>
 <a href="https://github.com/pyshock/pyshock/releases/download/v0.1/pyshock-0.1.zip">
 ![Download](https://img.shields.io/badge/Download-0.1-%23AFA)</a>
+
 
 Pyshock is a computer based remote control for shock collars.
 
@@ -16,6 +13,16 @@ It consists of
 - a randomizer program
 - a command line interface program.
 - a web-based API
+
+
+<div>
+<a href="https://raw.githubusercontent.com/pyshock/pyshock/master/doc/randomizer.png">
+<img style="border: 1px #AAA solid; padding: 1em" alt="Randomizer" src="https://raw.githubusercontent.com/pyshock/pyshock/master/doc/randomizer.png" height="200"></a> 
+<a href="https://raw.githubusercontent.com/pyshock/pyshock/master/doc/pac.jpeg">
+<img style="border: 1px #AAA solid; padding: 1em" alt="Photo of PAC collars with HackRF SDR" src="https://raw.githubusercontent.com/pyshock/pyshock/master/doc/pac.jpeg" height="200"></a> 
+<a href="https://raw.githubusercontent.com/pyshock/pyshock/master/doc/remote.png">
+<img style="border: 1px #AAA solid; padding: 1em" alt="Remote Control User Interface" src="https://raw.githubusercontent.com/pyshock/pyshock/master/doc/remote.png" height="200"></a>
+</div>
 
 
 ## ✔️ Requirements
@@ -200,8 +207,6 @@ There may be sections for the randomizer, which are documented above.
 
 Please report bugs and feature ideas as issues on [https://github.com/pyshock/pyshock](https://github.com/pyshock/pyshock)
 
-If you do not want to create an account on GitHub, you can also reach me at 
-https://fetlife.com/conversations/new?with=1561493
 
 ## 🔎 See also
 

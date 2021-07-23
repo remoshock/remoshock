@@ -25,10 +25,6 @@ No, you should not. Please see [WARNING](https://github.com/pyshock/pyshock/blob
 Please use the GitHub issue tracker at
 [https://github.com/pyshock/pyshock](https://github.com/pyshock/pyshock).
 
-If you do not want to create an account on GitHub, you can also reach me at 
-https://fetlife.com/conversations/new?with=1561493
-
-
 
 ## ✔️ Requirements
 
@@ -63,6 +59,11 @@ HackRF is used for testing
 
 **I am getting strange hardware error messages from my SDR transmitter**
 
+~~~~
+[CRITICAL::urh_cli.py::on_fatal_device_error_occurred] failed to start tx mode
+[ERROR::Device.py::log_retcode] HackRF-SETUP
+~~~~
+
 Please avoid USB hubs and connect your SDR directly to your computer.
 At least USB 2 hubs are known to be too slow to sustain the bit-stream.
 
@@ -71,3 +72,6 @@ might experience the same performance problems.
 
 
 
+**Which setup is used for testing?**
+
+I use Ubuntu 2020.04 with a HackRF transmitter and a PAC ACX collar.
