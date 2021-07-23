@@ -95,22 +95,26 @@ class Pyshock:
 
 
     def _setup_from_config(self):
-        self.config = ConfigManager().config
-        receivers = []
-        for receiver in self.config.sections():
-            if receiver.startswith("receiver"):
-                try:
-                    receiver = self.__instantiate_receiver(receiver)
-                    if receiver != None:
-                        receivers.append(receiver)
-                except configparser.NoOptionError as e:
-                    print("Error reading configuration file: " + str(e))
-
-        if len(receivers) == 0:
-            print()
-            print("ERROR: No valid receivers configured in pyshock.ini")
+        try:
+            self.config = ConfigManager().config
+            receivers = []
+            for receiver in self.config.sections():
+                if receiver.startswith("receiver"):
+                    try:
+                        receiver = self.__instantiate_receiver(receiver)
+                        if receiver != None:
+                            receivers.append(receiver)
+                    except configparser.NoOptionError as e:
+                        print("Error reading configuration file: " + str(e))
+    
+            if len(receivers) == 0:
+                print()
+                print("ERROR: No valid receivers configured in pyshock.ini")
+                sys.exit(1)
+            self.receivers = receivers
+        except configparser.NoOptionError as e:
+            print(e)
             sys.exit(1)
-        self.receivers = receivers
 
 
     def boot(self):
