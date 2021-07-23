@@ -4,6 +4,8 @@
 #_______________________________________________
 
 import argparse
+import configparser
+import datetime
 import random
 import sys
 import time
@@ -55,14 +57,19 @@ class PyshockRandomizer:
     def __load_config(self):
         """loads configuration from pyshock.ini for the section
         specified on the command line"""
-        self.beep_probability_percent = self.__get_config_value("beep_probability_percent")
-        self.shock_probability_percent = self.__get_config_value("shock_probability_percent")
-        self.shock_min_duration_ms = self.__get_config_value("shock_min_duration_ms")
-        self.shock_max_duration_ms = self.__get_config_value("shock_max_duration_ms")
-        self.shock_min_power_percent = self.__get_config_value("shock_min_power_percent")
-        self.shock_max_power_percent = self.__get_config_value("shock_max_power_percent")
-        self.pause_min_s = self.__get_config_value("pause_min_s")
-        self.pause_max_s = self.__get_config_value("pause_max_s")
+        try:
+            self.beep_probability_percent = self.__get_config_value("beep_probability_percent")
+            self.shock_probability_percent = self.__get_config_value("shock_probability_percent")
+            self.shock_min_duration_ms = self.__get_config_value("shock_min_duration_ms")
+            self.shock_max_duration_ms = self.__get_config_value("shock_max_duration_ms")
+            self.shock_min_power_percent = self.__get_config_value("shock_min_power_percent")
+            self.shock_max_power_percent = self.__get_config_value("shock_max_power_percent")
+            self.pause_min_s = self.__get_config_value("pause_min_s")
+            self.pause_max_s = self.__get_config_value("pause_max_s")
+            self.max_runtime_minutes = self.__get_config_value("max_runtime_minutes")
+        except configparser.NoOptionError as e:
+            print(e)
+            sys.exit(1)
 
 
     def __test_receivers(self):
@@ -93,7 +100,9 @@ class PyshockRandomizer:
         """the loop in which all the action happens"""
 
         try:
-            while True:
+            current_time = datetime.datetime.now()
+            start_time = current_time
+            while (current_time-start_time).total_seconds() < self.max_runtime_minutes * 60:
                 time.sleep(random.randint(self.pause_min_s, self.pause_max_s))
     
                 action = self.__determine_action()
@@ -105,8 +114,14 @@ class PyshockRandomizer:
                 receiver = random.randrange(len(self.pyshock.receivers)) + 1
        
                 self.pyshock.command(receiver, action, power, duration)
+                current_time = datetime.datetime.now()
+
+            print("Runtime completed.")
+
         except KeyboardInterrupt:
+            print("Stopped by ctrl+c.")
             sys.exit(0)
+
 
     def start(self):
         """starts up pyshockrnd"""

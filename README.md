@@ -132,14 +132,18 @@ shock_min_power_percent = 5
 shock_max_power_percent = 10
 pause_min_s = 300
 pause_max_s = 900
+max_runtime_minutes = 1440
 ~~~~
 
-This sample configuration will ensure that there is always (100% probability) a beep
-followed by a shock. The shock duration will vary between 250ms and 500ms. On
-a PAC collar this equals to either one or two impulses. The power of the
-shocks will vary between 5% and 10%. And finally the timer will be set to a
-random value between 5 minutes (300s) and 15 minutes (900s). After the event
-the timer will be set to a new random value in this range.
+This sample configuration will ensure that there is always (100% probability)
+a beep followed by a shock. The shock duration will vary between 250ms and
+500ms. On a PAC collar this equals to either one or two impulses. The power
+of the shocks will vary between 5% and 10%. And finally the timer will be
+set to a random value between 5 minutes (300s) and 15 minutes (900s).
+
+After the event the timer will be set to a new random value in this range and
+everything will start anew. In this example pyshockrnd will end after one day
+(1440 minutes) or when ctrl+c is pressed.
 
 `./pyshockrnd.py`
 
