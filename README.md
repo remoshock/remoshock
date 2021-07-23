@@ -24,13 +24,15 @@ It consists of
 - A Software Defined Radio (SDR) transmitter that works on the required frequencies (tested using a HackRF device).
 - Linux with Python 3 (tested on Ubuntu 20.04)
 - Universal Radio Hacker (`apt install python3-pip; pip3 install urh`).
+- Download and unzip [https://github.com/pyshock/pyshock/releases/download/v0.1/pyshock-0.1.zip](https://github.com/pyshock/pyshock/releases/download/v0.1/pyshock-0.1.zip).
 
 
 ## 🔧 Getting Started
 
 Make sure that `urh` is working and does recognize your SDR device.
 
-Run `./pyshockcli.py`. This command will generate a `pyshock.ini` configuration file.
+Run `./pyshockcli.py`. This command will generate a `pyshock.ini` configuration file
+with random values for authentication token and transmitter code.
 Please edit this file to specify your SDR transmitting hardware.
 
 Reset your collar into pairing mode and invoke `./pyshockcli` again.
@@ -84,9 +86,10 @@ can reach the IP address of the computer. For example because both devices
 are in the same Wifi network.
 
 You may make the server available on the Internet, if your computer has a public
-IP-address, either directly or via a tunnel. Furthermore SSH reverse port
+IP-address, either directly or via a VPN/tunnel. Furthermore SSH reverse port
 forwarding does work. This documentation, however, will not go into detail
-on how to make a server available to the Internet. 
+on how to make a server available to the Internet because of the security
+implications.
 
 `./pyshockserver.py` will start the server and print the URL. The port and
 authentication token may be configured in pyshock.ini.
@@ -154,7 +157,7 @@ Please see https://github.com/pyshock/pyshock for documentation.
 
 ## 📝 pyshock.ini
 
-The file `pyshock.ini` is automatically created with random tokens and codes
+The file `pyshock.ini` is automatically created with random tokens and transmitter codes
 when you start pyshock for the first time.
 
 
