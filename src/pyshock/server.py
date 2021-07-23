@@ -7,7 +7,9 @@
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse, parse_qs
 import argparse
+import html
 import json
+import os
 import ssl
 import sys
 import shutil
@@ -20,22 +22,46 @@ from pyshock.core.version import VERSION
 
 pyshock = None
 
+mimetypes = {
+    ".css": "text/css",
+    ".html": "text/html; charset=utf-8",
+    ".js": "application/javascript",
+    ".json": "application/json",
+    ".png": "image/png"
+}
+
 class PyshockRequestHandler(BaseHTTPRequestHandler):
     """handles requests from web browsers"""
-
-    def answer(self, status, data):
+    
+    def answer_json(self, status, data):
+        """Sends a JSON response"""
         self.send_response(status)
         self.send_header("Content-type", "application/json")
         self.send_header("Cache-Control", "no-cache")
         self.send_header("Access-Control-Allow-Origin", "*")
         self.end_headers()
-        self.wfile.write((json.dumps(data)).encode('utf-8'))
+        self.wfile.write(json.dumps(data).encode('utf-8'))
+
+
+    def answer_html(self, status, text):
+        """Sends a message as HTML-response"""
+        self.send_response(status)
+        self.send_header("Content-type", "text/html; charset=utf-8")
+        self.send_header("Cache-Control", "no-cache")
+        self.end_headers()
+        self.wfile.write(html.escape(text).encode('utf-8'))
+
+
+    def verify_authentication_token(self, params):
+        """validates authentication token"""
+        if not "token" in params:
+            return False
+
+        return params["token"][0] == pyshock.config.get("global", "web_authentication_token")
 
 
     def handle_command(self, params):
-        if (params["token"][0] != pyshock.config.get("global", "web_authentication_token")):
-            raise Exception("Invalid authentication token")
-
+        """Sends the specified command to specified receiver"""
         action = Action[params["action"][0]]
         receiver = int(params["receiver"][0])
         power = int(params["power"][0])
@@ -47,32 +73,57 @@ class PyshockRequestHandler(BaseHTTPRequestHandler):
         pyshock.command(action, receiver, power, duration)
 
 
-    def do_GET(self):
-        """handles a browser request"""
-        files = ["/index.html", "/remote.css", "/remote.js", "/favicon.png", "/manifest.json"]
-        types = ["text/html; charset=utf-8", "text/css", "application/javascript", "image/png", "application/json"]
+    def serve_file(self):
+        """serves a file from the web-folder
+        
+        this methods takes care of preventing directory traversing
+        and automatically expands directory references to index.html.
+        Furthermore it sends the correct MIME Content-Type header."""
 
-        if self.path == "/":
-            self.path = "/index.html"
+        if ".." in self.path:
+            self.answer_html(404, "Invalid file name.")
+            return
+
+        filename = "web/" + self.path
+        if os.path.isdir(filename):
+            filename = filename + "/index.html"
+
+        if not os.path.isfile(filename):
+            self.answer_html(404, "Not found.")
+            return
+
+        ext = os.path.splitext(filename)[1]
+        self.send_response(200)
+        self.send_header("Content-Type", mimetypes.get(ext.lower(), "application/octet-stream"))
+        self.end_headers()
+        with open(filename, "rb") as content:
+            shutil.copyfileobj(content, self.wfile)
+
+
+    def do_GET(self):
+        """handles a browser request.
+        
+        path starting with /pyshock are interpreted as commands.
+        everything else is seen as a reference to the web-folder"""
 
         params = parse_qs(urlparse(self.path).query)
         try:
-            if self.path.startswith("/pyshock/command"):
-                self.handle_command(params)
-                self.answer(200, { "status": "ok"})
-            elif self.path.startswith("/pyshock/config"):
-                self.answer(200, pyshock.get_config())
-            elif self.path in files:
-                self.send_response(200)
-                self.send_header("Content-Type", types[files.index(self.path)])
-                self.end_headers()
-                with open("web/" + self.path, "rb") as content:
-                    shutil.copyfileobj(content, self.wfile)
+            if self.path.startswith("/pyshock/"):
+                if not self.verify_authentication_token(params):
+                    self.answer_html(403, "Missing or invalid authentication token")
+                    return
+
+                if self.path.startswith("/pyshock/command"):
+                    self.handle_command(params)
+                    self.answer_json(200, { "status": "ok"})
+                elif self.path.startswith("/pyshock/config"):
+                    self.answer_json(200, pyshock.get_config())
+
             else:
-                self.answer(404, "unknown path: " + self.path)
+                self.serve_file()
         except Exception as ex:
             print("".join(traceback.TracebackException.from_exception(ex).format()))
-            self.answer(500, { "error": str(sys.exc_info()[0]) + ": " + str(sys.exc_info()[1])})
+            self.answer_html(500, str(sys.exc_info()[0]) + ": " + str(sys.exc_info()[1]))
 
 
 

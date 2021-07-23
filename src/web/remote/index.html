@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Remote</title>
+<link rel="stylesheet" href="remote.css">
+<link rel="shortcut icon" href="/favicon.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+</head>
+<body>
+
+<div id="receivers"></div>
+
+<template id="receiver-template">
+<div class="receiver">
+<h2>Receiver</h2>
+<div>
+<label for="power_input" title="Power">⚡</label>
+<input class="power_input" type="number" min="0" max="100" value="1">
+<input class="power_range" type="range" value="1" min="0" max="100" step="1" list="tickmarks_percent">
+</div>
+
+<div>
+<label for="duration_input" title="Duration">⏲️</label>
+<input class="duration_input" type="number" min="250" max="2000" value="0" step="250"> ms
+<input class="duration_range" type="range" value="250" min="250" max="2000" step="250" list="tickmarks_time">
+</div>
+
+<div class="action"><button class="beep">🔉</button> <button class="light">🚥</button> <button class="vibrate">📳</button> <button class="shock">⚡</button> <button class="beepshock">🔉⚡</button> </div>
+</div>
+</template>
+
+<datalist id="tickmarks_percent">
+  <option value="0" label="0"></option>
+  <option value="10"></option>
+  <option value="20"></option>
+  <option value="30"></option>
+  <option value="40"></option>
+  <option value="50" label="50"></option>
+  <option value="60"></option>
+  <option value="70"></option>
+  <option value="80"></option>
+  <option value="90"></option>
+  <option value="100" label="100"></option>
+</datalist>
+
+<datalist id="tickmarks_time">
+  <option value="0" label="0"></option>
+  <option value="250"></option>
+  <option value="500"></option>
+  <option value="750"></option>
+  <option value="1000" label="1s"></option>
+  <option value="1250"></option>
+  <option value="1500"></option>
+  <option value="1750"></option>
+  <option value="2000" label="2s"></option>
+  <option value="2250"></option>
+  <option value="2500"></option>
+  <option value="2750"></option>
+  <option value="3000" label="3s"></option>
+  <option value="3250"></option>
+  <option value="3500"></option>
+  <option value="3750"></option>
+  <option value="4000" label="4s"></option>
+  <option value="4250"></option>
+  <option value="4500"></option>
+  <option value="4750"></option>
+  <option value="5000" label="5s"></option>
+  <option value="5250"></option>
+  <option value="5500"></option>
+  <option value="5750"></option>
+  <option value="6000" label="6s"></option>
+  <option value="6250"></option>
+  <option value="6500"></option>
+  <option value="6750"></option>
+  <option value="7000" label="7s"></option>
+  <option value="7250"></option>
+  <option value="7500"></option>
+  <option value="7750"></option>
+  <option value="8000" label="8s"></option>
+  <option value="8250"></option>
+  <option value="8500"></option>
+  <option value="8750"></option>
+  <option value="9000" label="9s"></option>
+  <option value="9250"></option>
+  <option value="9500"></option>
+  <option value="9750"></option>
+  <option value="10000" label="10s"></option>
+</datalist>
+
+<script type="application/javascript" src="remote.js"></script>
+</body>
+</html>

@@ -63,7 +63,11 @@ async function clickHandler(e) {
 }
 
 async function init() {
-	let response = await fetch('/pyshock/config.json');
+	let token = window.location.hash.substring(7);
+	let response = await fetch("/pyshock/config.json?token=" + escape(token));
+	if (response.status == 403) {
+		alert("Please make sure to end the URL with \"#token=\" followed by the value from web_authentication_token in pyshock.ini")
+	}
 	window.receivers = await response.json();
 	for (let i = 0; i < receivers.length; i++) {
 		addreceiver(i);
