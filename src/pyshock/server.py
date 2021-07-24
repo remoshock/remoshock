@@ -181,7 +181,11 @@ class PyshockServer:
         if certfile:
             server.socket = ssl.wrap_socket(server.socket, certfile=certfile,
                                             ssl_version=ssl.PROTOCOL_TLSv1_2, server_side=True)
-        server.serve_forever()
+        try:
+            server.serve_forever()
+        except KeyboardInterrupt:
+            print("Stopped by Ctrl+c.")
+            sys.exit(0)
 
 
     def start(self):
