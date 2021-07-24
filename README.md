@@ -5,9 +5,11 @@
 <a href="https://github.com/pyshock/pyshock/blob/master/doc/FAQ.md">
 <img alt="Warning" src="https://img.shields.io/badge/-FAQ-yellow"></a> 
 <a href="https://github.com/pyshock/pyshock/blob/master/doc/LICENSE.md">
-<img alt="License: AGPL" src="https://img.shields.io/badge/License-AGPL-%23AAF"></a> 
-<a href="https://github.com/pyshock/pyshock/releases/download/v0.1/pyshock-0.1.zip">
-<img alt="Download" src="https://img.shields.io/badge/Download-0.1-%23AFA"></a>
+<img alt="License: AGPL" src="https://img.shields.io/badge/-AGPL-%23AAF"></a> 
+<a href="https://github.com/pyshock/pyshock/releases">
+<img alt="Changes" src="https://img.shields.io/badge/-Changes-green"></a> 
+<a href="https://github.com/pyshock/pyshock/releases/download/v0.2/pyshock-0.2.zip">
+<img alt="Download" src="https://img.shields.io/badge/-Download-brightgreen"></a>
 
 <div>
 <a href="https://raw.githubusercontent.com/pyshock/pyshock/master/doc/randomizer.png">
@@ -33,7 +35,7 @@ It consists of
 - A Software Defined Radio (SDR) transmitter that works on the required frequencies (tested using a HackRF device).
 - Linux with Python 3 (tested on Ubuntu 20.04)
 - Universal Radio Hacker (`apt install python3-pip; pip3 install urh`).
-- Download and unzip [https://github.com/pyshock/pyshock/releases/download/v0.1/pyshock-0.1.zip](https://github.com/pyshock/pyshock/releases/download/v0.1/pyshock-0.1.zip).
+- Download and unzip [https://github.com/pyshock/pyshock/releases/download/v0.2/pyshock-0.2.zip](https://github.com/pyshock/pyshock/releases/download/v0.2/pyshock-0.2.zip).
 
 
 ## 🔧 Getting Started

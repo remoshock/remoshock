@@ -1,1 +1,1 @@
-Please see [/README.md](../README.md).
+Please see [/README.md](https://github.com/pyshock/pyshock#readme).

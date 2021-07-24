@@ -1,2 +1,2 @@
 # This file is imported by both Python and Shell scripts
-VERSION="0.1"
+VERSION="0.2"
