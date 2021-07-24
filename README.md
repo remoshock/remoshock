@@ -123,7 +123,7 @@ Please see https://github.com/pyshock/pyshock for documentation.
 
 pyshockrnd sends timed commands that can be randomized. For example it may
 send a beep followed a shock every 5 to 15 minutes. For a completely deterministic
-experiences, set min and max to the same value.
+experience, set min and max to the same value.
 
 Example configuration section:
 

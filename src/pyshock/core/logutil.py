@@ -1,7 +1,20 @@
+#!/usr/bin/python3
+#
+# Copyright nilswinter 2021. License: AGPL
+#_______________________________________________
+
 import os
 import sys
 
 class HidePrintIfNotVerbose:
+    """Suppress print() calls (e. g. in third party code) unless
+    "verbose" is set to true.
+
+    Usage:
+    with HidePrintIfNotVerbose(verbose):
+        do_something()
+    """
+
     def __init__(self, verbose):
         self.verbose = verbose
 
