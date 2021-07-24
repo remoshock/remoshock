@@ -89,11 +89,12 @@ class PyshockRequestHandler(BaseHTTPRequestHandler):
         and automatically expands directory references to index.html.
         Furthermore it sends the correct MIME Content-Type header."""
 
-        if ".." in self.path:
+        web_folder = os.path.normpath(os.path.dirname(os.path.abspath(__file__)) + "/../web")
+        filename = os.path.normpath(web_folder + self.path)
+        if not filename.startswith(web_folder):
             self.answer_html(404, "Invalid file name.")
             return
 
-        filename = "web/" + self.path
         if os.path.isdir(filename):
             filename = filename + "/index.html"
 
