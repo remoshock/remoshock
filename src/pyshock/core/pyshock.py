@@ -120,6 +120,7 @@ class Pyshock:
     def boot(self):
         """starts up pyshock.
         
+        - enable logging
         - read configuration from pyshock.ini
         - initialize receiver configuration
         - initialize SDR, if required by a configured receiver
@@ -215,5 +216,11 @@ class PyshockMock(Pyshock):
         """setup receivers based on configuration, but does not 
         initialize anything because they will never be accessed
         using this mock"""
+
+        logging.basicConfig(
+            format='%(asctime)s %(levelname)-8s %(message)s',
+            level=logging.INFO,
+            datefmt='%Y-%m-%d %H:%M:%S')
+
         self._setup_from_config()
         print("Loaded mock")
