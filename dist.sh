@@ -16,7 +16,7 @@ rm $TARGET_DIR/pyshock/README.md
 
 # copy files to temporary folder with the desired directory structure
 cp -ax $PROJECT_DIR/src/* pyshock
-cp -ax $PROJECT_DIR/doc pyshock
+cp -ax $PROJECT_DIR/docs pyshock
 cp -ax $PROJECT_DIR/*.md pyshock
 rm -rf __pycache__
 rm -rf */__pycache__
