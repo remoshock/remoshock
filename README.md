@@ -1,5 +1,6 @@
 # Pyshock
 
+Quick links:&nbsp;&nbsp;
 <a href="https://github.com/pyshock/pyshock/blob/master/doc/WARNING.md">
 <img alt="Warning" src="https://img.shields.io/badge/-Warning-red"></a> 
 <a href="https://github.com/pyshock/pyshock/blob/master/doc/FAQ.md">
