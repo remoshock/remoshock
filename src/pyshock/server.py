@@ -25,6 +25,8 @@ pyshock = None
 mimetypes = {
     ".css": "text/css",
     ".html": "text/html; charset=utf-8",
+    ".jpeg": "image/jpeg",
+    ".jpg": "image/jpeg",
     ".js": "application/javascript",
     ".json": "application/json",
     ".png": "image/png"
