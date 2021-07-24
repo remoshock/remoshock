@@ -11,8 +11,12 @@ import logging
 import os
 import sys
 import time
+import threading
 
 import numpy as np
+
+from pyshock.sdr.sdrsender import SdrSender
+from pyshock.core.logutil import HidePrintIfNotVerbose
 
 cli_exe = sys.executable if hasattr(sys, 'frozen') else sys.argv[0]
 cur_dir = os.path.realpath(os.path.dirname(os.path.realpath(cli_exe)))
@@ -181,9 +185,6 @@ class Sender:
         hackrf.close()
         hackrf.exit()
 
-import threading
-
-from pyshock.sdr.sdrsender import SdrSender
 
 
 lock = threading.RLock()
@@ -196,8 +197,9 @@ class UrhInternalSender(SdrSender):
 
     def __init__(self, verbose):
         global log_enabled
-        self.sender = Sender()
         log_enabled = verbose
+        self.verbose = verbose
+        self.sender = Sender()
     
     def send(self, frequency, sample_rate, carrier_frequency, 
                  modulation_type, samples_per_symbol, low_frequency,
@@ -212,8 +214,10 @@ class UrhInternalSender(SdrSender):
             self.sender.args.sample_rate = sample_rate
             self.sender.args.frequency = frequency
             self.sender.reset()
-            samples = self.sender.modulate_messages(data)
-            self.sender.send(samples)
+
+            with HidePrintIfNotVerbose(self.verbose):
+                samples = self.sender.modulate_messages(data)
+                self.sender.send(samples)
 
 
 if __name__ == '__main__':

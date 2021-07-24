@@ -71,6 +71,10 @@ If you run Linux inside of a Virtual Machine on a slow computer, you
 might experience the same performance problems.
 
 
+**It is not working, why?**
+
+Please add the parameter `--verbose`. It will enable debug logging.
+
 
 **Which setup is used for testing?**
 
