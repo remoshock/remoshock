@@ -54,7 +54,7 @@ pyshockcli allows you to send commands using the command line ("terminal window"
 
 By default, it will send a BEEP command to the first receiver configured in `pyshock.ini`.
 
-For example, to send a shock with 10% power for a duration of 250ms duration to the first receiver:
+For example, to send a shock with 10% power for a duration of 250ms to the first receiver:
 
 `./pyshockcli.py --receiver 1 --action SHOCK --power 10 --duration 250`
 
@@ -134,7 +134,8 @@ shock_min_power_percent = 5
 shock_max_power_percent = 10
 pause_min_s = 300
 pause_max_s = 900
-max_runtime_minutes = 1440
+runtime_min_minutes = 1440
+runtime_max_minutes = 1440
 ~~~~
 
 This sample configuration will ensure that there is always (100% probability)
@@ -145,7 +146,7 @@ set to a random value between 5 minutes (300s) and 15 minutes (900s).
 
 After the event the timer will be set to a new random value in this range and
 everything will start anew. In this example pyshockrnd will end after one day
-(1440 minutes) or when ctrl+c is pressed.
+(1440 minutes) or when Ctrl+c is pressed.
 
 `./pyshockrnd.py`
 

@@ -66,7 +66,8 @@ class PyshockRandomizer:
             self.shock_max_power_percent = self.__get_config_value("shock_max_power_percent")
             self.pause_min_s = self.__get_config_value("pause_min_s")
             self.pause_max_s = self.__get_config_value("pause_max_s")
-            self.max_runtime_minutes = self.__get_config_value("max_runtime_minutes")
+            self.runtime_min_minutes = self.__get_config_value("runtime_min_minutes")
+            self.runtime_max_minutes = self.__get_config_value("runtime_max_minutes")
         except configparser.NoOptionError as e:
             print(e)
             sys.exit(1)
@@ -98,11 +99,12 @@ class PyshockRandomizer:
 
     def __execute(self):
         """the loop in which all the action happens"""
+        run_time_s = random.randint(self.runtime_min_minutes, self.runtime_max_minutes) * 60
 
         try:
             current_time = datetime.datetime.now()
             start_time = current_time
-            while (current_time-start_time).total_seconds() < self.max_runtime_minutes * 60:
+            while (current_time-start_time).total_seconds() < run_time_s:
                 time.sleep(random.randint(self.pause_min_s, self.pause_max_s))
     
                 action = self.__determine_action()
@@ -119,7 +121,7 @@ class PyshockRandomizer:
             print("Runtime completed.")
 
         except KeyboardInterrupt:
-            print("Stopped by ctrl+c.")
+            print("Stopped by Ctrl+c.")
             sys.exit(0)
 
 
