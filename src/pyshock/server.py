@@ -179,7 +179,8 @@ class PyshockServer:
         server = ThreadingHTTPServer(('0.0.0.0', port), PyshockRequestHandler)
         certfile = pyshock.config.get("global", "web_server_certfile", fallback=None) 
         if certfile:
-            server.socket = ssl.wrap_socket(server.socket, certfile=certfile, server_side=True)
+            server.socket = ssl.wrap_socket(server.socket, certfile=certfile,
+                                            ssl_version=ssl.PROTOCOL_TLSv1_2, server_side=True)
         server.serve_forever()
 
 
