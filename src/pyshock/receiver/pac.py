@@ -27,15 +27,17 @@ class Pac(Receiver):
         [1, 1, 1]   # unused
     ]
 
+
     def __init__(self, name, color, code, button):
         super().__init__(name, color)
         self.code = code
         self.button = button
 
+
     def validate_config(self):
         """validates pyshock.ini configuration and prints errors"""
 
-        if re.fullmatch("^[01]{9}$", self.code) == None:
+        if re.fullmatch("^[01]{9}$", self.code) is None:
             print("ERROR: Invalid transmitter_code \"" + self.code + "\" in pyshock.ini.")
             print("The transmitter_code must be sequence of length 9 consisting of the characters 0 and 1")
             return False
@@ -51,7 +53,6 @@ class Pac(Receiver):
     def is_sdr_required(self):
         """we require a SDR (software defined radio) transmitter.
         There are no Arduino modules working on the required frequency."""
-
         return True
 
 
@@ -62,9 +63,9 @@ class Pac(Receiver):
 
     def generate(self, transmitter_code, intensity, button, beep):
         """generates the data structure with checksum for a single command.
-        
+
         This method returns the logical data-structure without transmission-encoding.
-        
+
         @param transmitter_code the unique code of the transmitter as bit string
         @param intensity power level in the PAC scale of 0-63 as but-string
         @param button    index of button
@@ -86,10 +87,10 @@ class Pac(Receiver):
 
     def calculate_checksum(self, data):
         """calculates the checksum of a command data structure
-        
+
         @param data the command data structure without transmission encoding
                     but with a placeholder for the checksum bits"""
-  
+
         # a b c d e f g h i  j  k  l  m  n  o p q  r  s
         # 7 6 5 4 3 2 1 0 15 14 13 12 11 10 9 8 23 22 21
         res =       str((int(data[0]) + int(data[ 8])) % 2)
@@ -102,7 +103,7 @@ class Pac(Receiver):
 
     def encode_for_transmission(self, data):
         """encodes a command data structure for transmission over the air.
-        
+
         This methods adds the synchronization prefix as well as the fillers
         between each bit."""
 
@@ -132,7 +133,7 @@ class Pac(Receiver):
 
     def command(self, action, power, duration):
         """sends a command to the receiver.
-        
+
         A command may consist of several messages, e. g. one message
         for every 250ms of the duration parameter.
 
@@ -162,4 +163,3 @@ class Pac(Receiver):
             message = message + " " + message_template
 
         self.send(message)
-

@@ -12,7 +12,7 @@ import time
 
 
 from pyshock.core.pyshock import Pyshock, PyshockMock
-from pyshock.core.action import Action 
+from pyshock.core.action import Action
 from pyshock.core.version import VERSION
 
 class PyshockRandomizer:
@@ -36,7 +36,7 @@ class PyshockRandomizer:
         parser.add_argument("--version",
                             action="version",
                             version=VERSION)
-    
+
         self.args = parser.parse_args()
 
 
@@ -82,19 +82,18 @@ class PyshockRandomizer:
             time.sleep(1)
         print("Beep command sent to all known receivers. Starting randomizer... Press Ctrl+c to stop.")
 
-    
+
     def __determine_action(self):
-        """determines whether there should be a beep, a shock, both or 
+        """determines whether there should be a beep, a shock, both or
         neither this time based on probabilities for beep and shock"""
         if random.randrange(100) < self.beep_probability_percent:
             if random.randrange(100) < self.shock_probability_percent:
                 return Action.BEEPSHOCK
-            else:
-                return Action.BEEP
-        else:
-            if random.randrange(100) < self.shock_probability_percent:
-                return Action.SHOCK
-            return Action.LIGHT
+            return Action.BEEP
+
+        if random.randrange(100) < self.shock_probability_percent:
+            return Action.SHOCK
+        return Action.LIGHT
 
 
     def __execute(self):
@@ -106,7 +105,7 @@ class PyshockRandomizer:
             start_time = current_time
             while (current_time-start_time).total_seconds() < run_time_s:
                 time.sleep(random.randint(self.pause_min_s, self.pause_max_s))
-    
+
                 action = self.__determine_action()
                 power = random.randint(self.shock_min_power_percent, self.shock_max_power_percent)
                 if action == Action.BEEP:
@@ -114,7 +113,7 @@ class PyshockRandomizer:
                 else:
                     duration = random.randint(self.shock_min_duration_ms, self.shock_max_duration_ms)
                 receiver = random.randrange(len(self.pyshock.receivers)) + 1
-       
+
                 self.pyshock.command(receiver, action, power, duration)
                 current_time = datetime.datetime.now()
 
@@ -132,4 +131,3 @@ class PyshockRandomizer:
         self.__load_config()
         self.__test_receivers()
         self.__execute()
-

@@ -45,11 +45,12 @@ def log(msg):
         print(str(datetime.datetime.now().time()) + " " + msg)
 
 
-class SendConfig(object):
+class SendConfig:
     def __init__(self, send_buffer, total_samples: int):
         self.send_buffer = send_buffer
         self.total_samples = total_samples
         self.current_sent_index = 0
+
 
     def get_data_to_send(self, buffer_length: int):
         try:
@@ -65,13 +66,17 @@ class SendConfig(object):
         except (BrokenPipeError, EOFError):
             return np.zeros(1, dtype=self.send_buffer._type_._type_)
 
+
     def sending_is_finished(self):
         return self.current_sent_index >= self.total_samples
+
 
     def progress_send_status(self, buffer_length: int):
         self.current_sent_index += buffer_length
         if self.current_sent_index >= self.total_samples - 1:
             self.current_sent_index = self.total_samples
+
+
 
 class Sender:
 
@@ -82,7 +87,7 @@ class Sender:
         DEFAULT_CENTER = 0
         DEFAULT_CENTER_SPACING = 0.1
         DEFAULT_TOLERANCE = 5
-    
+
         args = argparse.Namespace()
         args.receive = False
         args.transmit = True
@@ -110,18 +115,19 @@ class Sender:
         args.device_identifier = None
         args.frequency = 27.1e6
         args.frequency_correction = 1
-        args.sample_rate = 2e6 
+        args.sample_rate = 2e6
         args.raw = False
-    
+
         logger.setLevel(logging.ERROR)
         #logger.setLevel(logging.INFO)
         #logger.setLevel(logging.DEBUG)
         Logger.save_log_level()
         self.modulator = urh_cli.build_modulator_from_args(args)
-        
+
         self.args = args
         hackrf.setup(None)
         self.reset()
+
 
     def reset(self):
         bandwidth = self.args.sample_rate if self.args.bandwidth is None else self.args.bandwidth
@@ -135,6 +141,7 @@ class Sender:
         hackrf.set_rf_gain(gain)
         hackrf.set_if_tx_gain(if_gain)
         hackrf.TIMEOUT = 0.1
+
 
     def modulate_messages(self, messages):
         log("modulate messages")
@@ -151,11 +158,13 @@ class Sender:
         numpy_view[:] = samples.flatten(order="C")
         return arr
 
+
     def init_send_parameters(self, samples_to_send: IQArray):
         samples_to_send_ = samples_to_send.convert_to(np.int8)
         send_buffer = self.iq_to_bytes(samples_to_send_)
         total_samples = len(send_buffer)
         return SendConfig(send_buffer, total_samples)
+
 
     def send(self, samples_to_send: np.ndarray):
         send_config = self.init_send_parameters(samples_to_send)
@@ -166,7 +175,7 @@ class Sender:
             if ret != 0:
                 print("ERROR: enter_async_send_mode failed")
                 return False
-    
+
             while not send_config.sending_is_finished():
                 try:
                     time.sleep(0.01)
@@ -189,6 +198,7 @@ class Sender:
 
 lock = threading.RLock()
 
+
 class UrhInternalSender(SdrSender):
     """sends commands by directly invoking code from Universal Radio Hacker.
 
@@ -200,10 +210,11 @@ class UrhInternalSender(SdrSender):
         log_enabled = verbose
         self.verbose = verbose
         self.sender = Sender()
-    
+
+
     def send(self, frequency, sample_rate, carrier_frequency, 
-                 modulation_type, samples_per_symbol, low_frequency,
-                 high_frequency, pause, data):
+             modulation_type, samples_per_symbol, low_frequency,
+             high_frequency, pause, data):
 
         with lock:
             self.sender.args.pause = pause
@@ -222,14 +233,14 @@ class UrhInternalSender(SdrSender):
 
 if __name__ == '__main__':
     sender = Sender()
-    
+
     try:
         samples_to_send = sender.modulate_messages(sys.argv[1])
         print(str(len(samples_to_send)))
         sender.send(samples_to_send)
         time.sleep(1)
-    
+
         sender.send(samples_to_send)
-    
-    finally:    
+
+    finally:
         sender.shutdown_device()

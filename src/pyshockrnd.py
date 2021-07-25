@@ -5,4 +5,4 @@
 
 from pyshock.randomizer import PyshockRandomizer
 
-PyshockRandomizer().start() 
+PyshockRandomizer().start()

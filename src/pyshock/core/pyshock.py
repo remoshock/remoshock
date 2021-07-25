@@ -19,15 +19,15 @@ class Pyshock:
 
     def __init__(self, args):
         """Constructor of the manager class Pyshock
-        
+
         @param args the command line arguments as returned by argparser"""
         self.args = args
 
 
     def __instantiate_receiver(self, section):
-        """handles a [receiver] section in pyshock.ini by creating 
+        """handles a [receiver] section in pyshock.ini by creating
         the appropriate receiver object with the specified parameters.
-        
+
         @param section (mangled) name of the section from pyshock.ini
         """
 
@@ -51,19 +51,19 @@ class Pyshock:
 
     def __instantitate_sdr_sender(self):
         """creates a sdr_sender based on the configuration in pyshock.ini or the command line.
-        
+
         This method triggers a special case handling for HackRF devices.
         """
         sdr = self.config.get("global", "sdr", fallback=None)
-        if "sdr" in self.args and self.args.sdr != None:
+        if "sdr" in self.args and self.args.sdr is not None:
             sdr = self.args.sdr
-        if sdr == None:
+        if sdr is None:
             print()
             print("SDR (software defined radio) hardware is required to send radio signals.")
             print()
             print("Please edit pyshock.ini and add an entry sdr=... in the [global] section.")
             print()
-            print("Supported devices are (upper/lower case is important):") 
+            print("Supported devices are (upper/lower case is important):")
             print("HackRF, LimeSDR")
             print()
             sys.exit(1)
@@ -79,7 +79,7 @@ class Pyshock:
             print()
             print("If the device is not connected or not ready, driver initialization will fail right now")
             print("...")
-            
+
             from pyshock.sdr.urhinternal import UrhInternalSender
             sender = UrhInternalSender(self.args.verbose)
             print("Yeah! Driver initialized successfully.")
@@ -102,11 +102,11 @@ class Pyshock:
                 if receiver.startswith("receiver"):
                     try:
                         receiver = self.__instantiate_receiver(receiver)
-                        if receiver != None:
+                        if receiver is not None:
                             receivers.append(receiver)
                     except configparser.NoOptionError as e:
                         print("Error reading configuration file: " + str(e))
-    
+
             if len(receivers) == 0:
                 print()
                 print("ERROR: No valid receivers configured in pyshock.ini")
@@ -119,7 +119,7 @@ class Pyshock:
 
     def boot(self):
         """starts up pyshock.
-        
+
         - enable logging
         - read configuration from pyshock.ini
         - initialize receiver configuration
@@ -135,7 +135,7 @@ class Pyshock:
         self._setup_from_config()
         arduino_required = False
         sdr_required = False
-        
+
         for receiver in self.receivers:
             if receiver.is_arduino_required():
                 arduino_required = True
@@ -155,7 +155,7 @@ class Pyshock:
             receiver.boot(arduino_manager, sdr_sender)
 
 
-        
+
     def _process_command(self, receiver, action, power, duration):
         """sends a command to the indicated receiver
 
@@ -184,7 +184,7 @@ class Pyshock:
             logging.error("Power level \"" + str(receiver) + "\" is out of range. It should be between 1 and 100")
             return
 
-        impulse_duration = self.receivers[receiver - 1].get_impulse_duration() 
+        impulse_duration = self.receivers[receiver - 1].get_impulse_duration()
         normalized_duration = round(duration / impulse_duration) * impulse_duration
         logging.info("receiver: " + str(receiver) + ", action: " + action.name + ", power: " + str(power) + "%, duration: " + str(normalized_duration) + "ms")
 
@@ -202,18 +202,13 @@ class Pyshock:
 class PyshockMock(Pyshock):
     """A mock used for testing without requiring any SDR hardware."""
 
-    def __init__(self, args):
-        """Constructor of mock for the the manager class Pyshock
-        
-        @param args the command line arguments as returned by argparser"""
-        self.args = args
 
     def _process_command(self, receiver, action, power, duration):
         """do nothing as this is a mock only"""
 
 
     def boot(self):
-        """setup receivers based on configuration, but does not 
+        """setup receivers based on configuration, but does not
         initialize anything because they will never be accessed
         using this mock"""
 

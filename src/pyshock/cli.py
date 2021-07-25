@@ -23,11 +23,11 @@ class PyshockCli:
                             default=1,
                             metavar="n",
                             help="number of receiver entry from pyshock.ini, starting at 1")
-        parser.add_argument("-a", "--action", 
+        parser.add_argument("-a", "--action",
                             default="BEEP",
-                            choices=["LIGHT", "BEEP", "VIBRATE", "SHOCK", "BEEPSHOCK"], 
+                            choices=["LIGHT", "BEEP", "VIBRATE", "SHOCK", "BEEPSHOCK"],
                             help="Action to perform")
-        parser.add_argument("-d", "--duration", 
+        parser.add_argument("-d", "--duration",
                             type=int,
                             default=250,
                             metavar="n",
@@ -48,10 +48,10 @@ class PyshockCli:
         parser.add_argument("--version",
                             action="version",
                             version=VERSION)
-    
+
         self.args = parser.parse_args()
         print("Command: " + sys.argv[0] + " --receiver " + str(self.args.receiver) + " --action " + self.args.action
-               + " --power " + str(self.args.power) + " --duration " + str(self.args.duration))
+              + " --power " + str(self.args.power) + " --duration " + str(self.args.duration))
 
 
     def __boot_pyshock(self):
@@ -68,10 +68,9 @@ class PyshockCli:
         action = Action[self.args.action]
         self.pyshock.command(self.args.receiver, action, self.args.power, self.args.duration)
 
-    
+
     def start(self):
         """starts up pyshockcli"""
         self.__parse_args()
         self.__boot_pyshock()
         self.__process_action()
-

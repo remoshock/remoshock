@@ -5,4 +5,4 @@
 
 from pyshock.cli import PyshockCli
 
-PyshockCli().start() 
+PyshockCli().start()
