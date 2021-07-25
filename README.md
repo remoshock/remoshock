@@ -35,8 +35,9 @@ It consists of
 - One or more PAC shock collars (Pacdog ACX or BCX collar or anything compatible with ATX or DTX remote).
 - A Software Defined Radio (SDR) transmitter that works on the required frequencies (tested using a HackRF device).
 - Linux with Python 3 (tested on Ubuntu 20.04)
-- Universal Radio Hacker (`apt install python3-pip python3-pyqt5; pip3 install urh`).
+- Universal Radio Hacker: `apt install python3-pip python3-pyqt5; pip3 install urh`
 - Download and unzip [https://github.com/pyshock/pyshock/releases/download/v0.2/pyshock-0.2.zip](https://github.com/pyshock/pyshock/releases/download/v0.2/pyshock-0.2.zip).
+- Please see [docs/FAQ.md](https://github.com/pyshock/pyshock/blob/master/docs/FAQ.md) for troubleshooting tips.
 
 
 ## 🔧 Getting Started

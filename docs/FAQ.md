@@ -68,12 +68,23 @@ Please avoid USB hubs and connect your SDR directly to your computer.
 At least USB 2 hubs are known to be too slow to sustain the bit-stream.
 
 If you run Linux inside of a Virtual Machine on a slow computer, you
-might experience the same performance problems.
+might experience the same performance problems. VirtualBox only supports
+USB 1.x in the default installation. Please see 
+[https://www.eltima.com/article/virtualbox-usb-passthrough/](https://www.eltima.com/article/virtualbox-usb-passthrough/).
 
 
 **It is not working, why?**
 
 Please add the parameter `--verbose`. It will enable debug logging.
+
+
+**I am in a VirtualBox VM and lsusb does not find my SDR transmitter**
+
+Please see [https://www.eltima.com/article/virtualbox-usb-passthrough/](https://www.eltima.com/article/virtualbox-usb-passthrough/) on how to install and enable USB Passthrough support for VirtualBox.
+
+Note: I did not work for me: The VirtualBox Machine configuration dialog
+does not list any USB devices in the USB section. Nor does `lsusb` inside
+the virtual machine.
 
 
 **Which setup is used for testing?**
