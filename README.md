@@ -1,4 +1,4 @@
-# Pyshock
+# <img src="https://raw.githubusercontent.com/pyshock/pyshock/master/src/web/favicon.png" alt="Logo showing a drawing of a shock collar receiver" height="32">&nbsp;&nbsp; pyshock
 
 Quick links:&nbsp;&nbsp;
 <a href="https://github.com/pyshock/pyshock/blob/master/docs/WARNING.md">
@@ -21,7 +21,7 @@ Quick links:&nbsp;&nbsp;
 <img style="border: 1px #AAA solid; padding: 1em" alt="Remote Control User Interface" src="https://raw.githubusercontent.com/pyshock/pyshock/master/docs/remote.png" height="200"></a>
 </div>
 
-Pyshock is a computer based remote control for shock collars.
+pyshock is a computer based remote control for shock collars.
 
 It consists of
 - a web-based user interface, that works on mobile
@@ -35,7 +35,7 @@ It consists of
 - One or more PAC shock collars (Pacdog ACX or BCX collar or anything compatible with ATX or DTX remote).
 - A Software Defined Radio (SDR) transmitter that works on the required frequencies (tested using a HackRF device).
 - Linux with Python 3 (tested on Ubuntu 20.04)
-- Universal Radio Hacker (`apt install python3-pip; pip3 install urh`).
+- Universal Radio Hacker (`apt install python3-pip python3-pyqt5; pip3 install urh`).
 - Download and unzip [https://github.com/pyshock/pyshock/releases/download/v0.2/pyshock-0.2.zip](https://github.com/pyshock/pyshock/releases/download/v0.2/pyshock-0.2.zip).
 
 
