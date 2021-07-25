@@ -66,6 +66,8 @@ class PyshockRandomizer:
             self.shock_max_power_percent = self.__get_config_value("shock_max_power_percent")
             self.pause_min_s = self.__get_config_value("pause_min_s")
             self.pause_max_s = self.__get_config_value("pause_max_s")
+            self.start_delay_min_minutes = self.__get_config_value("start_delay_min_minutes")
+            self.start_delay_max_minutes = self.__get_config_value("start_delay_max_minutes")
             self.runtime_min_minutes = self.__get_config_value("runtime_min_minutes")
             self.runtime_max_minutes = self.__get_config_value("runtime_max_minutes")
         except configparser.NoOptionError as e:
@@ -98,11 +100,17 @@ class PyshockRandomizer:
 
     def __execute(self):
         """the loop in which all the action happens"""
-        run_time_s = random.randint(self.runtime_min_minutes, self.runtime_max_minutes) * 60
-
         try:
+            start_delay_s = random.randint(self.start_delay_min_minutes, self.start_delay_max_minutes) * 60
+
+            if start_delay_s > 0:
+                print("Waiting according to start_delay_min_minutes and start_delay_max_minutes...")
+                time.sleep(start_delay_s)
+
+            run_time_s = random.randint(self.runtime_min_minutes, self.runtime_max_minutes) * 60
             current_time = datetime.datetime.now()
             start_time = current_time
+
             while (current_time-start_time).total_seconds() < run_time_s:
                 time.sleep(random.randint(self.pause_min_s, self.pause_max_s))
 
