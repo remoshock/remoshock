@@ -68,6 +68,8 @@ shock_min_power_percent = 5
 shock_max_power_percent = 10
 pause_min_s = 300
 pause_max_s = 900
+start_delay_min_minutes = 0
+start_delay_max_minutes = 0
 runtime_min_minutes = 1440
 runtime_max_minutes = 1440
 
