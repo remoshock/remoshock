@@ -82,9 +82,10 @@ Please add the parameter `--verbose`. It will enable debug logging.
 
 Please see [https://www.eltima.com/article/virtualbox-usb-passthrough/](https://www.eltima.com/article/virtualbox-usb-passthrough/) on how to install and enable USB Passthrough support for VirtualBox.
 
-Note: I did not work for me: The VirtualBox Machine configuration dialog
-does not list any USB devices in the USB section. Nor does `lsusb` inside
-the virtual machine.
+Note: I did not work for me. USB 3.0 showed up after
+`apt install virtualbox-ext-pack`, adding myself to the vboxuser group and
+restarting. But the VirtualBox Machine configuration dialog does not 
+list any USB devices. Neither does `lsusb` inside the virtual machine.
 
 
 **Which setup is used for testing?**
