@@ -1,11 +1,11 @@
 # Pyshock
 
 Quick links:&nbsp;&nbsp;
-<a href="https://github.com/pyshock/pyshock/blob/master/doc/WARNING.md">
+<a href="https://github.com/pyshock/pyshock/blob/master/docs/WARNING.md">
 <img alt="Warning" src="https://img.shields.io/badge/-Warning-red"></a> 
-<a href="https://github.com/pyshock/pyshock/blob/master/doc/FAQ.md">
+<a href="https://github.com/pyshock/pyshock/blob/master/docs/FAQ.md">
 <img alt="Warning" src="https://img.shields.io/badge/-FAQ-yellow"></a> 
-<a href="https://github.com/pyshock/pyshock/blob/master/doc/LICENSE.md">
+<a href="https://github.com/pyshock/pyshock/blob/master/docs/LICENSE.md">
 <img alt="License: AGPL" src="https://img.shields.io/badge/-AGPL-%23AAF"></a> 
 <a href="https://github.com/pyshock/pyshock/releases">
 <img alt="Changes" src="https://img.shields.io/badge/-Changes-green"></a> 
@@ -13,12 +13,12 @@ Quick links:&nbsp;&nbsp;
 <img alt="Download" src="https://img.shields.io/badge/-Download-brightgreen"></a>
 
 <div>
-<a href="https://raw.githubusercontent.com/pyshock/pyshock/master/doc/randomizer.png">
-<img style="border: 1px #AAA solid; padding: 1em" alt="Randomizer" src="https://raw.githubusercontent.com/pyshock/pyshock/master/doc/randomizer.png" height="200"></a> 
-<a href="https://raw.githubusercontent.com/pyshock/pyshock/master/doc/pac.jpeg">
-<img style="border: 1px #AAA solid; padding: 1em" alt="Photo of PAC collars with HackRF SDR" src="https://raw.githubusercontent.com/pyshock/pyshock/master/doc/pac.jpeg" height="200"></a> 
-<a href="https://raw.githubusercontent.com/pyshock/pyshock/master/doc/remote.png">
-<img style="border: 1px #AAA solid; padding: 1em" alt="Remote Control User Interface" src="https://raw.githubusercontent.com/pyshock/pyshock/master/doc/remote.png" height="200"></a>
+<a href="https://raw.githubusercontent.com/pyshock/pyshock/master/docs/randomizer.png">
+<img style="border: 1px #AAA solid; padding: 1em" alt="Randomizer" src="https://raw.githubusercontent.com/pyshock/pyshock/master/docs/randomizer.png" height="200"></a> 
+<a href="https://raw.githubusercontent.com/pyshock/pyshock/master/docs/pac.jpeg">
+<img style="border: 1px #AAA solid; padding: 1em" alt="Photo of PAC collars with HackRF SDR" src="https://raw.githubusercontent.com/pyshock/pyshock/master/docs/pac.jpeg" height="200"></a> 
+<a href="https://raw.githubusercontent.com/pyshock/pyshock/master/docs/remote.png">
+<img style="border: 1px #AAA solid; padding: 1em" alt="Remote Control User Interface" src="https://raw.githubusercontent.com/pyshock/pyshock/master/docs/remote.png" height="200"></a>
 </div>
 
 Pyshock is a computer based remote control for shock collars.
@@ -220,6 +220,6 @@ Please report bugs and feature ideas as issues on [https://github.com/pyshock/py
 
 ## 🔎 See also
 
-- [doc/LICENSE.md](https://github.com/pyshock/pyshock/blob/master/doc/LICENSE.md)
-- [doc/WARNING.md](https://github.com/pyshock/pyshock/blob/master/doc/WARNING.md)
-- [doc/FAQ.md](https://github.com/pyshock/pyshock/blob/master/doc/FAQ.md)
+- [docs/LICENSE.md](https://github.com/pyshock/pyshock/blob/master/docs/LICENSE.md)
+- [docs/WARNING.md](https://github.com/pyshock/pyshock/blob/master/docs/WARNING.md)
+- [docs/FAQ.md](https://github.com/pyshock/pyshock/blob/master/docs/FAQ.md)
