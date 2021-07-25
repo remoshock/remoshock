@@ -5,4 +5,4 @@
 
 from pyshock.server import PyshockServer
 
-PyshockServer().start() 
+PyshockServer().start()

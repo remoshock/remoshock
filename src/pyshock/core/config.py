@@ -10,7 +10,7 @@ import secrets
 import string
 
 class MultiReceiverSectionSupport(collections.OrderedDict):
-    """This class adds an index number at the end of each [receiver] section."""  
+    """This class adds an index number at the end of each [receiver] section."""
 
     index = 0
 
@@ -101,7 +101,7 @@ button=4
 
 """
         config = default.replace("[web_authentication_token]", self.__generate_web_authentication_token())
-        config = config.replace("[transmitter_code]", self.__generate_transmitter_code())       
+        config = config.replace("[transmitter_code]", self.__generate_transmitter_code())
 
         print("Writing default configuration file to " + self.filename)
         with open(self.filename, "w") as f:
@@ -129,4 +129,3 @@ button=4
                                            strict=False, default_section="default")
         config.read(self.filename, "UTF-8")
         self.config = config
-

@@ -6,12 +6,12 @@
 
 # Please ignore this file. It is unfinished and unusable.
 # It requires a connected Arduino with the arshock code.
- 
 
-import serial
+
 import time
 from enum import Enum
 from threading import RLock
+import serial
 
 from pyshock.core.action import Action
 from pyshock.receiver.receiver import Receiver
@@ -20,6 +20,8 @@ from pyshock.receiver.receiver import Receiver
 #  0  Pettainer,            sender code first byte, seonder code second byte, channel
 #  1  Opto-isolator 1,      beep pin,               vibrate pin,              shock pin
 #  2  Opto-isolator 2,      beep modifier pin,      ignored,                  pin
+
+
 
 class ProtocolAction(Enum):
     """actions used by the communication protocl between pyshock and arshock.
@@ -101,17 +103,17 @@ class ArduinoOptocouplerBeepModifier(ArduinoBasedReceiver):
 class ArduinoManager():
     """handles communication with arshock running on Arduino connected via USB"""
 
-    def read_responses(self, readUntil = ProtocolAction.ACKNOWLEDGE):
-        while (True):
-            if (self.ser.in_waiting < 2):
+    def read_responses(self, read_until=ProtocolAction.ACKNOWLEDGE):
+        while True:
+            if self.ser.in_waiting < 2:
                 time.sleep(0.1)
                 continue
             data = self.ser.read(2)
-            if (data[0] == readUntil.value):
+            if data[0] == read_until.value:
                 break
 
             params = self.ser.read(data[1])
-            if (data[0] != ProtocolAction.DEBUG.value):
+            if data[0] != ProtocolAction.DEBUG.value:
                 print(data[0])
             print(params)
             print(" ")
@@ -122,25 +124,25 @@ class ArduinoManager():
 
         @param data bytes data to send
         """
-        with self.serLock:
+        with self.serial_lock:
             self.ser.write(data)
             self.read_responses()
 
 
     def command(self, action, receiver, power, duration):
-        l = [action.value, 4, receiver, power, int(duration / 256), duration % 256]
-        data = bytes(l)
-        self.send(data)
+        data = [action.value, 4, receiver, power, int(duration / 256), duration % 256]
+        message = bytes(data)
+        self.send(message)
 
 
     def boot(self):
         """Boots the Arduino and registers receivers"""
 
         self.ser = serial.Serial('/dev/ttyACM0')
-        self.serLock = RLock()
+        self.serial_lock = RLock()
         self.receiver_index = -1
 
-        with self.serLock:
+        with self.serial_lock:
             time.sleep(1)
             self.ser.flushInput()
 
@@ -148,9 +150,9 @@ class ArduinoManager():
             self.read_responses(ProtocolAction.BOOTED)
             self.read_responses()
 
+
     def register_receiver(self, receiver_type, arg1, arg2, arg3):
-        with self.serLock:
+        with self.serial_lock:
             self.send(bytes([ProtocolAction.ADD.value, 4, receiver_type, arg1, arg2, arg3]))
         self.receiver_index = self.receiver_index + 1
         return self.receiver_index
-

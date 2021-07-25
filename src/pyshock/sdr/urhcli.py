@@ -23,9 +23,9 @@ class UrhCliSender(SdrSender):
         self.verbose = verbose
 
 
-    def send(self, frequency, sample_rate, carrier_frequency, 
-                 modulation_type, samples_per_symbol, low_frequency,
-                 high_frequency, pause, data):
+    def send(self, frequency, sample_rate, carrier_frequency,
+             modulation_type, samples_per_symbol, low_frequency,
+             high_frequency, pause, data):
 
         with lock:
             cmd = [

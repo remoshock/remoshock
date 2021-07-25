@@ -22,7 +22,7 @@ from pyshock.core.version import VERSION
 
 pyshock = None
 
-mimetypes = {
+MIME_CONTENT_TYPES = {
     ".css": "text/css",
     ".html": "text/html; charset=utf-8",
     ".jpeg": "image/jpeg",
@@ -34,7 +34,7 @@ mimetypes = {
 
 class PyshockRequestHandler(BaseHTTPRequestHandler):
     """handles requests from web browsers"""
-    
+
     def answer_json(self, status, data):
         """Sends a JSON response"""
         try:
@@ -46,7 +46,6 @@ class PyshockRequestHandler(BaseHTTPRequestHandler):
             self.wfile.write(json.dumps(data).encode('utf-8'))
         except BrokenPipeError:
             print("Browser disconnected")
-            pass
 
     def answer_html(self, status, text):
         """Sends a message as HTML-response"""
@@ -58,7 +57,6 @@ class PyshockRequestHandler(BaseHTTPRequestHandler):
             self.wfile.write(html.escape(text).encode('utf-8'))
         except BrokenPipeError:
             print("Browser disconnected")
-            pass
 
 
     def verify_authentication_token(self, params):
@@ -84,7 +82,7 @@ class PyshockRequestHandler(BaseHTTPRequestHandler):
 
     def serve_file(self):
         """serves a file from the web-folder
-        
+
         this methods takes care of preventing directory traversing
         and automatically expands directory references to index.html.
         Furthermore it sends the correct MIME Content-Type header."""
@@ -104,7 +102,7 @@ class PyshockRequestHandler(BaseHTTPRequestHandler):
 
         ext = os.path.splitext(filename)[1]
         self.send_response(200)
-        self.send_header("Content-Type", mimetypes.get(ext.lower(), "application/octet-stream"))
+        self.send_header("Content-Type", MIME_CONTENT_TYPES.get(ext.lower(), "application/octet-stream"))
         self.end_headers()
         with open(filename, "rb") as content:
             shutil.copyfileobj(content, self.wfile)
@@ -112,7 +110,7 @@ class PyshockRequestHandler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         """handles a browser request.
-        
+
         path starting with /pyshock are interpreted as commands.
         everything else is seen as a reference to the web-folder"""
 
@@ -125,7 +123,7 @@ class PyshockRequestHandler(BaseHTTPRequestHandler):
 
                 if self.path.startswith("/pyshock/command"):
                     self.handle_command(params)
-                    self.answer_json(200, { "status": "ok"})
+                    self.answer_json(200, {"status": "ok"})
                 elif self.path.startswith("/pyshock/config"):
                     self.answer_json(200, pyshock.get_config())
 
@@ -155,7 +153,7 @@ class PyshockServer:
         parser.add_argument("--version",
                             action="version",
                             version=VERSION)
-    
+
         self.args = parser.parse_args()
 
 
@@ -177,7 +175,7 @@ class PyshockServer:
         print()
 
         server = ThreadingHTTPServer(('0.0.0.0', port), PyshockRequestHandler)
-        certfile = pyshock.config.get("global", "web_server_certfile", fallback=None) 
+        certfile = pyshock.config.get("global", "web_server_certfile", fallback=None)
         if certfile:
             server.socket = ssl.wrap_socket(server.socket, certfile=certfile,
                                             ssl_version=ssl.PROTOCOL_TLSv1_2, server_side=True)
