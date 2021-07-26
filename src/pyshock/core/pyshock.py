@@ -11,6 +11,7 @@ from pyshock.core.config import ConfigManager
 
 from pyshock.receiver.arshock import ArduinoManager
 from pyshock.receiver.pac import Pac
+from pyshock.util import powermanager
 
 class Pyshock:
     """This is the manager class. It basically coordinates everything and
@@ -154,6 +155,7 @@ class Pyshock:
         for receiver in self.receivers:
             receiver.boot(arduino_manager, sdr_sender)
 
+        powermanager.inhibit()
 
 
     def _process_command(self, receiver, action, power, duration):
@@ -218,4 +220,5 @@ class PyshockMock(Pyshock):
             datefmt='%Y-%m-%d %H:%M:%S')
 
         self._setup_from_config()
+        powermanager.inhibit()
         print("Loaded mock")
