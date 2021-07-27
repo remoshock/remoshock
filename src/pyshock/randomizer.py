@@ -10,10 +10,11 @@ import random
 import sys
 import time
 
-
 from pyshock.core.pyshock import Pyshock, PyshockMock
 from pyshock.core.action import Action
 from pyshock.core.version import VERSION
+from pyshock.util import powermanager
+
 
 class PyshockRandomizer:
     """sends random commands at random intervals as configured"""
@@ -137,5 +138,6 @@ class PyshockRandomizer:
         self.__parse_args()
         self.__boot_pyshock()
         self.__load_config()
+        powermanager.inhibit()
         self.__test_receivers()
         self.__execute()

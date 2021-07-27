@@ -19,6 +19,8 @@ import traceback
 from pyshock.core.pyshock import Pyshock, PyshockMock
 from pyshock.core.action import Action
 from pyshock.core.version import VERSION
+from pyshock.util import powermanager
+
 
 pyshock = None
 
@@ -192,4 +194,5 @@ class PyshockServer:
         """starts up pyshockserver"""
         self.__parse_args()
         self.__boot_pyshock()
+        powermanager.inhibit()
         self.__start_web_server()
