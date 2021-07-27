@@ -53,6 +53,7 @@ class PyshockRequestHandler(BaseHTTPRequestHandler):
             self.send_response(status)
             self.send_header("Content-type", "text/html; charset=utf-8")
             self.send_header("Cache-Control", "no-cache")
+            self.send_header("Content-Security-Policy", "default-src 'self'")
             self.end_headers()
             self.wfile.write(html.escape(text).encode('utf-8'))
         except BrokenPipeError:
@@ -85,7 +86,7 @@ class PyshockRequestHandler(BaseHTTPRequestHandler):
 
         this methods takes care of preventing directory traversing
         and automatically expands directory references to index.html.
-        Furthermore it sends the correct MIME Content-Type header."""
+        Furthermore it sends the correct headers."""
 
         web_folder = os.path.normpath(os.path.dirname(os.path.abspath(__file__)) + "/../web")
         filename = os.path.normpath(web_folder + self.path)
@@ -103,6 +104,7 @@ class PyshockRequestHandler(BaseHTTPRequestHandler):
         ext = os.path.splitext(filename)[1]
         self.send_response(200)
         self.send_header("Content-Type", MIME_CONTENT_TYPES.get(ext.lower(), "application/octet-stream"))
+        self.send_header("Content-Security-Policy", "default-src 'self'")
         self.end_headers()
         with open(filename, "rb") as content:
             shutil.copyfileobj(content, self.wfile)
