@@ -102,17 +102,17 @@ class PyshockRandomizer:
     def __execute(self):
         """the loop in which all the action happens"""
         try:
-            start_delay_s = random.randint(self.start_delay_min_minutes, self.start_delay_max_minutes) * 60
+            start_delay_s = random.randint(self.start_delay_min_minutes * 60, self.start_delay_max_minutes * 60)
 
             if start_delay_s > 0:
                 print("Waiting according to start_delay_min_minutes and start_delay_max_minutes...")
                 time.sleep(start_delay_s)
 
-            run_time_s = random.randint(self.runtime_min_minutes, self.runtime_max_minutes) * 60
+            runtime_s = random.randint(self.runtime_min_minutes * 60, self.runtime_max_minutes * 60)
             current_time = datetime.datetime.now()
             start_time = current_time
 
-            while (current_time-start_time).total_seconds() < run_time_s:
+            while (current_time-start_time).total_seconds() < runtime_s:
                 time.sleep(random.randint(self.pause_min_s, self.pause_max_s))
 
                 action = self.__determine_action()
