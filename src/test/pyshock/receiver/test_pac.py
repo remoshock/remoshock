@@ -19,7 +19,7 @@ class PacTestCase(unittest.TestCase):
         pacdog = Pac("PAC1", "#FFF", "010110110", 1)
         expected = "010101010101010111110010110010110010010110010010010110110010110110010010010010010010110110010"
         data = "010100100011011000000110"
-        encoded = pacdog.encode(data)
+        encoded = pacdog.encode_for_transmission(data)
         self.assertThat("encoding", expected, encoded)
 
 
@@ -34,7 +34,3 @@ class PacTestCase(unittest.TestCase):
         pacdog = Pac("PAC1", "#FFF", "010110110", 1)
         self.assertThat("intensity  1", "100000", pacdog.calculate_intensity_code(1))
         self.assertThat("intensity 32", "000001", pacdog.calculate_intensity_code(32))
-
-
-if __name__ == '__main__':
-    unittest.main()
