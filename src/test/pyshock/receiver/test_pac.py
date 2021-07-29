@@ -1,3 +1,7 @@
+#
+# Copyright nilswinter 2020-2021. License: AGPL
+# _____________________________________________
+
 import unittest
 
 from pyshock.receiver.pac import Pac

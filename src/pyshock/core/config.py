@@ -1,13 +1,13 @@
-#!/usr/bin/python3
 #
 # Copyright nilswinter 2020-2021. License: AGPL
-#_______________________________________________
+# _____________________________________________
 
 import collections
 import configparser
 import os
 import secrets
 import string
+
 
 class MultiReceiverSectionSupport(collections.OrderedDict):
     """This class adds an index number at the end of each [receiver] section."""
@@ -48,12 +48,12 @@ class ConfigManager:
         web_authentication_token and transmitter_code are replaced by random values"""
         default = """
 [global]
-web_port = 7777    
+web_port = 7777
 web_authentication_token = [web_authentication_token]
 #for https support:
 #web_server_certile=key_and_cert.pem
 
-# URH supports the following hardware, that can transmit on 27.195 MHz (upper/lower case is important): 
+# URH supports the following hardware, that can transmit on 27.195 MHz (upper/lower case is important):
 # HackRF, LimeSDR
 
 # sdr=HackRF
