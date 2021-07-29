@@ -5,12 +5,14 @@
 import configparser
 import logging
 import sys
+import threading
 
 from pyshock.core.config import ConfigManager
 
 from pyshock.receiver.arshock import ArduinoManager
 from pyshock.receiver.pac import Pac
 
+lock = threading.RLock()
 
 class Pyshock:
     """This is the manager class. It basically coordinates everything and
@@ -163,7 +165,8 @@ class Pyshock:
         @param power power level (1-100)
         @param duration duration in ms
         """
-        self.receivers[receiver - 1].command(action, power, duration)
+        with lock:
+            self.receivers[receiver - 1].command(action, power, duration)
 
 
     def command(self, receiver, action, power, duration):
