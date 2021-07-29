@@ -1,9 +1,9 @@
-#!/usr/bin/python3
 #
 # Copyright nilswinter 2020-2021. License: AGPL
-#_______________________________________________
+# _____________________________________________
 
 from enum import Enum
+
 
 class Action(Enum):
     """Actions that may be sent to the receivers.

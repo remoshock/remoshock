@@ -1,8 +1,6 @@
-#!/usr/bin/python3
 #
 # Copyright nilswinter 2020-2021. License: AGPL
-#_______________________________________________
-
+# _____________________________________________
 
 import re
 import threading
@@ -12,11 +10,12 @@ from pyshock.receiver.receiver import Receiver
 
 lock = threading.RLock()
 
+
 class Pac(Receiver):
     """communication with PAC ACX collars"""
 
     button_codes = [
-        #8 22 23
+        # 8 22 23
         [0, 0, 0],  # E/P left
         [0, 1, 1],  # B1  right 1
         [0, 1, 0],  # B2  right 2, E/P right
@@ -93,8 +92,8 @@ class Pac(Receiver):
 
         # a b c d e f g h i  j  k  l  m  n  o p q  r  s
         # 7 6 5 4 3 2 1 0 15 14 13 12 11 10 9 8 23 22 21
-        res =       str((int(data[0]) + int(data[ 8])) % 2)
-        res = res + str((int(data[1]) + int(data[ 9]) + int(data[21])) % 2)
+        res =       str((int(data[0]) + int(data[ 8])) % 2)                   # noqa: E201, E222
+        res = res + str((int(data[1]) + int(data[ 9]) + int(data[21])) % 2)   # noqa: E201, E222
         res = res + str((int(data[2]) + int(data[10]) + int(data[22])) % 2)
         res = res + str((int(data[3]) + int(data[11]) + int(data[23])) % 2)
         res = res + str((int(data[4]) + int(data[12])) % 2)

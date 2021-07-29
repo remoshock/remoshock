@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 #
 # Copyright nilswinter 2020-2021. License: AGPL
-#_______________________________________________
+# _____________________________________________
 
 import argparse
 import configparser
@@ -112,7 +112,7 @@ class PyshockRandomizer:
             current_time = datetime.datetime.now()
             start_time = current_time
 
-            while (current_time-start_time).total_seconds() < runtime_s:
+            while (current_time - start_time).total_seconds() < runtime_s:
                 time.sleep(random.randint(self.pause_min_s, self.pause_max_s))
 
                 action = self.__determine_action()

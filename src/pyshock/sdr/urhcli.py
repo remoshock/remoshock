@@ -1,7 +1,6 @@
-#!/usr/bin/python3
 #
 # Copyright nilswinter 2020-2021. License: AGPL
-#_______________________________________________
+# _____________________________________________
 
 import subprocess
 import threading
@@ -10,6 +9,7 @@ from pyshock.sdr.sdrsender import SdrSender
 
 
 lock = threading.RLock()
+
 
 class UrhCliSender(SdrSender):
     """sends messages using urh_cli (the Universal Radio Hacker - Command Line Interface)"""

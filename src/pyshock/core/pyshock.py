@@ -1,7 +1,6 @@
-#!/usr/bin/python3
 #
 # Copyright nilswinter 2020-2021. License: AGPL
-#_______________________________________________
+# _____________________________________________
 
 import configparser
 import logging
@@ -11,6 +10,7 @@ from pyshock.core.config import ConfigManager
 
 from pyshock.receiver.arshock import ArduinoManager
 from pyshock.receiver.pac import Pac
+
 
 class Pyshock:
     """This is the manager class. It basically coordinates everything and

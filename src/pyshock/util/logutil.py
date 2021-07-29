@@ -1,10 +1,10 @@
-#!/usr/bin/python3
 #
-# Copyright nilswinter 2021. License: AGPL
-#_______________________________________________
+# Copyright nilswinter 2020-2021. License: AGPL
+# _____________________________________________
 
 import os
 import sys
+
 
 class HidePrintIfNotVerbose:
     """Suppress print() calls (e. g. in third party code) unless

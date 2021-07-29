@@ -1,8 +1,7 @@
 #!/usr/bin/python3
 #
 # Copyright nilswinter 2020-2021. License: AGPL
-#_______________________________________________
-
+# _____________________________________________
 
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse, parse_qs
@@ -34,6 +33,7 @@ MIME_CONTENT_TYPES = {
     ".png": "image/png"
 }
 
+
 class PyshockRequestHandler(BaseHTTPRequestHandler):
     """handles requests from web browsers"""
 
@@ -64,7 +64,7 @@ class PyshockRequestHandler(BaseHTTPRequestHandler):
 
     def verify_authentication_token(self, params):
         """validates authentication token"""
-        if not "token" in params:
+        if "token" not in params:
             return False
 
         return params["token"][0] == pyshock.config.get("global", "web_authentication_token")
@@ -77,7 +77,7 @@ class PyshockRequestHandler(BaseHTTPRequestHandler):
         power = int(params["power"][0])
         duration = int(params["duration"][0])
 
-        if not action in [Action.LIGHT, Action.BEEP, Action.VIBRATE, Action.SHOCK, Action.BEEPSHOCK]:
+        if action not in [Action.LIGHT, Action.BEEP, Action.VIBRATE, Action.SHOCK, Action.BEEPSHOCK]:
             raise Exception("Invalid action")
 
         pyshock.command(receiver, action, power, duration)

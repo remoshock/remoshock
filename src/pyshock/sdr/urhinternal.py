@@ -1,9 +1,9 @@
-#!/usr/bin/python3
 #
 # Most code in this file is copied from https://github.com/jopohl/urh
 # which is GPL. Please see https://github.com/jopohl/urh/blob/master/LICENSE
-#_______________________________________________
+# __________________________________________________________________________
 
+# flake8: noqa
 
 import argparse
 import datetime

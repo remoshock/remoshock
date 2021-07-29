@@ -1,8 +1,7 @@
 #!/usr/bin/python3
 #
 # Copyright nilswinter 2020-2021. License: AGPL
-#_______________________________________________
-
+# _____________________________________________
 
 import argparse
 import sys
@@ -10,6 +9,7 @@ import sys
 from pyshock.core.pyshock import Pyshock, PyshockMock
 from pyshock.core.action import Action
 from pyshock.core.version import VERSION
+
 
 class PyshockCli:
     """a commandline tool to send a command to a receiver"""

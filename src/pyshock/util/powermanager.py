@@ -1,3 +1,7 @@
+#
+# Copyright nilswinter 2020-2021. License: AGPL
+# _____________________________________________
+
 
 def inhibit():
     """tries to inhibit automatic power save mode (hibernation).
@@ -11,25 +15,25 @@ def inhibit():
 
         try:
             proxy = dbus.SessionBus().get_object("org.freedesktop.PowerManagement", "/org/freedesktop/PowerManagement")
-            pm = dbus.Interface (proxy, 'org.freedesktop.PowerManagement')
+            pm = dbus.Interface(proxy, 'org.freedesktop.PowerManagement')
             pm.Inhibit("pyshock", "playing...")
             successful = True
-        except:
+        except:  # noqa: E722
             pass
 
         try:
             proxy = dbus.SessionBus().get_object("org.freedesktop.ScreenSaver", "/ScreenSaver")
-            screenSaver = dbus.Interface (proxy, 'org.freedesktop.ScreenSaver')
+            screenSaver = dbus.Interface(proxy, 'org.freedesktop.ScreenSaver')
             screenSaver.Inhibit("pyshock", "playing...")
 
             proxy = dbus.SessionBus().get_object("org.gnome.SessionManager", "/org/gnome/SessionManager")
-            sessionManager = dbus.Interface (proxy, 'org.gnome.SessionManager')
+            sessionManager = dbus.Interface(proxy, 'org.gnome.SessionManager')
             sessionManager.Inhibit("pyshock", 0, "playing...", 8)
             successful = True
-        except:
+        except:  # noqa: E722
             pass
 
-    except:
+    except:  # noqa: E722
         pass
 
     if not successful:

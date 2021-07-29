@@ -1,7 +1,6 @@
-#!/usr/bin/python3
 #
 # Copyright nilswinter 2020-2021. License: AGPL
-#_______________________________________________
+# _____________________________________________
 
 
 # Please ignore this file. It is unfinished and unusable.
