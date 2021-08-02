@@ -14,6 +14,7 @@ from pyshock.receiver.pac import Pac
 
 lock = threading.RLock()
 
+
 class Pyshock:
     """This is the manager class. It basically coordinates everything and
     delegate the actual work to specialized classes."""

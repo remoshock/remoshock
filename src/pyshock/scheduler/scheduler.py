@@ -33,13 +33,13 @@ class Scheduler:
             timer_reference = threading.Timer(wait_time, task)
             self.__scheduled_tasks[task.identifier] = task
             self.__scheduled_task_references[task.identifier] = timer_reference
-            if task.group is not None:
-                if task.group in self.__scheduled_groups:
-                    group = self.__scheduled_groups[task.group]
+            if task.group_identifier is not None:
+                if task.group_identifier in self.__scheduled_groups:
+                    group = self.__scheduled_groups[task.group_identifier]
                 else:
-                    group = {}
-                    self.__scheduled_groups[task.group] = group
-                group.append(task.identifer)
+                    group = []
+                    self.__scheduled_groups[task.group_identifier] = group
+                group.append(task.identifier)
 
             timer_reference.start()
             return True
@@ -54,12 +54,13 @@ class Scheduler:
             self.__scheduled_tasks.pop(task.identifier, None)
             self.__scheduled_task_references.pop(task.identifier, None)
 
-            if task.group is not None:
-                if task.group in self.__scheduled_groups:
-                    group = self.__scheduled_groups[task.group]
-                    group.pop(task.identifier, None)
-                    if len(group) == 0:
-                        self.__scheduled_groups.pop(task.group, None)
+            if task.group_identifier is not None:
+                if task.group_identifier in self.__scheduled_groups:
+                    group = self.__scheduled_groups[task.group_identifier]
+                    if task.identifier in group:
+                        group.remove(task.identifier)
+                        if len(group) == 0:
+                            self.__scheduled_groups.pop(task.group_identifier, None)
 
 
     def cancel_task(self, identifer):
@@ -85,6 +86,7 @@ class Scheduler:
                 task_identifiers = self.__scheduled_groups.pop(group_identifier)
                 for task_identifier in task_identifiers:
                     self.cancel_task(task_identifier)
+
 
 
 __scheduler = None
