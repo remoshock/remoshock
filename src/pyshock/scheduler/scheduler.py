@@ -25,8 +25,9 @@ class Scheduler:
                 (e. g. because timestamp was in the past"""
 
         with self.lock:
-            wait_time = (task.timestamp-datetime.datetime.now()).total_seconds()
+            wait_time = (task.timestamp - datetime.datetime.now()).total_seconds()
             if wait_time < 0:
+                # timestamp is in the past
                 return False
 
             timer_reference = threading.Timer(wait_time, task)
@@ -88,9 +89,11 @@ class Scheduler:
 
 __scheduler = None
 
+
 def scheduler():
     """a scheduler for future tasks"""
     # singleton pattern
+    global __scheduler
     if __scheduler is None:
         __scheduler = Scheduler()
     return __scheduler
