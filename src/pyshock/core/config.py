@@ -78,28 +78,28 @@ type=pac
 name=PAC1
 color=#FFD
 transmitter_code=[transmitter_code]
-button=1
+channel=1
 
 [receiver]
 type=pac
 name=PAC2
 color=#DDF
 transmitter_code=[transmitter_code]
-button=2
+channel=2
 
 [receiver]
 type=pac
 name=PAC3
 color=#FDF
 transmitter_code=[transmitter_code]
-button=3
+channel=3
 
 [receiver]
 type=pac
 name=PAC4
 color=#DFF
 transmitter_code=[transmitter_code]
-button=4
+channel=4
 
 """
         config = default.replace("[web_authentication_token]", self.__generate_web_authentication_token())

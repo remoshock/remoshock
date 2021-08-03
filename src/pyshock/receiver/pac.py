@@ -27,10 +27,10 @@ class Pac(Receiver):
     ]
 
 
-    def __init__(self, name, color, transmitter_code, button):
+    def __init__(self, name, color, transmitter_code, channel):
         super().__init__(name, color)
         self.transmitter_code = transmitter_code
-        self.button = button
+        self.button = channel
 
 
     def validate_config(self):

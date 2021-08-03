@@ -38,10 +38,18 @@ class Pyshock:
         name = self.config.get(section, "name")
         color = self.config.get(section, "color")
         code = self.config.get(section, "transmitter_code")
-        button = self.config.getint(section, "button")
+        channel = self.config.getint(section, "channel", default=None)
+        if channel is None:
+            button = self.config.getint(section, "button", default=None)
+            if button is None:
+                # force exception
+                self.config.getint(section, "channel")
+            else:
+                channel = button
+                print("WARNING: Please rename parameter \"button\" to \"channel\" in pyshock.ini")
 
         if receiver_type.lower() == "pac":
-            receiver = Pac(name, color, code, button)
+            receiver = Pac(name, color, code, channel)
         else:
             print("ERROR: Unknown receiver type \"" + receiver_type + "\" in pyshock.ini. Supported types: pac")
             return None
