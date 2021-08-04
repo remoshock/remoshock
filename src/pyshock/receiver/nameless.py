@@ -14,10 +14,17 @@ lock = threading.RLock()
 
 class Nameless(Receiver):
 
-    def __init__(self, name, color, transmitter_code, button):
+    action_codes = {
+        Action.LIGHT: 4,
+        Action.BEEP: 3,
+        Action.VIBRATE: 2,
+        Action.SHOCK: 1
+    }
+
+    def __init__(self, name, color, transmitter_code, channel):
         super().__init__(name, color)
         self.transmitter_code = transmitter_code
-        self.button = button
+        self.channel = channel
 
 
     def validate_config(self):
@@ -28,8 +35,8 @@ class Nameless(Receiver):
             print("The transmitter_code must be sequence of length 16 consisting of the characters 0 and 1")
             return False
 
-        if self.button < 1 or self.button > 3:
-            print("ERROR: Invalid button \"" + str(self.button) + "\" in pyshock.ini.")
+        if self.channel < 1 or self.channel > 3:
+            print("ERROR: Invalid channel \"" + str(self.channel) + "\" in pyshock.ini.")
             print("This parameter needs to be a whole number between 1 and 3 inclusive.")
             return False
 
@@ -48,17 +55,36 @@ class Nameless(Receiver):
 
 
     def generate(self, action, power):
-        ## TODO generate messages
-        return "xxx"
+        """generates the data structure (without transfer encoding)"""
+
+        # 16 bits  transmitter code
+        #  4 bits  action: 1: shock, 2: vibreate, 3: beep
+        #  4 bits  channel
+        #  8 bits  power
+        #  8 bits  sum of the previous bytes modulo 256
+
+        action_code = self.action_codes.get(action, 3)
+        if power > 99:
+            power = 99
+
+        data = self.transmitter_code \
+            + format(self.channel - 1, '04b') \
+            + format(action_code, '04b') \
+            + format(power, '08b')
+
+        checksum = (int(data[0:8], 2) + int(data[8:16], 2) + int(data[16:24], 2) + int(data[24:32], 2)) % 256
+        data = data + format(checksum, '08b')
+
+        return data
 
 
     def encode_for_transmission(self, data):
         """encodes a command data structure for transmission over the air.
 
-        This methods adds the synchronization prefix, suffx as well"""
-
+        This methods adds the synchronization prefix and suffx as well.
+        """
         prefix = "111111000"
-        suffix="1000100010000"
+        suffix = "1000100010000"
         res = prefix
         for bit in data:
             if bit == "0":
@@ -81,7 +107,7 @@ class Nameless(Receiver):
             samples_per_symbol=500,
             low_frequency=0,
             high_frequency=100,
-            pause=262924,  # TODO
+            pause=0,
             data=messages)
 
 
@@ -97,12 +123,14 @@ class Nameless(Receiver):
         """
 
         # TODO validate action, power and duration
+        # TODO BEEPSHOCK
 
         message = ""
         message_template = self.encode_for_transmission(self.generate(action, power))
 
         # TODO handle repeats for duration
         for _ in range(0, 3):
-            message = message + " " + message_template
+            message = message + message_template
 
+        # TODO turn off light
         self.send(message)
