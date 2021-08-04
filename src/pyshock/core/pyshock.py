@@ -39,15 +39,14 @@ class Pyshock:
         name = self.config.get(section, "name")
         color = self.config.get(section, "color")
         code = self.config.get(section, "transmitter_code")
-        channel = self.config.getint(section, "channel", default=None)
+
+        channel = self.config.get(section, "channel", fallback=None)
         if channel is None:
-            button = self.config.getint(section, "button", default=None)
-            if button is None:
-                # force exception
-                self.config.getint(section, "channel")
-            else:
-                channel = button
-                print("WARNING: Please rename parameter \"button\" to \"channel\" in pyshock.ini")
+            button = self.config.getint(section, "button", fallback=None)
+            if button is not None:
+                print("ERROR: Please rename parameter \"button\" to \"channel\" in pyshock.ini")
+                return None
+        channel = self.config.getint(section, "channel")
 
         if receiver_type.lower() == "pac":
             receiver = Pac(name, color, code, channel)
