@@ -27,17 +27,17 @@ class Pac(Receiver):
     ]
 
 
-    def __init__(self, name, color, code, button):
+    def __init__(self, name, color, transmitter_code, channel):
         super().__init__(name, color)
-        self.code = code
-        self.button = button
+        self.transmitter_code = transmitter_code
+        self.button = channel
 
 
     def validate_config(self):
         """validates pyshock.ini configuration and prints errors"""
 
-        if re.fullmatch("^[01]{9}$", self.code) is None:
-            print("ERROR: Invalid transmitter_code \"" + self.code + "\" in pyshock.ini.")
+        if re.fullmatch("^[01]{9}$", self.transmitter_code) is None:
+            print("ERROR: Invalid transmitter_code \"" + self.transmitter_code + "\" in pyshock.ini.")
             print("The transmitter_code must be sequence of length 9 consisting of the characters 0 and 1")
             return False
 
@@ -143,7 +143,7 @@ class Pac(Receiver):
 
         message = ""
         if action == Action.BEEPSHOCK:
-            message = self.encode_for_transmission(self.generate(self.code, 0, self.button, 1)) + "/1s"
+            message = self.encode_for_transmission(self.generate(self.transmitter_code, 0, self.button, 1)) + "/1s"
 
         beep = 0
         if action == Action.BEEP or action == Action.VIBRATE:
@@ -157,7 +157,7 @@ class Pac(Receiver):
         if duration > 10000:
             duration = 10000
 
-        message_template = self.encode_for_transmission(self.generate(self.code, power * 63 // 100, self.button, beep))
+        message_template = self.encode_for_transmission(self.generate(self.transmitter_code, power * 63 // 100, self.button, beep))
         for _ in range(0, round(duration / 250)):
             message = message + " " + message_template
 

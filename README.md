@@ -205,7 +205,7 @@ type=pac
 name=PAC1
 color=#FFD
 transmitter_code=[random 9 bit value]
-button=1
+channel=1
 ~~~~
 
 Each receiver section has the following parameters:
@@ -213,7 +213,7 @@ Each receiver section has the following parameters:
 - **name**: A name to display in the user interface
 - **color**: A HTML color code used by the user interface
 - **transmitter_code**: The transmitter bit code. You can use a random value of exactly 9 bits. Or it can be the same code as your real device. Use network bit order.
-- **button**: The button number as used by the DXT remote (top right is 1, button left is 6). In E/P-mode the left side is code 0, and the right side is code 2. Button code 7 works as well.
+- **channel**: The button number as used by the DXT remote (top right is 1, button left is 6). In E/P-mode the left side is code 0, and the right side is code 2. Button code 7 works as well.
 
 There may be sections for the randomizer, which are documented above.
 

@@ -11,6 +11,7 @@ from pyshock.core.config import ConfigManager
 
 from pyshock.receiver.arshock import ArduinoManager
 from pyshock.receiver.pac import Pac
+from pyshock.receiver.nameless import Nameless
 
 lock = threading.RLock()
 
@@ -38,10 +39,19 @@ class Pyshock:
         name = self.config.get(section, "name")
         color = self.config.get(section, "color")
         code = self.config.get(section, "transmitter_code")
-        button = self.config.getint(section, "button")
+
+        channel = self.config.get(section, "channel", fallback=None)
+        if channel is None:
+            button = self.config.getint(section, "button", fallback=None)
+            if button is not None:
+                print("ERROR: Please rename parameter \"button\" to \"channel\" in pyshock.ini")
+                return None
+        channel = self.config.getint(section, "channel")
 
         if receiver_type.lower() == "pac":
-            receiver = Pac(name, color, code, button)
+            receiver = Pac(name, color, code, channel)
+        elif receiver_type.lower() == "nameless":
+            receiver = Nameless(name, color, code, channel)
         else:
             print("ERROR: Unknown receiver type \"" + receiver_type + "\" in pyshock.ini. Supported types: pac")
             return None
