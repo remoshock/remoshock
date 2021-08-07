@@ -122,15 +122,33 @@ class Nameless(Receiver):
         @param duration duration in ms
         """
 
-        # TODO validate action, power and duration
-        # TODO BEEPSHOCK
 
         message = ""
-        message_template = self.encode_for_transmission(self.generate(action, power))
+        if action == Action.BEEPSHOCK:
+            message = self.encode_for_transmission(self.generate(Action.BEEP, 1))
+            message = message + message + message + "/1s"
 
-        # TODO handle repeats for duration
-        for _ in range(0, 3):
+        if action == Action.LIGHT:
+            # TODO handle "flashlight" on/off mode
+            action = Action.VIBRATE
+            power = 0
+
+        if duration < 500:
+            duration = 500
+        if duration > 10000:
+            duration = 10000
+
+
+        # at least 3 repeats of the message
+        # one message takes 45.75ms (after transfer encoding: 183 symbols,
+        # 500 samples/symbols, 2000000 samples/second)
+        #
+        #  500ms ==> 3 messages
+        # 1000ms ==> messages for  500ms, followed by 3 messages
+        # 1500ms ==> messages for 1000ms, followed by 3 messages
+        repeats = round((duration - 500) // 500 * 45.75 + 3)
+        message_template = self.encode_for_transmission(self.generate(action, power))
+        for _ in range(0, repeats):
             message = message + message_template
 
-        # TODO turn off light
         self.send(message)
