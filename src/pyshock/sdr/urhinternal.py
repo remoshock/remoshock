@@ -122,7 +122,6 @@ class Sender:
         #logger.setLevel(logging.INFO)
         #logger.setLevel(logging.DEBUG)
         Logger.save_log_level()
-        self.modulator = urh_cli.build_modulator_from_args(args)
 
         self.args = args
         hackrf.setup(None)
@@ -147,7 +146,8 @@ class Sender:
         log("modulate messages")
         self.args.messages = [messages]
         messages_to_send = urh_cli.read_messages_to_send(self.args)
-        samples = urh_cli.modulate_messages(messages_to_send, self.modulator)
+        modulator = urh_cli.build_modulator_from_args(self.args)
+        samples = urh_cli.modulate_messages(messages_to_send, modulator)
         log("modulate messages done")
         return samples
 
@@ -168,10 +168,11 @@ class Sender:
 
     def send(self, samples_to_send: np.ndarray):
         send_config = self.init_send_parameters(samples_to_send)
-        log("send send config generated")
+        log("send config generated")
 
         try:
             ret = hackrf.start_tx_mode(send_config.get_data_to_send)
+            log("hackrf.start_tx_mode")
             if ret != 0:
                 print("ERROR: enter_async_send_mode failed")
                 return False

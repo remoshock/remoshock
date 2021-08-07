@@ -105,8 +105,8 @@ class Nameless(Receiver):
             carrier_frequency=30.716e3,
             modulation_type="ASK",
             samples_per_symbol=500,
-            low_frequency=0,
-            high_frequency=100,
+            low_frequency="0",
+            high_frequency="100",
             pause=0,
             data=messages)
 
