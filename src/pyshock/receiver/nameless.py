@@ -51,10 +51,15 @@ class Nameless(Receiver):
         return True
 
 
-    def boot(self, _pyshock, _receiver, _arduino_manader, sdr_sender):
+    def boot(self, pyshock, receiver, _arduino_manader, sdr_sender):
         """keep a references to the sdr_sender for later use
         and schedules keep-awake messages"""
         self.sender = sdr_sender
+
+        # schedule keep awake timer
+        command_task = CommandTask(None, None, None, pyshock, receiver, Action.VIBRATE, 0, 250)
+        periodic_task = PeriodicTask(5 * 60 / 2 - 10, command_task)
+        scheduler().schedule_task(periodic_task)
 
 
     def generate(self, action, power):
