@@ -55,7 +55,7 @@ class Pac(Receiver):
         return True
 
 
-    def boot(self, _arduino_manader, sdr_sender):
+    def boot(self, _pyshock, _receiver, _arduino_manader, sdr_sender):
         """keep a references to the sdr_sender for later use"""
         self.sender = sdr_sender
 
