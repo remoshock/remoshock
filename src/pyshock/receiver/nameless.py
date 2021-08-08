@@ -8,6 +8,9 @@ import threading
 
 from pyshock.core.action import Action
 from pyshock.receiver.receiver import Receiver
+from pyshock.scheduler.commandtask import CommandTask
+from pyshock.scheduler.periodictask import PeriodicTask
+from pyshock.scheduler.scheduler import scheduler
 
 lock = threading.RLock()
 
@@ -48,10 +51,10 @@ class Nameless(Receiver):
         return True
 
 
-    def boot(self, _arduino_manader, sdr_sender):
-        """keep a references to the sdr_sender for later use"""
+    def boot(self, _pyshock, _receiver, _arduino_manader, sdr_sender):
+        """keep a references to the sdr_sender for later use
+        and schedules keep-awake messages"""
         self.sender = sdr_sender
-        # TODO schedule keep awake timer
 
 
     def generate(self, action, power):

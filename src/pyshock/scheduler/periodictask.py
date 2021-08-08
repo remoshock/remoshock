@@ -18,6 +18,7 @@ class PeriodicTask:
         self.task = task
         self.interval = interval
         self.timestamp = datetime.datetime.fromtimestamp(datetime.datetime.now().timestamp() + interval)
+        task.timestamp = self.timestamp
         self.identifier = task.identifier
         self.group_identifier = task.group_identifier
 
@@ -30,4 +31,5 @@ class PeriodicTask:
         self.task.__call__()
 
         self.timestamp = datetime.datetime.fromtimestamp(datetime.datetime.now().timestamp() + self.interval)
+        self.task.timestamp = self.timestamp
         scheduler().schedule_task(self)

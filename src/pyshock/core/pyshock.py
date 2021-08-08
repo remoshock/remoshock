@@ -164,8 +164,10 @@ class Pyshock:
         if sdr_required:
             sdr_sender = self.__instantitate_sdr_sender()
 
+        i = 1
         for receiver in self.receivers:
-            receiver.boot(arduino_manager, sdr_sender)
+            receiver.boot(self, i, arduino_manager, sdr_sender)
+            i = i + 1
 
 
     def _process_command(self, receiver, action, power, duration):
