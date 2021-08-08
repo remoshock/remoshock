@@ -15,6 +15,7 @@ class PeriodicTask:
         @param interval interval in seconds
         @param task to execute
         """
+        self.task = task
         self.interval = interval
         self.timestamp = datetime.datetime.fromtimestamp(datetime.datetime.now().timestamp() + interval)
         self.identifier = task.identifier
