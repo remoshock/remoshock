@@ -8,6 +8,7 @@ import datetime
 
 from pyshock.scheduler.scheduler import scheduler
 from pyshock.scheduler.task import Task
+from pyshock.scheduler.periodictask import PeriodicTask
 
 
 class MockTask(Task):
@@ -22,13 +23,13 @@ class MockTask(Task):
         @param group_identifier an identifier, which may be used to cannel all task with same same group identifier
         """
         super().__init__(timestamp, identifier, group_identifier)
-        self.called = False
+        self.called = 0
 
 
     def __call__(self):
         """remember that this task was processed"""
         super().__call__()
-        self.called = True
+        self.called = self.called + 1
 
 
 class TestScheduler(unittest.TestCase):
@@ -37,12 +38,12 @@ class TestScheduler(unittest.TestCase):
         """tests the normal opertion of the scheduler"""
         timestamp = datetime.datetime.now()
         delta = datetime.timedelta(milliseconds=1)
-        mock_task = MockTask(timestamp + delta, "identifier", "group_identifier")
+        mock_task = MockTask(timestamp + delta, "identifier", None)
         scheduler().schedule_task(mock_task)
 
         # wait a little time and check that the task was executed
         time.sleep(.005)
-        self.assertTrue(mock_task.called, "task was executed")
+        self.assertTrue(mock_task.called == 1, "task was executed")
 
 
     def test_scheduler_cancel(self):
@@ -55,7 +56,7 @@ class TestScheduler(unittest.TestCase):
 
         # wait a little time and check that the task was not executed
         time.sleep(.02)
-        self.assertFalse(mock_task.called, "task was not executed")
+        self.assertTrue(mock_task.called == 0, "task was not executed")
 
 
     def test_group_scheduler_cancel(self):
@@ -73,6 +74,14 @@ class TestScheduler(unittest.TestCase):
         # wait a little time and check that all tasks of the group were not executed,
         # also check that a task from another group was executed
         time.sleep(.02)
-        self.assertFalse(mock_task1.called, "task was not executed")
-        self.assertTrue(mock_task2.called, "task was executed")
-        self.assertFalse(mock_task3.called, "task was not executed")
+        self.assertFalse(mock_task1.called == 1, "task was not executed")
+        self.assertTrue(mock_task2.called == 1, "task was executed")
+        self.assertFalse(mock_task3.called == 1, "task was not executed")
+
+    def test_periodic_task(self):
+        mock_task = MockTask(None, "identifier1", None)
+        periodic_task = PeriodicTask(0.010, mock_task)
+        scheduler().schedule_task(periodic_task)
+        time.sleep(0.04)
+        scheduler().cancel_task(mock_task.identifier)
+        self.assertTrue(mock_task.called >= 2, "task was executed at least twice")

@@ -41,6 +41,7 @@ class Scheduler:
                     self.__scheduled_groups[task.group_identifier] = group
                 group.append(task.identifier)
 
+            timer_reference.daemon = True
             timer_reference.start()
             return True
 

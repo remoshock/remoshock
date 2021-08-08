@@ -36,9 +36,9 @@ class CommandTask(Task):
         """executes the task"""
         super().__call__()
 
-        # if this call is really oudated, skip it (e. g. don't execute
+        # if this call is really outdated, skip it (e. g. don't execute
         # all delayed calles as batch after the computer wakes up from hibernation)
-        delayed = datetime.datetime.now() - self.timestamp
+        delayed = (datetime.datetime.now() - self.timestamp).total_seconds()
         if delayed > 30:
             return
         self.pyshock.command(self.receiver, self.action, self.power, self.duration)
