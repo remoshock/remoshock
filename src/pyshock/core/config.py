@@ -94,41 +94,49 @@ channel=1
 [receiver]
 type=pac
 name=PAC2
-color=#DDF
+color=#FFD
 transmitter_code=[transmitter_code_9bit]
 channel=2
 
 [receiver]
 type=pac
 name=PAC3
-color=#FDF
+color=#FFD
 transmitter_code=[transmitter_code_9bit]
 channel=3
+
+[receiver]
+type=pac
+name=PAC4
+color=#FFD
+transmitter_code=[transmitter_code_9bit]
+channel=4
 
 #[receiver]
 #type=nameless
 #name=Nameless1
-#color=#DFF
+#color=#FDF
 #transmitter_code=[transmitter_code_16bit]
 #channel=1
 
 #[receiver]
 #type=nameless
-#name=Nameless1
-#color=#DFF
+#name=Nameless2
+#color=#FDF
 #transmitter_code=[transmitter_code_16bit]
 #channel=2
 
 #[receiver]
 #type=nameless
-#name=Nameless1
-#color=#DFF
+#name=Nameless3
+#color=#FDF
 #transmitter_code=[transmitter_code_16bit]
 #channel=3
 
 """
         config = default.replace("[web_authentication_token]", self.__generate_web_authentication_token())
         config = config.replace("[transmitter_code_9bit]", self.__generate_transmitter_code(9))
+        config = config.replace("[transmitter_code_16bit]", self.__generate_transmitter_code(16))
 
         print("Writing default configuration file to " + self.filename)
         with open(self.filename, "w") as f:
