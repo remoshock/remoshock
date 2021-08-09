@@ -7,4 +7,4 @@
 
 # pylint: disable=C0326
 # flake8: noqa
-VERSION="0.3"
+VERSION="0.4"

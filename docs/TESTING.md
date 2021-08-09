@@ -107,35 +107,42 @@ Open the displayed URL in a web-browser.</td>
 
 <tr>
 <td>11.</td>
-<td><td>Reset Nameless receiver into learning mode<br>.
+<td>Reset Nameless receiver into learning mode.<br>
 Press the shock button for the first Nameless receiver.</td>
-<td>The receiver beeps, there is a delay of 1 second, before the LIGHT flashes for another second.</td>
+<td>The receiver beeps, its stops flashing the light and starts blinking the light.</td>
 </tr>
 
 
 <tr>
 <td>12.</td>
-<td><td>Press the beeo button for the first Nameless receiver.</td>
+<td>Press the beep button for the first Nameless receiver.</td>
 <td>The receiver beeps.</td>
 </tr>
 
 
 <tr>
 <td>13.</td>
-<td>Wait five minutes<td>
+<td>Wait five minutes</td>
 <td>There are at least 2 automatic generated messages per nameless receiver. The message for each collar are at least 2 minutes and at most 2 minutes and 30 seconds apart.</td>
 </tr>
 
 
 <tr>
 <td>14.</td>
+<td>Press the beep button for the first Nameless receiver.</td>
+<td>The receiver beeps.</td>
+</tr>
+
+
+<tr>
+<td>15.</td>
 <td>End the pyshockserver-process by pressing <code>ctrl+c</code></td>
 <td>No error message is shown. No traceback is shown.</td>
 </tr>
 
 
 <tr>
-<td>15.</td>
+<td>16.</td>
 <td>Edit pyshock.ini to setup the following randomizer configuration:
 
 ~~~~
@@ -161,7 +168,7 @@ Disable all non PAC receivers by adding a `#` at the start of the lines.
 
 
 <tr>
-<td>16.</td>
+<td>17.</td>
 <td>Run <code>pyshockrnd.py --mock</code></td>
 <td>
 
