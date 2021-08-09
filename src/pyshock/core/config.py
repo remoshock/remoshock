@@ -34,19 +34,30 @@ class ConfigManager:
     def __generate_web_authentication_token(self):
         """creates a web_authentication_token that is probably unique to this installation."""
         charset = string.ascii_lowercase + string.ascii_uppercase + string.digits
-        return ''.join(secrets.choice(charset) for _ in range(20))
+        return ''.join(secrets.choice(charset) for _ in range(8))
 
 
-    def __generate_transmitter_code(self):
-        """creates a transmitter_code that is probably unique to this installation."""
+    def __generate_transmitter_code(self, length):
+        """creates a transmitter_code that is probably unique to this installation.
+
+        @param length number of bits"""
         charset = "01"
-        return ''.join(secrets.choice(charset) for _ in range(9))
+        return ''.join(secrets.choice(charset) for _ in range(length))
 
 
     def __write_default_configuration(self):
         """write a default configuration to pyshock.ini.
         web_authentication_token and transmitter_code are replaced by random values"""
         default = """
+#
+# Configuration file for pyshock. Please see https://github.com/pyshock/pyshock#readme
+# Lines starting with a # are ignored.
+#
+# This file is generated for PAC collars. If you are using another brand,
+# please delete the [receiver] sections for the PAC collar and remove the #-characters
+# in the appropriate sections for your receiver.
+#
+
 [global]
 web_port = 7777
 web_authentication_token = [web_authentication_token]
@@ -77,33 +88,47 @@ runtime_max_minutes = 1440
 type=pac
 name=PAC1
 color=#FFD
-transmitter_code=[transmitter_code]
+transmitter_code=[transmitter_code_9bit]
 channel=1
 
 [receiver]
 type=pac
 name=PAC2
 color=#DDF
-transmitter_code=[transmitter_code]
+transmitter_code=[transmitter_code_9bit]
 channel=2
 
 [receiver]
 type=pac
 name=PAC3
 color=#FDF
-transmitter_code=[transmitter_code]
+transmitter_code=[transmitter_code_9bit]
 channel=3
 
-[receiver]
-type=pac
-name=PAC4
-color=#DFF
-transmitter_code=[transmitter_code]
-channel=4
+#[receiver]
+#type=nameless
+#name=Nameless1
+#color=#DFF
+#transmitter_code=[transmitter_code_16bit]
+#channel=1
+
+#[receiver]
+#type=nameless
+#name=Nameless1
+#color=#DFF
+#transmitter_code=[transmitter_code_16bit]
+#channel=2
+
+#[receiver]
+#type=nameless
+#name=Nameless1
+#color=#DFF
+#transmitter_code=[transmitter_code_16bit]
+#channel=3
 
 """
         config = default.replace("[web_authentication_token]", self.__generate_web_authentication_token())
-        config = config.replace("[transmitter_code]", self.__generate_transmitter_code())
+        config = config.replace("[transmitter_code_9bit]", self.__generate_transmitter_code(9))
 
         print("Writing default configuration file to " + self.filename)
         with open(self.filename, "w") as f:
