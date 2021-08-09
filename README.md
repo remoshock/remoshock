@@ -4,7 +4,7 @@ Quick links:&nbsp;&nbsp;
 <a href="https://github.com/pyshock/pyshock/blob/master/docs/WARNING.md">
 <img alt="Warning" src="https://img.shields.io/badge/-Warning-red"></a> 
 <a href="https://github.com/pyshock/pyshock/blob/master/docs/FAQ.md">
-<img alt="Warning" src="https://img.shields.io/badge/-FAQ-yellow"></a> 
+<img alt="Frequently Asked Questions" src="https://img.shields.io/badge/-FAQ-yellow"></a> 
 <a href="https://github.com/pyshock/pyshock/blob/master/docs/LICENSE.md">
 <img alt="License: AGPL" src="https://img.shields.io/badge/-AGPL-%23AAF"></a> 
 <a href="https://github.com/pyshock/pyshock/releases">
@@ -32,7 +32,9 @@ It consists of
 
 ## ✔️ Requirements
 
-- One or more PAC shock collars (Pacdog ACX or BCX collar or anything compatible with ATX or DTX remote).
+- One or more compatible shock collars:
+  - PAC collars (Pacdog ACX or BCX collar or anything compatible with ATX or DTX remote)
+  - Nameless "Dog Shock Collar", often with a yellow remote control
 - A Software Defined Radio (SDR) transmitter that works on the required frequencies (tested using a HackRF device).
 - Linux with Python 3 (tested on Ubuntu 20.04)
 - Universal Radio Hacker: `apt install python3-pip python3-pyqt5; pip3 install urh`
@@ -47,6 +49,11 @@ Make sure that `urh` is working and does recognize your SDR device.
 Run `./pyshockcli.py`. This command will generate a `pyshock.ini` configuration file
 with random values for authentication token and transmitter code.
 Please edit this file to specify your SDR transmitting hardware.
+
+The file will be generate with an active sample configruation for PAC collars.
+If you are using another brand, please delete the [receiver]-sections for
+the PAC collars and remove the comment-character `#` before the lines for 
+your receiver.
 
 Reset your collar into pairing mode and invoke `./pyshockcli` again.
 After successful pairing, run it a third time, to issue a "beep" command.

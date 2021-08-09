@@ -54,15 +54,16 @@ cd pyshock
 
 - "Please edit pyshock.ini and add an entry sdr=... in the [global] section."
 - In pyshock.ini, the variables web_authentication_token and transmitter_code contain random values.
-- There is an example configuration for multiple receivers.
-- There is an example configuration for th randomizer.
+- There is an example configuration for multiple PAC receivers.
+- There is are example configurations for non PAC receivers, that are disabled by a leading `#`.
+- There is an example configuration for the randomizer.
 </td>
 </tr>
 
 
 <tr>
 <td>5.</td>
-<td>Edit pyshock.ini and set sdr=hackrf</td>
+<td>Edit pyshock.ini and set sdr=hackrf. Uncomment all receiver sections be removing a leading `#`.</td>
 <td>-</td>
 </tr>
 
@@ -106,13 +107,35 @@ Open the displayed URL in a web-browser.</td>
 
 <tr>
 <td>11.</td>
+<td><td>Reset Nameless receiver into learning mode<br>.
+Press the shock button for the first Nameless receiver.</td>
+<td>The receiver beeps, there is a delay of 1 second, before the LIGHT flashes for another second.</td>
+</tr>
+
+
+<tr>
+<td>12.</td>
+<td><td>Press the beeo button for the first Nameless receiver.</td>
+<td>The receiver beeps.</td>
+</tr>
+
+
+<tr>
+<td>13.</td>
+<td>Wait five minutes<td>
+<td>There are at least 2 automatic generated messages per nameless receiver. The message for each collar are at least 2 minutes and at most 2 minutes and 30 seconds apart.</td>
+</tr>
+
+
+<tr>
+<td>14.</td>
 <td>End the pyshockserver-process by pressing <code>ctrl+c</code></td>
 <td>No error message is shown. No traceback is shown.</td>
 </tr>
 
 
 <tr>
-<td>12.</td>
+<td>15.</td>
 <td>Edit pyshock.ini to setup the following randomizer configuration:
 
 ~~~~
@@ -131,13 +154,14 @@ runtime_min_minutes = 2
 runtime_max_minutes = 3
 
 ~~~~
+Disable all non PAC receivers by adding a `#` at the start of the lines.
 </td>
 <td>-</td>
 </tr>
 
 
 <tr>
-<td>13.</td>
+<td>16.</td>
 <td>Run <code>pyshockrnd.py --mock</code></td>
 <td>
 
@@ -147,7 +171,7 @@ runtime_max_minutes = 3
 - Power varies between 5% and 10%
 - Duration varies between the two exact values 250ms and 500ms
 - The last BEEPSHOCK-message is between 120s and 185ms of the first BEEPSHOCK-message
-- The programm ends with "Runtime comleted".
+- The programm ends with "Runtime completed".
 </td>
 </tr>
 
