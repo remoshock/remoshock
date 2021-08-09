@@ -134,7 +134,8 @@ class Nameless(Receiver):
         message = ""
         if action == Action.BEEPSHOCK:
             message = self.encode_for_transmission(self.generate(Action.BEEP, 1))
-            message = message + message + message + "/1s"
+            message = message + message + message + "/1.1s "
+            action = Action.SHOCK
 
         if action == Action.LIGHT:
             # TODO handle "flashlight" on/off mode
