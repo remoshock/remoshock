@@ -193,7 +193,7 @@ Disable all non PAC receivers by adding a `#` at the start of the lines.
 git commit -am "released version x.x"
 git push
 git checkout -b VERSION_xx_RELEASE_xx
-git push --set-upstream VERSION_xx_RELEASE_xx
+git push --set-upstream origin VERSION_xx_RELEASE_xx
 git checkout master
 ~~~~
 
