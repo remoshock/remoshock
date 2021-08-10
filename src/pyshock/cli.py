@@ -37,7 +37,7 @@ class PyshockCli:
                             help=argparse.SUPPRESS)
         parser.add_argument("-p", "--power",
                             type=int,
-                            default=0,
+                            default=1,
                             metavar="n",
                             help="power level (0-100)")
         parser.add_argument("--sdr",
