@@ -10,8 +10,9 @@ import threading
 from pyshock.core.config import ConfigManager
 
 from pyshock.receiver.arshock import ArduinoManager
-from pyshock.receiver.pac import Pac
 from pyshock.receiver.nameless import Nameless
+from pyshock.receiver.pac import Pac
+from pyshock.receiver.petrainer import Petrainer
 
 lock = threading.RLock()
 
@@ -52,8 +53,10 @@ class Pyshock:
             receiver = Pac(name, color, code, channel)
         elif receiver_type.lower() == "nameless":
             receiver = Nameless(name, color, code, channel)
+        elif receiver_type.lower() == "petainer":
+            receiver = Petrainer(name, color, code, channel)
         else:
-            print("ERROR: Unknown receiver type \"" + receiver_type + "\" in pyshock.ini. Supported types: pac")
+            print("ERROR: Unknown receiver type \"" + receiver_type + "\" in pyshock.ini. Supported types: pac, nameless, petainer")
             return None
 
         if receiver.validate_config():
