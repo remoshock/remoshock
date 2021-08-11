@@ -15,7 +15,7 @@ from pyshock.scheduler.scheduler import scheduler
 lock = threading.RLock()
 
 
-class Nameless(Receiver):
+class Wodondog(Receiver):
 
     action_codes = {
         Action.LIGHT: 4,

@@ -33,8 +33,8 @@ It consists of
 ## ✔️ Requirements
 
 - One or more compatible shock collars:
-  - PAC collars (Pacdog ACX or BCX collar or anything compatible with ATX or DTX remote)
-  - Nameless "Dog Shock Collar", often with a yellow remote control
+  - PAC collars (compatible with ATX or DTX remote)
+  - Wodondog "Dog Shock Collar"
 - A Software Defined Radio (SDR) transmitter that works on the required frequencies (tested using a HackRF device).
 - Linux with Python 3 (tested on Ubuntu 20.04)
 - Universal Radio Hacker: `apt install python3-pip python3-pyqt5; pip3 install urh`

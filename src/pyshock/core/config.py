@@ -113,22 +113,22 @@ transmitter_code=[transmitter_code_9bit]
 channel=4
 
 #[receiver]
-#type=nameless
-#name=Nameless1
+#type=wodondog
+#name=Wodondog1
 #color=#FDF
 #transmitter_code=[transmitter_code_16bit]
 #channel=1
 
 #[receiver]
-#type=nameless
-#name=Nameless2
+#type=wodondog
+#name=Wodondog2
 #color=#FDF
 #transmitter_code=[transmitter_code_16bit]
 #channel=2
 
 #[receiver]
-#type=nameless
-#name=Nameless3
+#type=wodondog
+#name=Wodondog3
 #color=#FDF
 #transmitter_code=[transmitter_code_16bit]
 #channel=3

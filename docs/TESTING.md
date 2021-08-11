@@ -107,15 +107,15 @@ Open the displayed URL in a web-browser.</td>
 
 <tr>
 <td>11.</td>
-<td>Reset Nameless receiver into learning mode.<br>
-Press the shock button for the first Nameless receiver.</td>
+<td>Reset Wodondog receiver into learning mode.<br>
+Press the shock button for the first Wodondog receiver.</td>
 <td>The receiver beeps, its stops flashing the light and starts blinking the light.</td>
 </tr>
 
 
 <tr>
 <td>12.</td>
-<td>Press the beep button for the first Nameless receiver.</td>
+<td>Press the beep button for the first Wodondog receiver.</td>
 <td>The receiver beeps.</td>
 </tr>
 
@@ -123,13 +123,13 @@ Press the shock button for the first Nameless receiver.</td>
 <tr>
 <td>13.</td>
 <td>Wait five minutes</td>
-<td>There are at least 2 automatic generated messages per nameless receiver. The message for each collar are at least 2 minutes and at most 2 minutes and 30 seconds apart.</td>
+<td>There are at least 2 automatic generated messages per Wodondog receiver. The message for each collar are at least 2 minutes and at most 2 minutes and 30 seconds apart.</td>
 </tr>
 
 
 <tr>
 <td>14.</td>
-<td>Press the beep button for the first Nameless receiver.</td>
+<td>Press the beep button for the first Wodondog receiver.</td>
 <td>The receiver beeps.</td>
 </tr>
 
