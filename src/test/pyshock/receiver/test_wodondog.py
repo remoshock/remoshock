@@ -5,16 +5,16 @@
 import unittest
 
 from pyshock.core.action import Action
-from pyshock.receiver.nameless import Nameless
+from pyshock.receiver.wodondog import Wodondog
 
 
-class NamelessTestCase(unittest.TestCase):
-    """test for nameless collar"""
+class WodondogTestCase(unittest.TestCase):
+    """test for Wodondog collar"""
 
 
     def test_encoding(self):
         """test for the transfer encoding"""
-        receiver = Nameless("Nameless1", "#FFF", "0101010101010101", 1)
+        receiver = Wodondog("Wodondog1", "#FFF", "0101010101010101", 1)
         expected = "11111100010001110100011101000111010001110100011101000111010001110100011101000100010001000100010001110100010001000100010001000100010001110111010001110100011101110100011101000100010000"
         data = "0101010101010101000000100000000110101101"
         encoded = receiver.encode_for_transmission(data)
@@ -23,7 +23,7 @@ class NamelessTestCase(unittest.TestCase):
 
     def test_generate(self):
         """test for generating messages"""
-        receiver = Nameless("Nameless1", "#FFF", "0101010101010101", 1)
+        receiver = Wodondog("Wodondog1", "#FFF", "0101010101010101", 1)
         expected = "0101010101010101000000110000000010101101"
         generated = receiver.generate(Action.BEEP, 0)
         self.assertEqual(expected, generated, "generation")
