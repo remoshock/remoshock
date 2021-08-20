@@ -89,7 +89,7 @@ class Wodondog(Receiver):
     def encode_for_transmission(self, data):
         """encodes a command data structure for transmission over the air.
 
-        This methods adds the synchronization prefix and suffx as well.
+        This methods adds the synchronization prefix and suffix as well.
         """
         prefix = "111111000"
         suffix = "1000100010000"
@@ -108,9 +108,9 @@ class Wodondog(Receiver):
 
         @param messages messages that have already been encoded for transmission"""
         self.sender.send(
-            frequency=433.92e6,
+            frequency=433.85e6,
             sample_rate=2e6,
-            carrier_frequency=30.716e3,
+            carrier_frequency=6e3,
             modulation_type="ASK",
             samples_per_symbol=500,
             low_frequency="0",

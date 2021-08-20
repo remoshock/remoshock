@@ -113,9 +113,9 @@ class Petrainer(Receiver):
         @param messages messages that have already been encoded for transmission"""
         # TODO duration of simples, heading, tailing, etc.
         self.sender.send(
-            frequency=433.92e6,
+            frequency=433.98e6,
             sample_rate=2e6,
-            carrier_frequency=30.716e3,
+            carrier_frequency=0e3,
             modulation_type="ASK",
             samples_per_symbol=500,
             low_frequency="0",
