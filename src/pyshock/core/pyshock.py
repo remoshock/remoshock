@@ -53,7 +53,7 @@ class Pyshock:
             receiver = Pac(name, color, code, channel)
         elif receiver_type.lower() == "wodondog":
             receiver = Wodondog(name, color, code, channel)
-        elif receiver_type.lower() == "petainer":
+        elif receiver_type.lower() == "petrainer":
             receiver = Petrainer(name, color, code, channel)
         else:
             print("ERROR: Unknown receiver type \"" + receiver_type + "\" in pyshock.ini. Supported types: pac, Wodondog, petainer")
