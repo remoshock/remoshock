@@ -90,7 +90,7 @@ class RemoshockRequestHandler(BaseHTTPRequestHandler):
         and automatically expands directory references to index.html.
         Furthermore it sends the correct headers."""
 
-        web_folder = os.path.normpath(os.path.dirname(os.path.abspath(__file__)) + "/../web")
+        web_folder = os.path.normpath(os.path.dirname(os.path.abspath(__file__)) + "/web")
         filename = os.path.normpath(web_folder + self.path)
         if not filename.startswith(web_folder):
             self.answer_html(404, "Invalid file name.")
