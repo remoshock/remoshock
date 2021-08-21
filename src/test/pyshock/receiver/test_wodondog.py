@@ -4,8 +4,8 @@
 
 import unittest
 
-from pyshock.core.action import Action
-from pyshock.receiver.wodondog import Wodondog
+from remoshock.core.action import Action
+from remoshock.receiver.wodondog import Wodondog
 
 
 class WodondogTestCase(unittest.TestCase):

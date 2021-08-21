@@ -6,23 +6,23 @@
 import argparse
 import sys
 
-from pyshock.core.pyshock import Pyshock, PyshockMock
-from pyshock.core.action import Action
-from pyshock.core.version import VERSION
+from remoshock.core.remoshock import Remoshock, RemoshockMock
+from remoshock.core.action import Action
+from remoshock.core.version import VERSION
 
 
-class PyshockCli:
+class RemoshockCli:
     """a commandline tool to send a command to a receiver"""
 
     def __parse_args(self):
         """parses command line arguments"""
         parser = argparse.ArgumentParser(description="Shock collar remote",
-                                         epilog="Please see https://github.com/pyshock/pyshock for documentation.")
+                                         epilog="Please see https://github.com/remoshock/remoshock for documentation.")
         parser.add_argument("-r", "--receiver",
                             type=int,
                             default=1,
                             metavar="n",
-                            help="number of receiver entry from pyshock.ini, starting at 1")
+                            help="number of receiver entry from remoshock.ini, starting at 1")
         parser.add_argument("-a", "--action",
                             default="BEEP",
                             choices=["LIGHT", "BEEP", "VIBRATE", "SHOCK", "BEEPSHOCK"],
@@ -39,7 +39,7 @@ class PyshockCli:
                             type=int,
                             default=1,
                             metavar="n",
-                            help="power level (0-100)")
+                            help="power level (1-100)")
         parser.add_argument("--sdr",
                             help=argparse.SUPPRESS)
         parser.add_argument("-v", "--verbose",
@@ -54,23 +54,27 @@ class PyshockCli:
               + " --power " + str(self.args.power) + " --duration " + str(self.args.duration))
 
 
-    def __boot_pyshock(self):
-        """starts up the pyshock infrastructure"""
+    def __boot_remoshock(self):
+        """starts up the remoshock infrastructure"""
         if self.args.mock:
-            self.pyshock = PyshockMock(self.args)
+            self.remoshock = RemoshockMock(self.args)
         else:
-            self.pyshock = Pyshock(self.args)
-        self.pyshock.boot()
+            self.remoshock = Remoshock(self.args)
+        self.remoshock.boot()
 
 
     def __process_action(self):
         """sends the specified command to the specified receiver"""
         action = Action[self.args.action]
-        self.pyshock.command(self.args.receiver, action, self.args.power, self.args.duration)
+        self.remoshock.command(self.args.receiver, action, self.args.power, self.args.duration)
 
 
     def start(self):
-        """starts up pyshockcli"""
+        """starts up remoshockcli"""
         self.__parse_args()
-        self.__boot_pyshock()
+        self.__boot_remoshock()
         self.__process_action()
+
+
+def main():
+    RemoshockCli().start()

@@ -12,8 +12,8 @@ from enum import Enum
 from threading import RLock
 import serial
 
-from pyshock.core.action import Action
-from pyshock.receiver.receiver import Receiver
+from remoshock.core.action import Action
+from remoshock.receiver.receiver import Receiver
 
 # type            code, code, channel
 #  0  Pettainer,            sender code first byte, seonder code second byte, channel
@@ -23,8 +23,8 @@ from pyshock.receiver.receiver import Receiver
 
 
 class ProtocolAction(Enum):
-    """actions used by the communication protocl between pyshock and arshock.
-    Note: This this enum extends pyshock.core.action.Action"""
+    """actions used by the communication protocl between remoshock and arshock.
+    Note: This this enum extends remoshock.core.action.Action"""
     LIGHT = 10
     BEEP = 11
     VIBRATE = 12
@@ -66,7 +66,7 @@ class ArduinoBasedReceiver(Receiver):
         return True
 
 
-    def boot(self, _pyshock, _receiver, arduino_manager, _sdr_sender):
+    def boot(self, _remoshock, _receiver, arduino_manager, _sdr_sender):
         self.arduino_manager = arduino_manager
         self.index = arduino_manager.register_receiver(self.receiver_type.value, self.arg1, self.arg2, self.arg3)
 

@@ -16,7 +16,7 @@ def inhibit():
         try:
             proxy = dbus.SessionBus().get_object("org.freedesktop.PowerManagement", "/org/freedesktop/PowerManagement")
             pm = dbus.Interface(proxy, 'org.freedesktop.PowerManagement')
-            pm.Inhibit("pyshock", "playing...")
+            pm.Inhibit("remoshock", "playing...")
             successful = True
         except:  # noqa: E722
             pass
@@ -24,11 +24,11 @@ def inhibit():
         try:
             proxy = dbus.SessionBus().get_object("org.freedesktop.ScreenSaver", "/ScreenSaver")
             screenSaver = dbus.Interface(proxy, 'org.freedesktop.ScreenSaver')
-            screenSaver.Inhibit("pyshock", "playing...")
+            screenSaver.Inhibit("remoshock", "playing...")
 
             proxy = dbus.SessionBus().get_object("org.gnome.SessionManager", "/org/gnome/SessionManager")
             sessionManager = dbus.Interface(proxy, 'org.gnome.SessionManager')
-            sessionManager.Inhibit("pyshock", 0, "playing...", 8)
+            sessionManager.Inhibit("remoshock", 0, "playing...", 8)
             successful = True
         except:  # noqa: E722
             pass

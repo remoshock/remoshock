@@ -15,13 +15,13 @@ import shutil
 import traceback
 
 
-from pyshock.core.pyshock import Pyshock, PyshockMock
-from pyshock.core.action import Action
-from pyshock.core.version import VERSION
-from pyshock.util import powermanager
+from remoshock.core.remoshock import Remoshock, RemoshockMock
+from remoshock.core.action import Action
+from remoshock.core.version import VERSION
+from remoshock.util import powermanager
 
 
-pyshock = None
+remoshock = None
 
 MIME_CONTENT_TYPES = {
     ".css": "text/css",
@@ -34,7 +34,7 @@ MIME_CONTENT_TYPES = {
 }
 
 
-class PyshockRequestHandler(BaseHTTPRequestHandler):
+class RemoshockRequestHandler(BaseHTTPRequestHandler):
     """handles requests from web browsers"""
 
     def answer_json(self, status, data):
@@ -67,7 +67,7 @@ class PyshockRequestHandler(BaseHTTPRequestHandler):
         if "token" not in params:
             return False
 
-        return params["token"][0] == pyshock.config.get("global", "web_authentication_token")
+        return params["token"][0] == remoshock.config.get("global", "web_authentication_token")
 
 
     def handle_command(self, params):
@@ -80,7 +80,7 @@ class PyshockRequestHandler(BaseHTTPRequestHandler):
         if action not in [Action.LIGHT, Action.BEEP, Action.VIBRATE, Action.SHOCK, Action.BEEPSHOCK]:
             raise Exception("Invalid action")
 
-        pyshock.command(receiver, action, power, duration)
+        remoshock.command(receiver, action, power, duration)
 
 
     def serve_file(self):
@@ -115,21 +115,21 @@ class PyshockRequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         """handles a browser request.
 
-        path starting with /pyshock are interpreted as commands.
+        path starting with /remoshock are interpreted as commands.
         everything else is seen as a reference to the web-folder"""
 
         params = parse_qs(urlparse(self.path).query)
         try:
-            if self.path.startswith("/pyshock/"):
+            if self.path.startswith("/remoshock/"):
                 if not self.verify_authentication_token(params):
                     self.answer_html(403, "Missing or invalid authentication token")
                     return
 
-                if self.path.startswith("/pyshock/command"):
+                if self.path.startswith("/remoshock/command"):
                     self.handle_command(params)
                     self.answer_json(200, {"status": "ok"})
-                elif self.path.startswith("/pyshock/config"):
-                    self.answer_json(200, pyshock.get_config())
+                elif self.path.startswith("/remoshock/config"):
+                    self.answer_json(200, remoshock.get_config())
 
             else:
                 self.serve_file()
@@ -139,13 +139,13 @@ class PyshockRequestHandler(BaseHTTPRequestHandler):
 
 
 
-class PyshockServer:
-    """pyshockserver is a web server that provides the remote-control user-interface """
+class RemoshockServer:
+    """remoshockserver is a web server that provides the remote-control user-interface """
 
     def __parse_args(self):
         """parses command line arguments"""
         parser = argparse.ArgumentParser(description="Shock collar remote control",
-                                         epilog="Please see https://github.com/pyshock/pyshock for documentation.")
+                                         epilog="Please see https://github.com/remoshock/remoshock for documentation.")
         parser.add_argument("--mock",
                             action="store_true",
                             help=argparse.SUPPRESS)
@@ -161,25 +161,25 @@ class PyshockServer:
         self.args = parser.parse_args()
 
 
-    def __boot_pyshock(self):
-        """starts up the pyshock infrastructure"""
-        global pyshock
+    def __boot_remoshock(self):
+        """starts up the remoshock infrastructure"""
+        global remoshock
         if self.args.mock:
-            pyshock = PyshockMock(self.args)
+            remoshock = RemoshockMock(self.args)
         else:
-            pyshock = Pyshock(self.args)
-        pyshock.boot()
+            remoshock = Remoshock(self.args)
+        remoshock.boot()
 
 
     def __start_web_server(self):
-        """starts the webserver on tcp-port configured in pyshock.ini"""
-        port = pyshock.config.getint("global", "web_port", fallback=7777)
+        """starts the webserver on tcp-port configured in remoshock.ini"""
+        port = remoshock.config.getint("global", "web_port", fallback=7777)
         print()
-        print("Open http://127.0.0.1:" + str(port) + "/#token=" + pyshock.config.get("global", "web_authentication_token"))
+        print("Open http://127.0.0.1:" + str(port) + "/#token=" + remoshock.config.get("global", "web_authentication_token"))
         print()
 
-        server = ThreadingHTTPServer(('0.0.0.0', port), PyshockRequestHandler)
-        certfile = pyshock.config.get("global", "web_server_certfile", fallback=None)
+        server = ThreadingHTTPServer(('0.0.0.0', port), RemoshockRequestHandler)
+        certfile = remoshock.config.get("global", "web_server_certfile", fallback=None)
         if certfile:
             server.socket = ssl.wrap_socket(server.socket, certfile=certfile,
                                             ssl_version=ssl.PROTOCOL_TLSv1_2, server_side=True)
@@ -191,8 +191,12 @@ class PyshockServer:
 
 
     def start(self):
-        """starts up pyshockserver"""
+        """starts up remoshockserver"""
         self.__parse_args()
-        self.__boot_pyshock()
+        self.__boot_remoshock()
         powermanager.inhibit()
         self.__start_web_server()
+
+
+def main():
+    RemoshockServer().start()

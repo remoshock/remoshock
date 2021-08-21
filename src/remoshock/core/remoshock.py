@@ -7,33 +7,33 @@ import logging
 import sys
 import threading
 
-from pyshock.core.config import ConfigManager
+from remoshock.core.config import ConfigManager
 
-from pyshock.receiver.arshock import ArduinoManager
-from pyshock.receiver.wodondog import Wodondog
-from pyshock.receiver.pac import Pac
-from pyshock.receiver.petrainer import Petrainer
+from remoshock.receiver.arshock import ArduinoManager
+from remoshock.receiver.wodondog import Wodondog
+from remoshock.receiver.pac import Pac
+from remoshock.receiver.petrainer import Petrainer
 
 lock = threading.RLock()
 
 
-class Pyshock:
+class Remoshock:
     """This is the manager class. It basically coordinates everything and
     delegate the actual work to specialized classes."""
 
 
     def __init__(self, args):
-        """Constructor of the manager class Pyshock
+        """Constructor of the manager class Remoshock
 
         @param args the command line arguments as returned by argparser"""
         self.args = args
 
 
     def __instantiate_receiver(self, section):
-        """handles a [receiver] section in pyshock.ini by creating
+        """handles a [receiver] section in remoshock.ini by creating
         the appropriate receiver object with the specified parameters.
 
-        @param section (mangled) name of the section from pyshock.ini
+        @param section (mangled) name of the section from remoshock.ini
         """
 
         receiver_type = self.config.get(section, "type")
@@ -45,7 +45,7 @@ class Pyshock:
         if channel is None:
             button = self.config.getint(section, "button", fallback=None)
             if button is not None:
-                print("ERROR: Please rename parameter \"button\" to \"channel\" in pyshock.ini")
+                print("ERROR: Please rename parameter \"button\" to \"channel\" in remoshock.ini")
                 return None
         channel = self.config.getint(section, "channel")
 
@@ -56,7 +56,7 @@ class Pyshock:
         elif receiver_type.lower() == "petrainer":
             receiver = Petrainer(name, color, code, channel)
         else:
-            print("ERROR: Unknown receiver type \"" + receiver_type + "\" in pyshock.ini. Supported types: pac, Wodondog, petainer")
+            print("ERROR: Unknown receiver type \"" + receiver_type + "\" in remoshock.ini. Supported types: pac, Wodondog, petainer")
             return None
 
         if receiver.validate_config():
@@ -66,7 +66,7 @@ class Pyshock:
 
 
     def __instantitate_sdr_sender(self):
-        """creates a sdr_sender based on the configuration in pyshock.ini or the command line.
+        """creates a sdr_sender based on the configuration in remoshock.ini or the command line.
 
         This method triggers a special case handling for HackRF devices.
         """
@@ -77,7 +77,7 @@ class Pyshock:
             print()
             print("SDR (software defined radio) hardware is required to send radio signals.")
             print()
-            print("Please edit pyshock.ini and add an entry sdr=... in the [global] section.")
+            print("Please edit remoshock.ini and add an entry sdr=... in the [global] section.")
             print()
             print("Supported devices are (upper/lower case is important):")
             print("HackRF, LimeSDR")
@@ -91,12 +91,12 @@ class Pyshock:
             print()
             print("We are using internal URH invokation for HackRF. This is recommanded because it")
             print("prevents a one second delay. But it might cause Python errors, if the URH version is")
-            print("incompatible. In this case, please specify srd=hackrfcli in pyshock.ini")
+            print("incompatible. In this case, please specify srd=hackrfcli in remoshock.ini")
             print()
             print("If the device is not connected or not ready, driver initialization will fail right now")
             print("...")
 
-            from pyshock.sdr.urhinternal import UrhInternalSender
+            from remoshock.sdr.urhinternal import UrhInternalSender
             sender = UrhInternalSender(self.args.verbose)
             print("Yeah! Driver initialized successfully.")
             print()
@@ -106,7 +106,7 @@ class Pyshock:
             sdr = "HackRF"
 
         print("Using " + sdr + " via urh_cli")
-        from pyshock.sdr.urhcli import UrhCliSender
+        from remoshock.sdr.urhcli import UrhCliSender
         return UrhCliSender(sdr, self.args.verbose)
 
 
@@ -125,7 +125,7 @@ class Pyshock:
 
             if len(receivers) == 0:
                 print()
-                print("ERROR: No valid receivers configured in pyshock.ini")
+                print("ERROR: No valid receivers configured in remoshock.ini")
                 sys.exit(1)
             self.receivers = receivers
         except configparser.NoOptionError as e:
@@ -134,10 +134,10 @@ class Pyshock:
 
 
     def boot(self):
-        """starts up pyshock.
+        """starts up remoshock.
 
         - enable logging
-        - read configuration from pyshock.ini
+        - read configuration from remoshock.ini
         - initialize receiver configuration
         - initialize SDR, if required by a configured receiver
         - initialize arshock, if required by a configured receiver
@@ -217,7 +217,7 @@ class Pyshock:
 
 
 
-class PyshockMock(Pyshock):
+class RemoshockMock(Remoshock):
     """A mock used for testing without requiring any SDR hardware."""
 
 

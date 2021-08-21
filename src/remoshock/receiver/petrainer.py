@@ -7,11 +7,11 @@
 import re
 import threading
 
-from pyshock.core.action import Action
-from pyshock.receiver.receiver import Receiver
-from pyshock.scheduler.commandtask import CommandTask
-from pyshock.scheduler.scheduler import scheduler
-from pyshock.scheduler.periodictask import PeriodicTask
+from remoshock.core.action import Action
+from remoshock.receiver.receiver import Receiver
+from remoshock.scheduler.commandtask import CommandTask
+from remoshock.scheduler.scheduler import scheduler
+from remoshock.scheduler.periodictask import PeriodicTask
 
 
 lock = threading.RLock()
@@ -44,15 +44,15 @@ class Petrainer(Receiver):
         self.channel = channel
 
     def validate_config(self):
-        """validates pyshock.ini configuration and prints errors"""
+        """validates remoshock.ini configuration and prints errors"""
 
         if re.fullmatch("^[01]{16}$", self.transmitter_code) is None:
-            print("ERROR: Invalid transmitter_code \"" + self.transmitter_code + "\" in pyshock.ini.")
+            print("ERROR: Invalid transmitter_code \"" + self.transmitter_code + "\" in remoshock.ini.")
             print("The transmitter_code must be sequence of length 16 consisting of the characters 0 and 1")
             return False
 
         if self.channel < 1 or self.channel > 2:
-            print("ERROR: Invalid channel \"" + str(self.channel) + "\" in pyshock.ini.")
+            print("ERROR: Invalid channel \"" + str(self.channel) + "\" in remoshock.ini.")
             print("This parameter needs to be a whole number between 1 and 2 inclusive.")
             return False
 
@@ -65,13 +65,13 @@ class Petrainer(Receiver):
         return True
 
 
-    def boot(self, pyshock, receiver, _arduino_manader, sdr_sender):
+    def boot(self, remoshock, receiver, _arduino_manader, sdr_sender):
         """keep a references to the sdr_sender for later use
         and schedules keep-awake messages"""
         self.sender = sdr_sender
 
         # schedule keep awake timer
-        command_task = CommandTask(None, None, None, pyshock, receiver, Action.LIGHT, 0, 250)
+        command_task = CommandTask(None, None, None, remoshock, receiver, Action.LIGHT, 0, 250)
         periodic_task = PeriodicTask(5 * 60 / 2 - 10, command_task)
         scheduler().schedule_task(periodic_task)
 

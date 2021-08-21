@@ -4,12 +4,12 @@
 
 **Is playing with electricity dangerous?**
 
-Yes, it is. Please see [WARNING](https://github.com/pyshock/pyshock/blob/master/doc/WARNING.md)
+Yes, it is. Please see [WARNING](https://github.com/remoshock/remoshock/blob/master/doc/WARNING.md)
 
 
 **Should I play with electricity?**
 
-No, you should not. Please see [WARNING](https://github.com/pyshock/pyshock/blob/master/doc/WARNING.md)
+No, you should not. Please see [WARNING](https://github.com/remoshock/remoshock/blob/master/doc/WARNING.md)
 
 
 
@@ -17,20 +17,20 @@ No, you should not. Please see [WARNING](https://github.com/pyshock/pyshock/blob
 
 **Where can I find documentation and source code?**
 
-[https://github.com/pyshock/pyshock](https://github.com/pyshock/pyshock)
+[https://github.com/remoshock/remoshock](https://github.com/remoshock/remoshock)
 
 
 **How do I report bugs, feature requests and patches?**
 
 Please use the GitHub issue tracker at
-[https://github.com/pyshock/pyshock](https://github.com/pyshock/pyshock).
+[https://github.com/remoshock/remoshock](https://github.com/remoshock/remoshock).
 
 
 ## ✔️ Requirements
 
-**Will pyshock work on Microsoft Windows?**
+**Will remoshock work on Microsoft Windows?**
 
-pyshock works on Linux only. Ubuntu 2020.04 is used for testing.
+remoshock works on Linux only. Ubuntu 2020.04 is used for testing.
 
 
 **Which shocking devices are supported?**
@@ -39,7 +39,7 @@ At the time of writing, only PAC collars of type ACX are tested.
 BCX collars (the smaller ones) are supposed to work as they
 can be controlled by the same remote (ATX, DTX).
 
-Support for other vendors might be added at a later time. pyshock
+Support for other vendors might be added at a later time. remoshock
 is designed with this kind of extension in mind. 
 
 

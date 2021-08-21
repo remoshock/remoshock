@@ -20,7 +20,7 @@ Testing instruction before release.
 
 <tr>
 <td>2.</td>
-<td>Increase version number in <code>src/pyshock/core/version.py</code></td>
+<td>Increase version number in <code>src/remoshock/core/version.py</code></td>
 <td>-</td>
 </tr>
 
@@ -31,7 +31,7 @@ Testing instruction before release.
 <td>
 
 - No error message
-- File `build/pyshock/pyshock-x.x.zip` is created
+- File `build/remoshock/remoshock-x.x.zip` is created
 - <code>git diff</code> shows only modification of the version number, and in REAME.md and version.py only.
 
 </tr>
@@ -42,18 +42,18 @@ Testing instruction before release.
 <td>
 
 ~~~~
-rm ~/.config/pyshock.ini
+rm ~/.config/remoshock.ini
 cd /tmp
-unzip ~/workspace/pyshock/build/pyshock-*
-cd pyshock
-./pyshockcli.py
+unzip ~/workspace/remoshock/build/remoshock-*
+cd remoshock
+./remoshockcli.py
 ~~~~
 
 </td>
 <td>
 
-- "Please edit pyshock.ini and add an entry sdr=... in the [global] section."
-- In pyshock.ini, the variables web_authentication_token and transmitter_code contain random values.
+- "Please edit remoshock.ini and add an entry sdr=... in the [global] section."
+- In remoshock.ini, the variables web_authentication_token and transmitter_code contain random values.
 - There is an example configuration for multiple PAC receivers.
 - There is are example configurations for non PAC receivers, that are disabled by a leading `#`.
 - There is an example configuration for the randomizer.
@@ -63,7 +63,7 @@ cd pyshock
 
 <tr>
 <td>5.</td>
-<td>Edit pyshock.ini and set sdr=hackrf. Uncomment all receiver sections be removing a leading `#`.</td>
+<td>Edit remoshock.ini and set sdr=hackrf. Uncomment all receiver sections be removing a leading `#`.</td>
 <td>-</td>
 </tr>
 
@@ -71,21 +71,21 @@ cd pyshock
 <tr>
 <td>6.</td>
 <td>Reset PAC receiver into learning mode<br>
-Run <code>./pyshockcli.py</code></td>
+Run <code>./remoshockcli.py</code></td>
 <td>Receiver was paired to the new transmitter code, it stopped flashing red and started to blink green.</td>
 </tr>
 
 
 <tr>
 <td>7.</td>
-<td>Run <code>./pyshockcli.py --sdr hackrfcli</code></td>
+<td>Run <code>./remoshockcli.py --sdr hackrfcli</code></td>
 <td>The receiver beeps.</td>
 </tr>
 
 
 <tr>
 <td>8.</td>
-<td>Run <code>./pyshockserver.py</code><br>
+<td>Run <code>./remoshockserver.py</code><br>
 Open the displayed URL in a web-browser.</td>
 <td>The remote-control website is shown.</td>
 </tr>
@@ -136,14 +136,14 @@ Press the shock button for the first Wodondog receiver.</td>
 
 <tr>
 <td>15.</td>
-<td>End the pyshockserver-process by pressing <code>ctrl+c</code></td>
+<td>End the remoshockserver-process by pressing <code>ctrl+c</code></td>
 <td>No error message is shown. No traceback is shown.</td>
 </tr>
 
 
 <tr>
 <td>16.</td>
-<td>Edit pyshock.ini to setup the following randomizer configuration:
+<td>Edit remoshock.ini to setup the following randomizer configuration:
 
 ~~~~
 [randomizer]
@@ -169,7 +169,7 @@ Disable all non PAC receivers by adding a `#` at the start of the lines.
 
 <tr>
 <td>17.</td>
-<td>Run <code>pyshockrnd.py --mock</code></td>
+<td>Run <code>remoshockrnd.py --mock</code></td>
 <td>
 
 - A beep is sent to 4 collars, about a second apart.<br>
@@ -187,7 +187,7 @@ Disable all non PAC receivers by adding a `#` at the start of the lines.
 # Publish release
 
 - create GitHub-releases with change-notes, a tag starting with "v" followed by the version number
-- upload build/pyshock-x.x.zip to the release
+- upload build/remoshock-x.x.zip to the release
 
 ~~~~
 git commit -am "released version x.x"

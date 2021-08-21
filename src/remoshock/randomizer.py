@@ -10,25 +10,25 @@ import random
 import sys
 import time
 
-from pyshock.core.pyshock import Pyshock, PyshockMock
-from pyshock.core.action import Action
-from pyshock.core.version import VERSION
-from pyshock.util import powermanager
+from remoshock.core.remoshock import Remoshock, RemoshockMock
+from remoshock.core.action import Action
+from remoshock.core.version import VERSION
+from remoshock.util import powermanager
 
 
-class PyshockRandomizer:
+class RemoshockRandomizer:
     """sends random commands at random intervals as configured"""
 
     def __parse_args(self):
         """parses command line arguments"""
         parser = argparse.ArgumentParser(description="Shock collar remote randomizer",
-                                         epilog="Please see https://github.com/pyshock/pyshock for documentation.")
+                                         epilog="Please see https://github.com/remoshock/remoshock for documentation.")
         parser.add_argument("--mock",
                             action="store_true",
                             help=argparse.SUPPRESS)
         parser.add_argument("-s", "--section",
                             default="randomizer",
-                            help="name of [section] in pyshock.ini to use. Default is [randomizer].")
+                            help="name of [section] in remoshock.ini to use. Default is [randomizer].")
         parser.add_argument("--sdr",
                             help=argparse.SUPPRESS)
         parser.add_argument("-v", "--verbose",
@@ -41,22 +41,22 @@ class PyshockRandomizer:
         self.args = parser.parse_args()
 
 
-    def __boot_pyshock(self):
-        """starts up the pyshock infrastructure"""
+    def __boot_remoshock(self):
+        """starts up the remoshock infrastructure"""
         if self.args.mock:
-            self.pyshock = PyshockMock(self.args)
+            self.remoshock = RemoshockMock(self.args)
         else:
-            self.pyshock = Pyshock(self.args)
-        self.pyshock.boot()
+            self.remoshock = Remoshock(self.args)
+        self.remoshock.boot()
 
 
     def __get_config_value(self, key):
         """reads a configuration setting"""
-        return self.pyshock.config.getint(self.args.section, key)
+        return self.remoshock.config.getint(self.args.section, key)
 
 
     def __load_config(self):
-        """loads configuration from pyshock.ini for the section
+        """loads configuration from remoshock.ini for the section
         specified on the command line"""
         try:
             self.beep_probability_percent = self.__get_config_value("beep_probability_percent")
@@ -79,9 +79,9 @@ class PyshockRandomizer:
     def __test_receivers(self):
         """sends a beep command to all registered receivers to allow users
         to verify that all receivers are turned on and setup correctly"""
-        for i in range(1, len(self.pyshock.receivers) + 1):
+        for i in range(1, len(self.remoshock.receivers) + 1):
             print("Testing receiver " + str(i))
-            self.pyshock.command(i, Action.BEEP, 0, 250)
+            self.remoshock.command(i, Action.BEEP, 0, 250)
             time.sleep(1)
         print("Beep command sent to all known receivers. Starting randomizer... Press Ctrl+c to stop.")
 
@@ -121,9 +121,9 @@ class PyshockRandomizer:
                     duration = 250
                 else:
                     duration = random.randint(self.shock_min_duration_ms, self.shock_max_duration_ms)
-                receiver = random.randrange(len(self.pyshock.receivers)) + 1
+                receiver = random.randrange(len(self.remoshock.receivers)) + 1
 
-                self.pyshock.command(receiver, action, power, duration)
+                self.remoshock.command(receiver, action, power, duration)
                 current_time = datetime.datetime.now()
 
             print("Runtime completed.")
@@ -134,10 +134,14 @@ class PyshockRandomizer:
 
 
     def start(self):
-        """starts up pyshockrnd"""
+        """starts up remoshockrnd"""
         self.__parse_args()
-        self.__boot_pyshock()
+        self.__boot_remoshock()
         self.__load_config()
         powermanager.inhibit()
         self.__test_receivers()
         self.__execute()
+
+
+def main():
+    RemoshockRandomizer().start()

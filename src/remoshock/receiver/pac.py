@@ -5,8 +5,8 @@
 import re
 import threading
 
-from pyshock.core.action import Action
-from pyshock.receiver.receiver import Receiver
+from remoshock.core.action import Action
+from remoshock.receiver.receiver import Receiver
 
 lock = threading.RLock()
 
@@ -34,15 +34,15 @@ class Pac(Receiver):
 
 
     def validate_config(self):
-        """validates pyshock.ini configuration and prints errors"""
+        """validates remoshock.ini configuration and prints errors"""
 
         if re.fullmatch("^[01]{9}$", self.transmitter_code) is None:
-            print("ERROR: Invalid transmitter_code \"" + self.transmitter_code + "\" in pyshock.ini.")
+            print("ERROR: Invalid transmitter_code \"" + self.transmitter_code + "\" in remoshock.ini.")
             print("The transmitter_code must be sequence of length 9 consisting of the characters 0 and 1")
             return False
 
         if self.button < 0 or self.button > 7:
-            print("ERROR: Invalid button \"" + str(self.button) + "\" in pyshock.ini.")
+            print("ERROR: Invalid button \"" + str(self.button) + "\" in remoshock.ini.")
             print("This parameter needs to be a whole number between 0 and 7 inclusive.")
             return False
 
@@ -55,7 +55,7 @@ class Pac(Receiver):
         return True
 
 
-    def boot(self, _pyshock, _receiver, _arduino_manader, sdr_sender):
+    def boot(self, _remoshock, _receiver, _arduino_manader, sdr_sender):
         """keep a references to the sdr_sender for later use"""
         self.sender = sdr_sender
 

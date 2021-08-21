@@ -3,7 +3,7 @@
 # ________________________________________
 
 import datetime
-from pyshock.scheduler.scheduler import scheduler
+from remoshock.scheduler.scheduler import scheduler
 
 
 class PeriodicTask:

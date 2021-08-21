@@ -1,27 +1,27 @@
-# <img src="https://raw.githubusercontent.com/pyshock/pyshock/master/src/web/favicon.png" alt="Logo showing a drawing of a shock collar receiver" height="32">&nbsp;&nbsp; pyshock
+# <img src="https://raw.githubusercontent.com/remoshock/remoshock/master/src/web/favicon.png" alt="Logo showing a drawing of a shock collar receiver" height="32">&nbsp;&nbsp; remoshock
 
 Quick links:&nbsp;&nbsp;
-<a href="https://github.com/pyshock/pyshock/blob/master/docs/WARNING.md">
+<a href="https://github.com/remoshock/remoshock/blob/master/docs/WARNING.md">
 <img alt="Warning" src="https://img.shields.io/badge/-Warning-red"></a> 
-<a href="https://github.com/pyshock/pyshock/blob/master/docs/FAQ.md">
+<a href="https://github.com/remoshock/remoshock/blob/master/docs/FAQ.md">
 <img alt="Frequently Asked Questions" src="https://img.shields.io/badge/-FAQ-yellow"></a> 
-<a href="https://github.com/pyshock/pyshock/blob/master/docs/LICENSE.md">
+<a href="https://github.com/remoshock/remoshock/blob/master/docs/LICENSE.md">
 <img alt="License: AGPL" src="https://img.shields.io/badge/-AGPL-%23AAF"></a> 
-<a href="https://github.com/pyshock/pyshock/releases">
+<a href="https://github.com/remoshock/remoshock/releases">
 <img alt="Changes" src="https://img.shields.io/badge/-Changes-green"></a> 
-<a href="https://github.com/pyshock/pyshock/releases/download/v0.4/pyshock-0.4.zip">
+<a href="https://github.com/remoshock/remoshock/releases/download/v0.4/remoshock-0.4.zip">
 <img alt="Download" src="https://img.shields.io/badge/-Download-brightgreen"></a>
 
 <div>
-<a href="https://raw.githubusercontent.com/pyshock/pyshock/master/docs/randomizer.png">
-<img style="border: 1px #AAA solid; padding: 1em" alt="Randomizer" src="https://raw.githubusercontent.com/pyshock/pyshock/master/docs/randomizer.png" height="200"></a> 
-<a href="https://raw.githubusercontent.com/pyshock/pyshock/master/docs/pac.jpeg">
-<img style="border: 1px #AAA solid; padding: 1em" alt="Photo of PAC collars with HackRF SDR" src="https://raw.githubusercontent.com/pyshock/pyshock/master/docs/pac.jpeg" height="200"></a> 
-<a href="https://raw.githubusercontent.com/pyshock/pyshock/master/docs/remote.png">
-<img style="border: 1px #AAA solid; padding: 1em" alt="Remote Control User Interface" src="https://raw.githubusercontent.com/pyshock/pyshock/master/docs/remote.png" height="200"></a>
+<a href="https://raw.githubusercontent.com/remoshock/remoshock/master/docs/randomizer.png">
+<img style="border: 1px #AAA solid; padding: 1em" alt="Randomizer" src="https://raw.githubusercontent.com/remoshock/remoshock/master/docs/randomizer.png" height="200"></a> 
+<a href="https://raw.githubusercontent.com/remoshock/remoshock/master/docs/pac.jpeg">
+<img style="border: 1px #AAA solid; padding: 1em" alt="Photo of PAC collars with HackRF SDR" src="https://raw.githubusercontent.com/remoshock/remoshock/master/docs/pac.jpeg" height="200"></a> 
+<a href="https://raw.githubusercontent.com/remoshock/remoshock/master/docs/remote.png">
+<img style="border: 1px #AAA solid; padding: 1em" alt="Remote Control User Interface" src="https://raw.githubusercontent.com/remoshock/remoshock/master/docs/remote.png" height="200"></a>
 </div>
 
-pyshock is a computer based remote control for shock collars.
+remoshock is a computer based remote control for shock collars.
 
 It consists of
 - a web-based user interface, that works on mobile
@@ -38,15 +38,15 @@ It consists of
 - A Software Defined Radio (SDR) transmitter that works on the required frequencies (tested using a HackRF device).
 - Linux with Python 3 (tested on Ubuntu 20.04)
 - Universal Radio Hacker: `apt install python3-pip python3-pyqt5; pip3 install urh`
-- Download and unzip [https://github.com/pyshock/pyshock/releases/download/v0.4/pyshock-0.4.zip](https://github.com/pyshock/pyshock/releases/download/v0.4/pyshock-0.4.zip).
-- Please see [docs/FAQ.md](https://github.com/pyshock/pyshock/blob/master/docs/FAQ.md) for troubleshooting tips.
+- Download and unzip [https://github.com/remoshock/remoshock/releases/download/v0.4/remoshock-0.4.zip](https://github.com/remoshock/remoshock/releases/download/v0.4/remoshock-0.4.zip).
+- Please see [docs/FAQ.md](https://github.com/remoshock/remoshock/blob/master/docs/FAQ.md) for troubleshooting tips.
 
 
 ## 🔧 Getting Started
 
 Make sure that `urh` is working and does recognize your SDR device.
 
-Run `./pyshockcli.py`. This command will generate a `pyshock.ini` configuration file
+Run `remoshockcli`. This command will generate a `remoshock.ini` configuration file
 with random values for authentication token and transmitter code.
 Please edit this file to specify your SDR transmitting hardware.
 
@@ -55,19 +55,19 @@ If you are using another brand, please delete the [receiver]-sections for
 the PAC collars and remove the comment-character `#` before the lines for 
 your receiver.
 
-Reset your collar into pairing mode and invoke `./pyshockcli` again.
+Reset your collar into pairing mode and invoke `./remoshockcli` again.
 After successful pairing, run it a third time, to issue a "beep" command.
 
 
-## 🖥 Command line interface (pyshockcli)
+## 🖥 Command line interface (remoshockcli)
 
-pyshockcli allows you to send commands using the command line ("terminal window").
+remoshockcli allows you to send commands using the command line ("terminal window").
 
-By default, it will send a BEEP command to the first receiver configured in `pyshock.ini`.
+By default, it will send a BEEP command to the first receiver configured in `remoshock.ini`.
 
 For example, to send a shock with 10% power for a duration of 250ms to the first receiver:
 
-`./pyshockcli.py --receiver 1 --action SHOCK --power 10 --duration 250`
+`remoshockcli --receiver 1 --action SHOCK --power 10 --duration 250`
 
 The following actions are supported:
 
@@ -78,7 +78,7 @@ The following actions are supported:
 - **BEEPSHOCK**: plays one beep sound, waits one second, and then triggers a shock according to parameters.
 
 ~~~~
-usage: pyshockcli.py [-h] [-r n] [-a {LIGHT,BEEP,VIBRATE,SHOCK,BEEPSHOCK}] [-d n] [-p n] [-v] [--version]
+usage: remoshockcli [-h] [-r n] [-a {LIGHT,BEEP,VIBRATE,SHOCK,BEEPSHOCK}] [-d n] [-p n] [-v] [--version]
 
 Shock collar remote
 
@@ -88,17 +88,17 @@ optional arguments:
                         Action to perform
   -d n, --duration n    duration in ms (Note: PAC uses an impulse duration of 250ms)
   -p n, --power n       power level (0-100)
-  -r n, --receiver n    index of receiver entry from pyshock.ini, starting at 1
+  -r n, --receiver n    index of receiver entry from remoshock.ini, starting at 1
   -v, --verbose         prints debug messages
   --version             show program's version number and exit
 
-Please see https://github.com/pyshock/pyshock for documentation.
+Please see https://github.com/remoshock/remoshock for documentation.
 ~~~~
 
 
-## 📱 Interactive Remote Control (pyshockserver)
+## 📱 Interactive Remote Control (remoshockserver)
 
-pyshockserver will start a web server, that will provide a user interface
+remoshockserver will start a web server, that will provide a user interface
 as shown on the screenshot.
 
 The webpage will work on mobile devices, provided that the mobile device
@@ -111,11 +111,11 @@ forwarding does work. This documentation, however, will not go into detail
 on how to make a server available to the Internet because of the security
 implications.
 
-`./pyshockserver.py` will start the server and print the URL. The port and
-authentication token may be configured in pyshock.ini.
+`remoshockserver` will start the server and print the URL. The port and
+authentication token may be configured in remoshock.ini.
 
 ~~~~
-usage: pyshockserver.py [-h] [-v] [--version]
+usage: remoshockserver [-h] [-v] [--version]
 
 Shock collar remote control
 
@@ -124,12 +124,12 @@ optional arguments:
   -v, --verbose         prints debug messages
   --version             show program's version number and exit
 
-Please see https://github.com/pyshock/pyshock for documentation.
+Please see https://github.com/remoshock/remoshock for documentation.
 ~~~~
 
-## 🎲 Randomizer (pyshockrnd)
+## 🎲 Randomizer (remoshockrnd)
 
-pyshockrnd sends timed commands that can be randomized. For example it may
+remoshockrnd sends timed commands that can be randomized. For example it may
 send a beep followed a shock every 5 to 15 minutes. For a completely deterministic
 experience, set min and max to the same value.
 
@@ -158,35 +158,35 @@ of the shocks will vary between 5% and 10%. And finally the timer will be
 set to a random value between 5 minutes (300s) and 15 minutes (900s).
 
 After the event the timer will be set to a new random value in this range and
-everything will start anew. In this example pyshockrnd will end after one day
+everything will start anew. In this example remoshockrnd will end after one day
 (1440 minutes) or when Ctrl+c is pressed. The runtime starts counting after
 the optional initial start_delay has expired.
 
-`./pyshockrnd.py`
+`remoshockrnd`
 
-You can prepare multiple rules by using different [section]-names in pyshock.ini:
+You can prepare multiple rules by using different [section]-names in remoshock.ini:
 
-`./pyshockrnd.py -s other_section`
+`remoshockrnd -s other_section`
 
 ~~~~
-usage: pyshockrnd.py [-h] [-s SECTION] [-v] [--version]
+usage: remoshockrnd [-h] [-s SECTION] [-v] [--version]
 
 Shock collar remote randomizer
 
 optional arguments:
   -h, --help            show this help message and exit
   -s SECTION, --section SECTION
-                        name of [section] in pyshock.ini to use. Default is [randomizer].
+                        name of [section] in remoshock.ini to use. Default is [randomizer].
   -v, --verbose         prints debug messages
   --version             show program's version number and exit
 
-Please see https://github.com/pyshock/pyshock for documentation.
+Please see https://github.com/remoshock/remoshock for documentation.
 ~~~~
 
-## 📝 pyshock.ini
+## 📝 remoshock.ini
 
-The file `pyshock.ini` is automatically created with random tokens and transmitter codes
-when you start pyshock for the first time.
+The file `remoshock.ini` is automatically created with random tokens and transmitter codes
+when you start remoshock for the first time.
 
 
 ~~~~
@@ -226,11 +226,11 @@ There may be sections for the randomizer, which are documented above.
 
 ## 🐞 Bugs and Feature Ideas
 
-Please report bugs and feature ideas as issues on [https://github.com/pyshock/pyshock](https://github.com/pyshock/pyshock)
+Please report bugs and feature ideas as issues on [https://github.com/remoshock/remoshock](https://github.com/remoshock/remoshock)
 
 
 ## 🔎 See also
 
-- [docs/LICENSE.md](https://github.com/pyshock/pyshock/blob/master/docs/LICENSE.md)
-- [docs/WARNING.md](https://github.com/pyshock/pyshock/blob/master/docs/WARNING.md)
-- [docs/FAQ.md](https://github.com/pyshock/pyshock/blob/master/docs/FAQ.md)
+- [docs/LICENSE.md](https://github.com/remoshock/remoshock/blob/master/docs/LICENSE.md)
+- [docs/WARNING.md](https://github.com/remoshock/remoshock/blob/master/docs/WARNING.md)
+- [docs/FAQ.md](https://github.com/remoshock/remoshock/blob/master/docs/FAQ.md)

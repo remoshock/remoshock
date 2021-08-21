@@ -4,7 +4,7 @@
 
 import secrets
 import string
-from pyshock.scheduler.scheduler import scheduler
+from remoshock.scheduler.scheduler import scheduler
 
 
 class Task:

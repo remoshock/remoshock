@@ -23,7 +23,7 @@ class MultiReceiverSectionSupport(collections.OrderedDict):
 
 
 class ConfigManager:
-    """This class loads configuration from pyshock.ini and writes the
+    """This class loads configuration from remoshock.ini and writes the
     default configuration with freshly created random values."""
 
     def __init__(self):
@@ -151,7 +151,7 @@ channel=1
         ]
         config = """
 #
-# Configuration file for pyshock. Please see https://github.com/pyshock/pyshock#readme
+# Configuration file for remoshock. Please see https://github.com/remoshock/remoshock#readme
 # Lines starting with a # are ignored.
 #
 
@@ -197,7 +197,7 @@ runtime_max_minutes = 1440
 
 
     def __write_default_configuration(self, config):
-        """write a default configuration to pyshock.ini.
+        """write a default configuration to remoshock.ini.
         web_authentication_token and transmitter_code are replaced by random values"""
 
         print("Writing default configuration file to " + self.filename)
@@ -220,7 +220,7 @@ runtime_max_minutes = 1440
         config_folder = os.path.expanduser("~") + "/.config"
         if not os.path.exists(config_folder):
             os.makedirs(config_folder)
-        return config_folder + "/pyshock.ini"
+        return config_folder + "/remoshock.ini"
 
 
     def __read_configuration_from_file(self):

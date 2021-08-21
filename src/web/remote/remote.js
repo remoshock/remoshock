@@ -25,7 +25,7 @@ function sleep(ms) {
 
 async function command(receiver, action, power, duration) {
 	let token = window.location.hash.substring(7);
-	let url = "/pyshock/command?token=" + escape(token)
+	let url = "/remoshock/command?token=" + escape(token)
             + "&receiver=" + escape(receiver)
             + "&action=" + escape(action)
             + "&power=" + escape(power)
@@ -64,9 +64,9 @@ async function clickHandler(e) {
 
 async function init() {
 	let token = window.location.hash.substring(7);
-	let response = await fetch("/pyshock/config.json?token=" + escape(token));
+	let response = await fetch("/remoshock/config.json?token=" + escape(token));
 	if (response.status == 403) {
-		alert("Please make sure to end the URL with \"#token=\" followed by the value from web_authentication_token in pyshock.ini")
+		alert("Please make sure to end the URL with \"#token=\" followed by the value from web_authentication_token in remoshock.ini")
 	}
 	window.receivers = await response.json();
 	for (let i = 0; i < receivers.length; i++) {

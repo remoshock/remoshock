@@ -4,7 +4,7 @@
 
 import unittest
 
-from pyshock.receiver.pac import Pac
+from remoshock.receiver.pac import Pac
 
 
 class PacTestCase(unittest.TestCase):

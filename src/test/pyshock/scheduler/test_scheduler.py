@@ -6,9 +6,9 @@ import time
 import unittest
 import datetime
 
-from pyshock.scheduler.scheduler import scheduler
-from pyshock.scheduler.task import Task
-from pyshock.scheduler.periodictask import PeriodicTask
+from remoshock.scheduler.scheduler import scheduler
+from remoshock.scheduler.task import Task
+from remoshock.scheduler.periodictask import PeriodicTask
 
 
 class MockTask(Task):

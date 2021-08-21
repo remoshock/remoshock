@@ -5,7 +5,7 @@
 import subprocess
 import threading
 
-from pyshock.sdr.sdrsender import SdrSender
+from remoshock.sdr.sdrsender import SdrSender
 
 
 lock = threading.RLock()

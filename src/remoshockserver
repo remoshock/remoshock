@@ -3,6 +3,6 @@
 # Copyright nilswinter 2020-2021. License: AGPL
 # _____________________________________________
 
-from pyshock.cli import PyshockCli
+from remoshock.server import RemoshockServer
 
-PyshockCli().start()
+RemoshockServer().start()

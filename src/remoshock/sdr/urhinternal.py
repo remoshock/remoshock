@@ -15,8 +15,8 @@ import threading
 
 import numpy as np
 
-from pyshock.sdr.sdrsender import SdrSender
-from pyshock.util.logutil import HidePrintIfNotVerbose
+from remoshock.sdr.sdrsender import SdrSender
+from remoshock.util.logutil import HidePrintIfNotVerbose
 
 cli_exe = sys.executable if hasattr(sys, 'frozen') else sys.argv[0]
 cur_dir = os.path.realpath(os.path.dirname(os.path.realpath(cli_exe)))
