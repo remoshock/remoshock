@@ -7,6 +7,7 @@ import configparser
 import os
 import secrets
 import string
+import sys
 
 
 class MultiReceiverSectionSupport(collections.OrderedDict):
@@ -26,8 +27,9 @@ class ConfigManager:
     default configuration with freshly created random values."""
 
     def __init__(self):
+        self.__tokens = []
         self.filename = self.__determine_filename()
-        self.__write_default_configuration_if_missing()
+        self.__start_setup_assistant_if_config_missing()
         self.__read_configuration_from_file()
 
 
@@ -40,22 +42,117 @@ class ConfigManager:
     def __generate_transmitter_code(self, length):
         """creates a transmitter_code that is probably unique to this installation.
 
-        @param length number of bits"""
+        @param length number of bits
+        """
+        # we ensure that transmitter codes are unique with this loop
+        # because collisions are more likely than one would expect
+        # for a 9 bit value because of the birthday paradox.
         charset = "01"
-        return ''.join(secrets.choice(charset) for _ in range(length))
+        while True:
+            token = ''.join(secrets.choice(charset) for _ in range(length))
+            if token not in self.__tokens:
+                self.__tokens.append(token)
+                return token
 
 
-    def __write_default_configuration(self):
-        """write a default configuration to pyshock.ini.
-        web_authentication_token and transmitter_code are replaced by random values"""
-        default = """
+    def __input_number(self, question, default_value, min_value, max_value):
+        """Asks the user for a number with validation
+
+        @param question Question to ask the user
+        @param default_value value used, if the player hits return without any input
+        @param min_value minimal acceptable value
+        @param max_value maximal acceptable value
+        """
+        while True:
+            answer = input(question).strip()
+            if answer == "":
+                answer = str(default_value)
+            try:
+                num = int(answer, 10)
+                if min_value <= num and num <= max_value:
+                    return num
+                print("ERROR: Expected a number between " + str(min_value) + " and " + str(max_value))
+            except ValueError:
+                print("ERROR: Expected a number between " + str(min_value) + " and " + str(max_value))
+
+
+    def __setup_assistant(self):
+        """ask the user for configuration information in order to write
+        the configuration file."""
+
+        try:
+            print()
+            print("Type of software defined radio (SDR) hardware")
+            print("  1 HackRF")
+            print("  2 LimeSDR")
+            print("  3 Other (manually edit pyhsock.ini)")
+            sdr = self.__input_number("Which type of SDR do you use? [1] ", 1, 1, 3) - 1
+
+            number_of_receivers = self.__input_number("How many receivers do you have? [1] ", 1, 0, 100)
+            types = []
+
+            for i in range(1, number_of_receivers + 1):
+                print()
+                print("Type of receiver " + str(i))
+                print("  1 PAC / Pacdog  (tested ATX/DTX and ACX)")
+                print("  2 Wondondog 433 Mhz")
+                print("  3 Petrainer")
+                receiver_type = self.__input_number("Which type is receiver " + str(i) + "? ", 0, 1, 3)
+                types.append(receiver_type - 1)
+
+            config = self.__generate_configuration(sdr, types)
+            self.__write_default_configuration(config)
+            print()
+            print("Default configuration was written with random transmitter codes.")
+            print("If you know the code of your transmitter, you can edit the configuration file to use it.")
+            print()
+            sys.exit(0)
+        except KeyboardInterrupt:
+            print()
+            print("Setup aborted. No configuration written.")
+            sys.exit(0)
+
+
+    def __generate_configuration(self, sdr, receiver_types):
+        """generates a default configuration with random codes
+
+        @param sdr index of software defined radio
+        @param receiver_types array of indexes of receiver types
+        """
+        sdrs = ["sdr=HackRF", "sdr=LimeSDR", "# sdr= HackRF"]
+        colors = ["#FFD", "#DFF", "#DFD", "#DDF", "#FDD", "#DDD", "#FDF", "#FFF", "#DDD"]
+        receiver_type_configs = [
+            """
+[receiver]
+type=pac
+name=PAC[number]
+color=[color]
+transmitter_code=[transmitter_code_9bit]
+channel=1
+""",
+
+            """
+[receiver]
+type=wodondog
+name=Wodondog[number]
+color=[color]
+transmitter_code=[transmitter_code_16bit]
+channel=1
+""",
+
+            """
+[receiver]
+type=petrainer
+name=Petrainer[number]
+color=[color]
+transmitter_code=[transmitter_code_16bit]
+channel=1
+"""
+        ]
+        config = """
 #
 # Configuration file for pyshock. Please see https://github.com/pyshock/pyshock#readme
 # Lines starting with a # are ignored.
-#
-# This file is generated for PAC collars. If you are using another brand,
-# please delete the [receiver] sections for the PAC collar and remove the #-characters
-# in the appropriate sections for your receiver.
 #
 
 [global]
@@ -66,8 +163,7 @@ web_authentication_token = [web_authentication_token]
 
 # URH supports the following hardware, that can transmit on 27.195 MHz (upper/lower case is important):
 # HackRF, LimeSDR
-
-# sdr=HackRF
+[sdr]
 
 
 [randomizer]
@@ -83,69 +179,38 @@ start_delay_min_minutes = 0
 start_delay_max_minutes = 0
 runtime_min_minutes = 1440
 runtime_max_minutes = 1440
-
-[receiver]
-type=pac
-name=PAC1
-color=#FFD
-transmitter_code=[transmitter_code_9bit]
-channel=1
-
-[receiver]
-type=pac
-name=PAC2
-color=#FFD
-transmitter_code=[transmitter_code_9bit]
-channel=2
-
-[receiver]
-type=pac
-name=PAC3
-color=#FFD
-transmitter_code=[transmitter_code_9bit]
-channel=3
-
-[receiver]
-type=pac
-name=PAC4
-color=#FFD
-transmitter_code=[transmitter_code_9bit]
-channel=4
-
-#[receiver]
-#type=wodondog
-#name=Wodondog1
-#color=#FDF
-#transmitter_code=[transmitter_code_16bit]
-#channel=1
-
-#[receiver]
-#type=wodondog
-#name=Wodondog2
-#color=#FDF
-#transmitter_code=[transmitter_code_16bit]
-#channel=2
-
-#[receiver]
-#type=wodondog
-#name=Wodondog3
-#color=#FDF
-#transmitter_code=[transmitter_code_16bit]
-#channel=3
-
 """
-        config = default.replace("[web_authentication_token]", self.__generate_web_authentication_token())
-        config = config.replace("[transmitter_code_9bit]", self.__generate_transmitter_code(9))
-        config = config.replace("[transmitter_code_16bit]", self.__generate_transmitter_code(16))
+
+        config = config.replace("[sdr]", sdrs[sdr])
+        config = config.replace("[web_authentication_token]", self.__generate_web_authentication_token())
+
+        i = 0
+        for receiver_type in receiver_types:
+            config = config + receiver_type_configs[receiver_type]
+            config = config.replace("[number]", str(i + 1))
+            config = config.replace("[color]", str(colors[i % len(colors)]))
+            config = config.replace("[transmitter_code_9bit]", self.__generate_transmitter_code(9))
+            config = config.replace("[transmitter_code_16bit]", self.__generate_transmitter_code(16))
+            i = i + 1
+
+        return config
+
+
+    def __write_default_configuration(self, config):
+        """write a default configuration to pyshock.ini.
+        web_authentication_token and transmitter_code are replaced by random values"""
 
         print("Writing default configuration file to " + self.filename)
         with open(self.filename, "w") as f:
             f.write(config)
 
 
-    def __write_default_configuration_if_missing(self):
+    def __start_setup_assistant_if_config_missing(self):
+        """starts the setup assistent to write a default configuration,
+        if there is no configuration file to be found"""
+
         if not os.path.exists(self.filename):
-            self.__write_default_configuration()
+            self.__setup_assistant()
 
 
     def __determine_filename(self):
