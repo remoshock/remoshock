@@ -35,6 +35,7 @@ It consists of
 - One or more compatible shock collars:
   - PAC collars (compatible with ATX or DTX remote)
   - Wodondog "Dog Shock Collar"
+  - Petrainer (i strongly recommend against this kind)
 - A Software Defined Radio (SDR) transmitter that works on the required frequencies (tested using a HackRF device).
 - Linux with Python 3 (tested on Ubuntu 20.04)
 - Universal Radio Hacker: `apt install python3-pip python3-pyqt5; pip3 install urh`
@@ -46,17 +47,17 @@ It consists of
 
 Make sure that `urh` is working and does recognize your SDR device.
 
-Run `remoshockcli`. This command will generate a `remoshock.ini` configuration file
-with random values for authentication token and transmitter code.
-Please edit this file to specify your SDR transmitting hardware.
+Run `remoshockcli`. This command will ask you about the number and
+types of receivers in order to generate a `remoshock.ini` configuration
+file. It will use random values for authentication token and transmitter
+code.
 
-The file will be generate with an active sample configruation for PAC collars.
-If you are using another brand, please delete the [receiver]-sections for
-the PAC collars and remove the comment-character `#` before the lines for 
-your receiver.
 
-Reset your collar into pairing mode and invoke `./remoshockcli` again.
+Reset your collar into pairing mode and invoke `remoshockcli` again.
 After successful pairing, run it a third time, to issue a "beep" command.
+
+If you have more than one receiver, please repeat this step for each
+device: `remoshock --receiver=1`, `remoshock --receiver=2`, etc.
 
 
 ## 🖥 Command line interface (remoshockcli)
@@ -73,7 +74,7 @@ The following actions are supported:
 
 - **LIGHT**:  blinks the light. Note: This might cause a tiny shock on PAC collars.
 - **BEEP**:   plays the beep sound
-- **VIBRATE**:   reserved for future use. Note: This will beep on PAC collars.
+- **VIBRATE**:   Note: This will beep on collars without vibration support (e. g. PAC)
 - **SHOCK**:  a shock.
 - **BEEPSHOCK**: plays one beep sound, waits one second, and then triggers a shock according to parameters.
 
