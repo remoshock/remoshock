@@ -10,7 +10,11 @@
 import time
 from enum import Enum
 from threading import RLock
-import serial
+available = True
+try:
+    import serial
+except ModuleNotFoundError:
+    available = False
 
 from remoshock.core.action import Action
 from remoshock.receiver.receiver import Receiver
@@ -136,6 +140,9 @@ class ArduinoManager():
 
     def boot(self):
         """Boots the Arduino and registers receivers"""
+        if not available:
+            print("Python module 'serial' not available. Arduino support disabled.")
+            return
 
         self.ser = serial.Serial('/dev/ttyACM0')
         self.serial_lock = RLock()

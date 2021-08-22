@@ -25,7 +25,20 @@ SRC_DIR = os.path.realpath(os.path.join(cur_dir, "..", "urh", "build", "lib.linu
 if os.path.isdir(SRC_DIR):
     sys.path.insert(0, SRC_DIR)
 
-from urh.signalprocessing.IQArray import IQArray
+try:
+    from urh.signalprocessing.IQArray import IQArray
+except ModuleNotFoundError:
+    print()
+    print("ERROR: Could not import urh")
+    print("Please install Universal Radio Hacker:")
+    print("sudo apt install python3-pip python3-pyqt5; sudo pip3 install urh")
+    print()
+    print("If URH is installed, you may try to use the command line interface")
+    print("instead of internal invokation by editing remoshock.ini:")
+    print("sdr=HackRFcli")
+    print();
+    sys.exit(1)
+
 from urh.util import util
 
 util.set_shared_library_path()

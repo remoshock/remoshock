@@ -39,8 +39,8 @@ It consists of
 - A Software Defined Radio (SDR) transmitter that works on the required frequencies (tested using a HackRF device).
 - Linux with Python 3 (tested on Ubuntu 20.04)
 - Universal Radio Hacker:<br>
-  `apt install python3-pip python3-pyqt5; pip3 install urh`
-- `pip3 install remoshock` 
+  `sudo apt install python3-pip python3-pyqt5; sudo pip3 install urh`
+- `sudo pip3 install remoshock` 
   <br>Alternatively: Download [remoshock-0.5.zip](https://github.com/remoshock/remoshock/releases/download/v0.5/remoshock-0.5.zip) manually.
 - Please see [docs/FAQ.md](https://github.com/remoshock/remoshock/blob/master/docs/FAQ.md) for troubleshooting tips.
 

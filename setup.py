@@ -21,7 +21,7 @@ setuptools.setup(
             'remoshockserver = remoshock.server:main'
         ],
     },
-#    install_requires=['numpy'],
+    install_requires=['numpy', 'serial'],
     long_description = long_description,
     long_description_content_type = 'text/markdown',
     license="GNU Affero General Public License v3 (AGPL)",
