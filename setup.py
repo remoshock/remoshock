@@ -1,11 +1,15 @@
+import re
 import setuptools
 
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
+with open("src/remoshock/core/version.py", "r", encoding="utf-8") as fh:
+    version = re.search("VERSION *= *[\"']([^\"']+).*", fh.read()).group(1)
+
 setuptools.setup(
     name = 'remoshock',
-    version = '0.5.0',
+    version = version,
     author = 'Nils Winter',
     author_email = 'nils.winter@yahoo.com',
     classifiers = [

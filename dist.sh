@@ -25,9 +25,14 @@ rm -rf */*/*/__pycache__
 rm -rf */*/*/*/__pycache__
 
 # create the .zip file
-mkdir -p $PROJECT_DIR/build
-rm -rf $PROJECT_DIR/build/*
-zip -r $PROJECT_DIR/build/remoshock-$VERSION.zip . 
+mkdir -p $PROJECT_DIR/dist
+rm -rf $PROJECT_DIR/dist/*
+zip -r $PROJECT_DIR/dist/remoshock-$VERSION.zip . 
 
 # clean up
 rm -rf $TARGET_DIR
+
+# build package
+cd $PROJECT_DIR
+rm -rf src/remoshock.egg-info/; python3 -m build
+
