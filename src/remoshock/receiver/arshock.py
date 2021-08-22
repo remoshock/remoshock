@@ -16,8 +16,9 @@ try:
 except ModuleNotFoundError:
     available = False
 
-from remoshock.core.action import Action
-from remoshock.receiver.receiver import Receiver
+from remoshock.core.action import Action  # noqa: E402
+from remoshock.receiver.receiver import Receiver  # noqa: E402
+
 
 # type            code, code, channel
 #  0  Pettainer,            sender code first byte, seonder code second byte, channel
