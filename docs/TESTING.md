@@ -31,7 +31,7 @@ Testing instruction before release.
 <td>
 
 - No error message
-- File `build/remoshock/remoshock-x.x.zip` is created
+- Files `dist/remoshock-x.x.zip`, `dist/remoshock-x.x.tar.gz` and `remoshock-x.x-py3-none-any.whl` are created
 - <code>git diff</code> shows only modification of the version number, and in REAME.md and version.py only.
 
 </tr>
@@ -43,49 +43,62 @@ Testing instruction before release.
 
 ~~~~
 rm ~/.config/remoshock.ini
-cd /tmp
-unzip ~/workspace/remoshock/build/remoshock-*
-cd remoshock
-./remoshockcli.py
+mkdir -p ~/temp/remoshock
+cd ~/temp/remoshock
+python3 -m venv env
+source env/bin/activate
+pip3 install urh
+pip3 install ../remoshock/dist/remoshock-*.whl
 ~~~~
 
 </td>
 <td>
+Installation completes successfully
+</td>
+<tr>
 
-- "Please edit remoshock.ini and add an entry sdr=... in the [global] section."
+<tr>
+<td>5.</td>
+<td>
+
+- `remoshockcli`
+- 1 HackRF
+- 4 Receivers
+- 1 PAC
+- 1 PAC
+- 2 Wodondog
+- 3 Petrainer
+
+</td>
+<td>
+
+- "Default configuration was written with random transmitter codes."
 - In remoshock.ini, the variables web_authentication_token and transmitter_code contain random values.
-- There is an example configuration for multiple PAC receivers.
-- There is are example configurations for non PAC receivers, that are disabled by a leading `#`.
+- There is an example configuration for PAC, Wodondog and Petrainer receivers.
 - There is an example configuration for the randomizer.
 </td>
 </tr>
 
 
-<tr>
-<td>5.</td>
-<td>Edit remoshock.ini and set sdr=hackrf. Uncomment all receiver sections be removing a leading `#`.</td>
-<td>-</td>
-</tr>
-
 
 <tr>
 <td>6.</td>
 <td>Reset PAC receiver into learning mode<br>
-Run <code>./remoshockcli.py</code></td>
+Run `remoshockcli`</td>
 <td>Receiver was paired to the new transmitter code, it stopped flashing red and started to blink green.</td>
 </tr>
 
 
 <tr>
 <td>7.</td>
-<td>Run <code>./remoshockcli.py --sdr hackrfcli</code></td>
+<td>Run `remoshockcli --sdr hackrfcli`</code></td>
 <td>The receiver beeps.</td>
 </tr>
 
 
 <tr>
 <td>8.</td>
-<td>Run <code>./remoshockserver.py</code><br>
+<td>Run `remoshockserver`<br>
 Open the displayed URL in a web-browser.</td>
 <td>The remote-control website is shown.</td>
 </tr>
@@ -161,7 +174,7 @@ runtime_min_minutes = 2
 runtime_max_minutes = 3
 
 ~~~~
-Disable all non PAC receivers by adding a `#` at the start of the lines.
+
 </td>
 <td>-</td>
 </tr>
@@ -169,7 +182,7 @@ Disable all non PAC receivers by adding a `#` at the start of the lines.
 
 <tr>
 <td>17.</td>
-<td>Run <code>remoshockrnd.py --mock</code></td>
+<td>Run `remoshockrnd --mock`</td>
 <td>
 
 - A beep is sent to 4 collars, about a second apart.<br>
@@ -188,6 +201,7 @@ Disable all non PAC receivers by adding a `#` at the start of the lines.
 
 - create GitHub-releases with change-notes, a tag starting with "v" followed by the version number
 - upload build/remoshock-x.x.zip to the release
+- upload to pip
 
 ~~~~
 git commit -am "released version x.x"

@@ -95,7 +95,7 @@ class ConfigManager:
                 print()
                 print("Type of receiver " + str(i))
                 print("  1 PAC / Pacdog  (tested ATX/DTX and ACX)")
-                print("  2 Wondondog 433 Mhz")
+                print("  2 Wodondog 433 Mhz")
                 print("  3 Petrainer")
                 receiver_type = self.__input_number("Which type is receiver " + str(i) + "? ", 0, 1, 3)
                 types.append(receiver_type - 1)
@@ -105,6 +105,8 @@ class ConfigManager:
             print()
             print("Default configuration was written with random transmitter codes.")
             print("If you know the code of your transmitter, you can edit the configuration file to use it.")
+            print()
+            print("Please reset your receiver into pairing mode and " + sys.argv[0] + " --receiver 1")
             print()
             sys.exit(0)
         except KeyboardInterrupt:

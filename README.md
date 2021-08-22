@@ -9,8 +9,6 @@ Quick links:&nbsp;&nbsp;
 <img alt="License: AGPL" src="https://img.shields.io/badge/-AGPL-%23AAF"></a> 
 <a href="https://github.com/remoshock/remoshock/releases">
 <img alt="Changes" src="https://img.shields.io/badge/-Changes-green"></a> 
-<a href="https://github.com/remoshock/remoshock/releases/download/v0.5/remoshock-0.5.zip">
-<img alt="Download" src="https://img.shields.io/badge/-Download-brightgreen"></a>
 
 <div>
 <a href="https://raw.githubusercontent.com/remoshock/remoshock/master/docs/randomizer.png">
@@ -35,7 +33,7 @@ It consists of
 - One or more compatible shock collars:
   - PAC collars (compatible with ATX or DTX remote)
   - Wodondog "Dog Shock Collar"
-  - Petrainer (i strongly recommend against this kind)
+  - Petrainer
 - A Software Defined Radio (SDR) transmitter that works on the required frequencies (tested using a HackRF device).
 - Linux with Python 3 (tested on Ubuntu 20.04)
 - Universal Radio Hacker:<br>

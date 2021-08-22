@@ -35,12 +35,9 @@ remoshock works on Linux only. Ubuntu 2020.04 is used for testing.
 
 **Which shocking devices are supported?**
 
-At the time of writing, only PAC collars of type ACX are tested.
-BCX collars (the smaller ones) are supposed to work as they
-can be controlled by the same remote (ATX, DTX).
-
-Support for other vendors might be added at a later time. remoshock
-is designed with this kind of extension in mind. 
+- PAC collars (compatible with ATX and DTX remote, tested with ACX)
+- Wodondog "Dog Shock Collar"
+- Petrainer
 
 
 **What transmitter hardware do I need?**
