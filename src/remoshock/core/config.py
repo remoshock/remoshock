@@ -106,7 +106,7 @@ class ConfigManager:
             print("Default configuration was written with random transmitter codes.")
             print("If you know the code of your transmitter, you can edit the configuration file to use it.")
             print()
-            print("Please reset your receiver into pairing mode and " + sys.argv[0] + " --receiver 1")
+            print("Please reset your receiver into pairing mode and run remoshockcli --receiver 1")
             print()
             sys.exit(0)
         except KeyboardInterrupt:

@@ -31,7 +31,7 @@ Testing instruction before release.
 <td>
 
 - No error message
-- Files `dist/remoshock-x.x.zip`, `dist/remoshock-x.x.tar.gz` and `remoshock-x.x-py3-none-any.whl` are created
+- Files <code>dist/remoshock-x.x.zip</code>, <code>dist/remoshock-x.x.tar.gz</code> and <code>remoshock-x.x-py3-none-any.whl</code> are created
 - <code>git diff</code> shows only modification of the version number, and in REAME.md and version.py only.
 
 </tr>
@@ -48,6 +48,7 @@ cd ~/temp/remoshock
 python3 -m venv env
 source env/bin/activate
 pip3 install urh
+pip3 uninstall remoshock
 pip3 install ../remoshock/dist/remoshock-*.whl
 ~~~~
 
@@ -61,7 +62,7 @@ Installation completes successfully
 <td>5.</td>
 <td>
 
-- `remoshockcli`
+- Run <code>remoshockcli</code>
 - 1 HackRF
 - 4 Receivers
 - 1 PAC
@@ -84,21 +85,21 @@ Installation completes successfully
 <tr>
 <td>6.</td>
 <td>Reset PAC receiver into learning mode<br>
-Run `remoshockcli`</td>
+Run <code>remoshockcli</code></td>
 <td>Receiver was paired to the new transmitter code, it stopped flashing red and started to blink green.</td>
 </tr>
 
 
 <tr>
 <td>7.</td>
-<td>Run `remoshockcli --sdr hackrfcli`</code></td>
+<td>Run <code>remoshockcli --sdr hackrfcli</code></code></td>
 <td>The receiver beeps.</td>
 </tr>
 
 
 <tr>
 <td>8.</td>
-<td>Run `remoshockserver`<br>
+<td>Run <code>remoshockserver</code><br>
 Open the displayed URL in a web-browser.</td>
 <td>The remote-control website is shown.</td>
 </tr>
@@ -182,7 +183,7 @@ runtime_max_minutes = 3
 
 <tr>
 <td>17.</td>
-<td>Run `remoshockrnd --mock`</td>
+<td>Run <code>remoshockrnd --mock</code></td>
 <td>
 
 - A beep is sent to 4 collars, about a second apart.<br>
@@ -204,6 +205,7 @@ runtime_max_minutes = 3
 - upload to pip
 
 ~~~~
+python3 -m twine upload dist/*.tar.gz dist/*.whl
 git commit -am "released version x.x"
 git push
 git checkout -b VERSION_xx_RELEASE_xx
