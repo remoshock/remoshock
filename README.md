@@ -57,7 +57,7 @@ Reset your collar into pairing mode and invoke `remoshockcli` again.
 After successful pairing, run it a third time, to issue a "beep" command.
 
 If you have more than one receiver, please repeat this step for each
-device: `remoshock --receiver=1`, `remoshock --receiver=2`, etc.
+device: `remoshockcli --receiver=1`, `remoshockcli --receiver=2`, etc.
 
 
 ## 🖥 Command line interface (remoshockcli)
