@@ -1,4 +1,4 @@
-# <img src="https://raw.githubusercontent.com/remoshock/remoshock/master/src/web/favicon.png" alt="Logo showing a drawing of a shock collar receiver" height="32">&nbsp;&nbsp; remoshock
+# <img src="https://raw.githubusercontent.com/remoshock/remoshock/master/src/remoshock/web/favicon.png" alt="Logo showing a drawing of a shock collar receiver" height="32">&nbsp;&nbsp; remoshock
 
 Quick links:&nbsp;&nbsp;
 <a href="https://github.com/remoshock/remoshock/blob/master/docs/WARNING.md">
