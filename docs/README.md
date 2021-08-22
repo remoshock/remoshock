@@ -1,1 +1,1 @@
-Please see [/README.md](https://github.com/pyshock/pyshock#readme).
+Please see [/README.md](https://github.com/remoshock/remoshock#readme).

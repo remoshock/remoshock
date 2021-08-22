@@ -1,4 +1,4 @@
-Pyshock is copyrighted by Nils Winter <nils.winter@yahoo.com> 2019-2021
+Remoshock is copyrighted by Nils Winter <nils.winter@yahoo.com> 2019-2021
 
 ### Please note the following clarification:
 

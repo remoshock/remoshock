@@ -20,7 +20,7 @@ Testing instruction before release.
 
 <tr>
 <td>2.</td>
-<td>Increase version number in <code>src/pyshock/core/version.py</code></td>
+<td>Increase version number in <code>src/remoshock/core/version.py</code></td>
 <td>-</td>
 </tr>
 
@@ -31,7 +31,7 @@ Testing instruction before release.
 <td>
 
 - No error message
-- File `build/pyshock/pyshock-x.x.zip` is created
+- Files <code>dist/remoshock-x.x.zip</code>, <code>dist/remoshock-x.x.tar.gz</code> and <code>remoshock-x.x-py3-none-any.whl</code> are created
 - <code>git diff</code> shows only modification of the version number, and in REAME.md and version.py only.
 
 </tr>
@@ -42,50 +42,64 @@ Testing instruction before release.
 <td>
 
 ~~~~
-rm ~/.config/pyshock.ini
-cd /tmp
-unzip ~/workspace/pyshock/build/pyshock-*
-cd pyshock
-./pyshockcli.py
+rm ~/.config/remoshock.ini
+mkdir -p ~/temp/remoshock
+cd ~/temp/remoshock
+python3 -m venv env
+source env/bin/activate
+pip3 install urh
+pip3 uninstall remoshock
+pip3 install ../remoshock/dist/remoshock-*.whl
 ~~~~
 
 </td>
 <td>
+Installation completes successfully
+</td>
+<tr>
 
-- "Please edit pyshock.ini and add an entry sdr=... in the [global] section."
-- In pyshock.ini, the variables web_authentication_token and transmitter_code contain random values.
-- There is an example configuration for multiple PAC receivers.
-- There is are example configurations for non PAC receivers, that are disabled by a leading `#`.
+<tr>
+<td>5.</td>
+<td>
+
+- Run <code>remoshockcli</code>
+- 1 HackRF
+- 4 Receivers
+- 1 PAC
+- 1 PAC
+- 2 Wodondog
+- 3 Petrainer
+
+</td>
+<td>
+
+- "Default configuration was written with random transmitter codes."
+- In remoshock.ini, the variables web_authentication_token and transmitter_code contain random values.
+- There is an example configuration for PAC, Wodondog and Petrainer receivers.
 - There is an example configuration for the randomizer.
 </td>
 </tr>
 
 
-<tr>
-<td>5.</td>
-<td>Edit pyshock.ini and set sdr=hackrf. Uncomment all receiver sections be removing a leading `#`.</td>
-<td>-</td>
-</tr>
-
 
 <tr>
 <td>6.</td>
 <td>Reset PAC receiver into learning mode<br>
-Run <code>./pyshockcli.py</code></td>
+Run <code>remoshockcli</code></td>
 <td>Receiver was paired to the new transmitter code, it stopped flashing red and started to blink green.</td>
 </tr>
 
 
 <tr>
 <td>7.</td>
-<td>Run <code>./pyshockcli.py --sdr hackrfcli</code></td>
+<td>Run <code>remoshockcli --sdr hackrfcli</code></code></td>
 <td>The receiver beeps.</td>
 </tr>
 
 
 <tr>
 <td>8.</td>
-<td>Run <code>./pyshockserver.py</code><br>
+<td>Run <code>remoshockserver</code><br>
 Open the displayed URL in a web-browser.</td>
 <td>The remote-control website is shown.</td>
 </tr>
@@ -136,14 +150,14 @@ Press the shock button for the first Wodondog receiver.</td>
 
 <tr>
 <td>15.</td>
-<td>End the pyshockserver-process by pressing <code>ctrl+c</code></td>
+<td>End the remoshockserver-process by pressing <code>ctrl+c</code></td>
 <td>No error message is shown. No traceback is shown.</td>
 </tr>
 
 
 <tr>
 <td>16.</td>
-<td>Edit pyshock.ini to setup the following randomizer configuration:
+<td>Edit remoshock.ini to setup the following randomizer configuration:
 
 ~~~~
 [randomizer]
@@ -161,7 +175,7 @@ runtime_min_minutes = 2
 runtime_max_minutes = 3
 
 ~~~~
-Disable all non PAC receivers by adding a `#` at the start of the lines.
+
 </td>
 <td>-</td>
 </tr>
@@ -169,7 +183,7 @@ Disable all non PAC receivers by adding a `#` at the start of the lines.
 
 <tr>
 <td>17.</td>
-<td>Run <code>pyshockrnd.py --mock</code></td>
+<td>Run <code>remoshockrnd --mock</code></td>
 <td>
 
 - A beep is sent to 4 collars, about a second apart.<br>
@@ -187,9 +201,11 @@ Disable all non PAC receivers by adding a `#` at the start of the lines.
 # Publish release
 
 - create GitHub-releases with change-notes, a tag starting with "v" followed by the version number
-- upload build/pyshock-x.x.zip to the release
+- upload build/remoshock-x.x.zip to the release
+- upload to pip
 
 ~~~~
+python3 -m twine upload dist/*.tar.gz dist/*.whl
 git commit -am "released version x.x"
 git push
 git checkout -b VERSION_xx_RELEASE_xx
