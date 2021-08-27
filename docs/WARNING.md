@@ -8,7 +8,7 @@ nerve system as well as damage to the skin.
 
 ### Nerves 
 
-[Shock collars around the neck are not safe](https://threadreaderapp.com/thread/1292957970742087680.html)
+[Shock collars around the neck are not safe](https://www.domme-chronicles.com/2021/02/shock-collars-in-bdsm-play-are-they-safe)
 
 ### Skin
 
