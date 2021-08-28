@@ -61,12 +61,22 @@ class RemoshockRequestHandler(BaseHTTPRequestHandler):
             print("Browser disconnected")
 
 
-    def verify_authentication_token(self, params):
-        """validates authentication token"""
-        if "token" not in params:
-            return False
+    def verify_authentication_token(self, headers, params):
+        """validates authentication token
 
-        return params["token"][0] == remoshock.config.get("global", "web_authentication_token")
+        @param headers HTTP headers
+        @param params  url parameters
+        """
+        expected_token = remoshock.config.get("global", "web_authentication_token")
+
+        auth_header = headers.getheader("Authorization")
+        if auth_header == "Bearer " + expected_token:
+            return True
+
+        if "token" in params:
+            return params["token"][0] == expected_token
+
+        return False
 
 
     def handle_command(self, params):
@@ -120,7 +130,7 @@ class RemoshockRequestHandler(BaseHTTPRequestHandler):
         params = parse_qs(urlparse(self.path).query)
         try:
             if self.path.startswith("/remoshock/"):
-                if not self.verify_authentication_token(params):
+                if not self.verify_authentication_token(self.headers, params):
                     self.answer_html(403, "Missing or invalid authentication token")
                     return
 
