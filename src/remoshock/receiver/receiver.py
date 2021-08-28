@@ -44,11 +44,12 @@ class Receiver:
         """duration of one impulse in milliseconds"""
         return 250
 
+
     def get_config(self):
         """returns configuration information for the website
 
         Most notable name, color, initial power and initial duration settings
-        as well as the duration increment (e. g. 250ms for PAC and 500ms for Petainer)."""
+        as well as the duration increment (e. g. 250ms for PAC and 500ms for Petrainer)."""
         config = {
             "name": self.name,
             "color": self.color,

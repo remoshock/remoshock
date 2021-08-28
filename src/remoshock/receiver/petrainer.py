@@ -160,3 +160,8 @@ class Petrainer(Receiver):
             message = message + message_template
 
         self.send(message)
+
+
+    def get_impulse_duration(self):
+        """duration of one impulse in milliseconds"""
+        return 500
