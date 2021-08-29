@@ -10,9 +10,10 @@ import threading
 from remoshock.core.config import ConfigManager
 
 from remoshock.receiver.arshock import ArduinoManager
-from remoshock.receiver.wodondog import Wodondog
+from remoshock.receiver.dogtra import Dogtra
 from remoshock.receiver.pac import Pac
 from remoshock.receiver.petrainer import Petrainer
+from remoshock.receiver.wodondog import Wodondog
 
 lock = threading.RLock()
 
@@ -49,14 +50,16 @@ class Remoshock:
                 return None
         channel = self.config.getint(section, "channel")
 
-        if receiver_type.lower() == "pac":
+        if receiver_type.lower() == "dogtra200ncp":
+            receiver = Dogtra(name, color, code, channel)
+        elif receiver_type.lower() == "pac":
             receiver = Pac(name, color, code, channel)
-        elif receiver_type.lower() == "wodondog":
-            receiver = Wodondog(name, color, code, channel)
         elif receiver_type.lower() == "petrainer":
             receiver = Petrainer(name, color, code, channel)
+        elif receiver_type.lower() == "wodondog":
+            receiver = Wodondog(name, color, code, channel)
         else:
-            print("ERROR: Unknown receiver type \"" + receiver_type + "\" in remoshock.ini. Supported types: pac, Wodondog, petainer")
+            print("ERROR: Unknown receiver type \"" + receiver_type + "\" in remoshock.ini. Supported types: pac, wodondog, petainer")
             return None
 
         if receiver.validate_config():
