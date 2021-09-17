@@ -69,7 +69,7 @@ class RemoshockRequestHandler(BaseHTTPRequestHandler):
         """
         expected_token = remoshock.config.get("global", "web_authentication_token")
 
-        auth_header = headers.getheader("Authorization")
+        auth_header = headers.get("Authorization")
         if auth_header == "Bearer " + expected_token:
             return True
 
