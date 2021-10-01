@@ -3,7 +3,7 @@
 # _____________________________________________
 
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from urllib.parse import urlparse, parse_qs
+from urllib.parse import parse_qs, unquote, urlparse
 import argparse
 import html
 import json
@@ -12,7 +12,6 @@ import ssl
 import sys
 import shutil
 import traceback
-
 
 from remoshock.core.remoshock import Remoshock, RemoshockMock
 from remoshock.core.action import Action
@@ -100,7 +99,7 @@ class RemoshockRequestHandler(BaseHTTPRequestHandler):
         Furthermore it sends the correct headers."""
 
         web_folder = os.path.normpath(os.path.dirname(os.path.abspath(__file__)) + "/web")
-        filename = os.path.normpath(web_folder + self.path)
+        filename = os.path.normpath(web_folder + unquote(self.path))
         if not filename.startswith(web_folder):
             self.answer_html(404, "Invalid file name.")
             return
