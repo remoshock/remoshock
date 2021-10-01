@@ -56,13 +56,21 @@ HackRF is used for testing
 
 **I am getting strange hardware error messages from my SDR transmitter**
 
+Examples for error message:
+
 ~~~~
 [CRITICAL::urh_cli.py::on_fatal_device_error_occurred] failed to start tx mode
 [ERROR::Device.py::log_retcode] HackRF-SETUP
+[ERROR::Device.py::log_retcode] HackRF-SETUP: HACKRF_ERROR_NOT_FOUND (-5)
+[ERROR::Device.py::log_retcode] HackRF-SET_SAMPLE_RATE to 2M: HACKRF_ERROR_LIBUSB (-1000)
 ~~~~
 
 Please avoid USB hubs and connect your SDR directly to your computer.
 At least USB 2 hubs are known to be too slow to sustain the bit-stream.
+
+Please make sure that your computer is connected to the power network
+(i. e. don't run your notebook on battery only). A throttled CPU
+might be too slow to generate the bit-stream for the SDR.
 
 If you run Linux inside of a Virtual Machine on a slow computer, you
 might experience the same performance problems. VirtualBox only supports
