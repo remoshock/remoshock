@@ -65,8 +65,9 @@ Examples for error message:
 [ERROR::Device.py::log_retcode] HackRF-SET_SAMPLE_RATE to 2M: HACKRF_ERROR_LIBUSB (-1000)
 ~~~~
 
-Please avoid USB hubs and connect your SDR directly to your computer.
-At least USB 2 hubs are known to be too slow to sustain the bit-stream.
+Please avoid USB hubs and USB extension cables, but connect your SDR
+directly to your computer. At least USB 2 hubs are known to be too
+slow to sustain the bit-stream.
 
 Please make sure that your computer is connected to the power network
 (i. e. don't run your notebook on battery only). A throttled CPU
@@ -95,4 +96,5 @@ list any USB devices. Neither does `lsusb` inside the virtual machine.
 
 **Which setup is used for testing?**
 
-I use Ubuntu 2020.04 with a HackRF transmitter and a PAC ACX collar.
+I use Ubuntu 2020.04 with a HackRF transmitter, a PAC ACX collar and
+a brandless Wodondog collar.
