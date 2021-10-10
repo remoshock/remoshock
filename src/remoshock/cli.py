@@ -25,7 +25,8 @@ class RemoshockCli:
         parser.add_argument("-a", "--action",
                             default="BEEP",
                             choices=["LIGHT", "BEEP", "VIBRATE", "SHOCK", "BEEPSHOCK"],
-                            help="Action to perform")
+                            help="Action to perform",
+                            type=str.upper)
         parser.add_argument("-d", "--duration",
                             type=int,
                             default=250,
