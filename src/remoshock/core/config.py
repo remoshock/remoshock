@@ -85,7 +85,7 @@ class ConfigManager:
             print("Type of software defined radio (SDR) hardware")
             print("  1 HackRF")
             print("  2 LimeSDR")
-            print("  3 Other (manually edit pyhsock.ini)")
+            print("  3 Other (manually edit remoshock.ini)")
             sdr = self.__input_number("Which type of SDR do you use? [1] ", 1, 1, 3) - 1
 
             number_of_receivers = self.__input_number("How many receivers do you have? [1] ", 1, 0, 100)

@@ -39,7 +39,7 @@ It consists of
 - Universal Radio Hacker:<br>
   `sudo apt install python3-pip python3-pyqt5; sudo pip3 install urh`
 - `sudo pip3 install remoshock` 
-  <br>Alternatively: Download [remoshock-0.5.zip](https://github.com/remoshock/remoshock/releases/download/v0.5/remoshock-0.5.zip) manually.
+  <br>Alternatively: Download [remoshock-0.6.zip](https://github.com/remoshock/remoshock/releases/download/v0.6/remoshock-0.6.zip) manually.
 - Please see [docs/FAQ.md](https://github.com/remoshock/remoshock/blob/master/docs/FAQ.md) for troubleshooting tips.
 
 
@@ -235,3 +235,4 @@ Please report bugs and feature ideas as issues on [https://github.com/remoshock/
 - [docs/LICENSE.md](https://github.com/remoshock/remoshock/blob/master/docs/LICENSE.md)
 - [docs/WARNING.md](https://github.com/remoshock/remoshock/blob/master/docs/WARNING.md)
 - [docs/FAQ.md](https://github.com/remoshock/remoshock/blob/master/docs/FAQ.md)
+- [docs/CHANGES.md](https://github.com/remoshock/remoshock/blob/master/docs/CHANGES.md)
