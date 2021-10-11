@@ -119,13 +119,13 @@ class Pac(Receiver):
 
         @param messages messages that have already been encoded for transmission"""
         self.sender.send(
-            frequency=27.190e6,
+            frequency=27.10e6,
             sample_rate=2e6,
             carrier_frequency=27.1e6,
             modulation_type="FSK",
             samples_per_symbol=3100,
-            low_frequency=2e3,
-            high_frequency=5e3,
+            low_frequency=92e3,
+            high_frequency=95e3,
             pause=262924,
             data=messages)
 
