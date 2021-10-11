@@ -108,13 +108,13 @@ class Dogtra(Receiver):
 
         @param messages messages that have already been encoded for transmission"""
         self.sender.send(
-            frequency=27.135e6,
+            frequency=27.1e6,
             sample_rate=2e6,
-            carrier_frequency=27.135e6,
+            carrier_frequency=27.1e6,
             modulation_type="FSK",
             samples_per_symbol=1500,
-            low_frequency=6e3,
-            high_frequency=11e3,
+            low_frequency=41e3,
+            high_frequency=46e3,
             pause=262924,
             data=messages)
 
