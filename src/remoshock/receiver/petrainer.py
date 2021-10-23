@@ -71,7 +71,7 @@ class Petrainer(Receiver):
         self.sender = sdr_sender
 
         # schedule keep awake timer
-        command_task = CommandTask(None, None, None, remoshock, receiver, Action.LIGHT, 0, 250)
+        command_task = CommandTask(None, None, None, remoshock, receiver, Action.KEEPAWAKE, 0, 250)
         periodic_task = PeriodicTask(5 * 60 / 2 - 10, command_task)
         scheduler().schedule_task(periodic_task)
 
@@ -134,6 +134,11 @@ class Petrainer(Receiver):
         @param power power level (1-100)
         @param duration duration in ms
         """
+
+        if action == Action.KEEPAWAKE:
+            action = Action.LIGHT
+            power = 0
+            duration = 250
 
         message = ""
         if action == Action.BEEPSHOCK:
