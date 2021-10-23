@@ -141,6 +141,9 @@ class Pac(Receiver):
         @param duration duration in ms
         """
 
+        if action == Action.KEEPAWAKE:
+            return
+
         message = ""
         if action == Action.BEEPSHOCK:
             message = self.encode_for_transmission(self.generate(self.transmitter_code, 0, self.button, 1)) + "/1s"

@@ -15,4 +15,5 @@ class Action(Enum):
     BEEP = 11
     VIBRATE = 12
     SHOCK = 13
+    KEEPAWAKE = 14
     BEEPSHOCK = 99

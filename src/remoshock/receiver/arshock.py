@@ -82,6 +82,9 @@ class ArduinoBasedReceiver(Receiver):
 
 
     def command(self, action, power, duration):
+        if action == Action.KEEPAWAKE:
+            return
+
         if action == Action.BEEPSHOCK:
             self.arduino_manager.command(Action.BEEP, self.index, 0, 0)
             time.sleep(1)

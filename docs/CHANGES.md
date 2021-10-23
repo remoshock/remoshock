@@ -1,3 +1,7 @@
+# Next version
+
+- **[internal]** dedicated action for keep-awake message to improve logging
+
 # Version 0.6 released on 2021-10-12
 
 - **[fix]**      improved reliability for PAC receivers by tuning off frequency to reduce
