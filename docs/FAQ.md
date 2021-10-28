@@ -4,12 +4,12 @@
 
 **Is playing with electricity dangerous?**
 
-Yes, it is. Please see [WARNING](https://github.com/remoshock/remoshock/blob/master/doc/WARNING.md)
+Yes, it is. Please see [WARNING](https://github.com/remoshock/remoshock/blob/master/docs/WARNING.md)
 
 
 **Should I play with electricity?**
 
-No, you should not. Please see [WARNING](https://github.com/remoshock/remoshock/blob/master/doc/WARNING.md)
+No, you should not. Please see [WARNING](https://github.com/remoshock/remoshock/blob/master/docs/WARNING.md)
 
 
 
@@ -79,6 +79,29 @@ USB 1.x in the default installation. Please see
 [https://www.eltima.com/article/virtualbox-usb-passthrough/](https://www.eltima.com/article/virtualbox-usb-passthrough/).
 
 
+**Access to HackRF only works as root**
+
+Access to the HackRF hardware only works as root. remoshock crashes with
+either a segmentation fault or the following error message:
+
+~~~~
+[ERROR::Device.py::log_retcode] HackRF-SETUP: HACKRF_ERROR_NOT_FOUND (-5)
+~~~~
+
+The `hackrf_info` fails with the following error as a normal user:
+
+~~~~
+hackrf_open() failed: Access denied (insufficient permissions) (-1000)
+~~~~
+
+In order to access the hardware as normal user, a udev rule is needed.
+Please create the file /etc/udev/rules.d/53-hackrf.rules with the
+content from
+https://raw.githubusercontent.com/mossmann/hackrf/master/host/libhackrf/53-hackrf.rules
+
+Furthermore please make sure that the user in the group plugdev.
+
+
 **It is not working, why?**
 
 Please add the parameter `--verbose`. It will enable debug logging.
@@ -88,10 +111,11 @@ Please add the parameter `--verbose`. It will enable debug logging.
 
 Please see [https://www.eltima.com/article/virtualbox-usb-passthrough/](https://www.eltima.com/article/virtualbox-usb-passthrough/) on how to install and enable USB Passthrough support for VirtualBox.
 
-Note: I did not work for me. USB 3.0 showed up after
-`apt install virtualbox-ext-pack`, adding myself to the vboxuser group and
-restarting. But the VirtualBox Machine configuration dialog does not 
-list any USB devices. Neither does `lsusb` inside the virtual machine.
+In short:
+- `apt install virtualbox-ext-pack`
+- add yourself to the vboxuser group
+- on the USB settings pages of the virutal machine select USB 3.0 controller
+  and add a filter to allow access to the SDR device
 
 
 **Which setup is used for testing?**

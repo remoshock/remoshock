@@ -2,6 +2,7 @@
 
 - **[internal]** dedicated action for keep-awake message to improve logging
 
+
 # Version 0.6 released on 2021-10-12
 
 - **[fix]**      improved reliability for PAC receivers by tuning off frequency to reduce
@@ -13,7 +14,7 @@
 
 # Version 0.5 released on 2021-08-22
 - **[package]**  made remoshock available on pip3 Python-repository
-- **[pacakge]**  changed name from pyshock to remoshock
+- **[package]**  changed name from pyshock to remoshock
 - **[setup]**    on first run, a setup assistant helps with creating remoshock.ini
 - **[receiver]** renamed "nameless" to "wodondog" receiver
 - **[receiver]** added support for Petrainer
