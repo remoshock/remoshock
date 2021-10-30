@@ -210,11 +210,12 @@ class Remoshock:
             logging.error("Power level \"" + str(power) + "\" is out of range. It should be between 1 and 100")
             return
 
-        impulse_duration = self.receivers[receiver - 1].get_impulse_duration()
-        normalized_duration = round(duration / impulse_duration) * impulse_duration
+        duration_increment_ms = self.receivers[receiver - 1].receiver_properties.duration_increment_ms
+        duration_min_ms = self.receivers[receiver - 1].receiver_properties.duration_min_ms
+        normalized_duration = max(duration_min_ms, round(duration / duration_increment_ms) * duration_increment_ms)
         logging.info("receiver: " + str(receiver) + ", action: " + action.name + ", power: " + str(power) + "%, duration: " + str(normalized_duration) + "ms")
 
-        self._process_command(receiver, action, power, duration)
+        self._process_command(receiver, action, power, normalized_duration)
 
     def get_config(self):
         """get configuration information for website"""

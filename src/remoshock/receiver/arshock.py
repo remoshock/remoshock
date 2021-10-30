@@ -61,6 +61,9 @@ class ArduinoBasedReceiver(Receiver):
 
     def __init__(self, receiver_properties, receiver_type, arg1, arg2, arg3):
         super().__init__(receiver_properties)
+        receiver_properties.capabilities(action_light=True, action_beep=True, action_vibrate=True, action_shock=True)
+        receiver_properties.timings(duration_min_ms=500, duration_increment_ms=500, awake_time_s=0)
+
         self.receiver_type = receiver_type
         self.arg1 = arg1
         self.arg2 = arg2
@@ -74,11 +77,6 @@ class ArduinoBasedReceiver(Receiver):
     def boot(self, _remoshock, _receiver, arduino_manager, _sdr_sender):
         self.arduino_manager = arduino_manager
         self.index = arduino_manager.register_receiver(self.receiver_type.value, self.arg1, self.arg2, self.arg3)
-
-
-    def get_impulse_duration(self):
-        """duration of one impulse in milliseconds"""
-        return 500
 
 
     def command(self, action, power, duration):

@@ -16,6 +16,8 @@ class Dogtra(Receiver):
 
     def __init__(self, receiver_properties, transmitter_code, channel):
         super().__init__(receiver_properties)
+        receiver_properties.capabilities(action_light=False, action_beep=False, action_vibrate=True, action_shock=True)
+        receiver_properties.timings(duration_min_ms=500, duration_increment_ms=500, awake_time_s=0)  # TODO
         self.transmitter_code = transmitter_code
         self.channel = channel
 
