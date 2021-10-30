@@ -205,7 +205,7 @@ class Remoshock:
             return
 
         if power < 0 or power > 100:
-            logging.error("Power level \"" + str(receiver) + "\" is out of range. It should be between 1 and 100")
+            logging.error("Power level \"" + str(power) + "\" is out of range. It should be between 1 and 100")
             return
 
         impulse_duration = self.receivers[receiver - 1].get_impulse_duration()
