@@ -6,14 +6,12 @@
 class Receiver:
     """parent class for all receivers"""
 
-    def __init__(self, name, color):
+    def __init__(self, receiver_properties):
         """constructs a Receiver
 
-        @param name name used on website
-        @param color background color used on website
+        @param receiver_properties receiver_properties
         """
-        self.name = name
-        self.color = color
+        self.receiver_properties = receiver_properties
 
 
     def is_arduino_required(self):
@@ -51,8 +49,8 @@ class Receiver:
         Most notable name, color, initial power and initial duration settings
         as well as the duration increment (e. g. 250ms for PAC and 500ms for Petrainer)."""
         config = {
-            "name": self.name,
-            "color": self.color,
+            "name": self.receiver_properties.name,
+            "color": self.receiver_properties.color,
             "power": 10,
             "duration": 500,
             "durationIncrement": self.get_impulse_duration()

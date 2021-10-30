@@ -27,8 +27,8 @@ class Pac(Receiver):
     ]
 
 
-    def __init__(self, name, color, transmitter_code, channel):
-        super().__init__(name, color)
+    def __init__(self, receiver_properties, transmitter_code, channel):
+        super().__init__(receiver_properties)
         self.transmitter_code = transmitter_code
         self.button = channel
 
