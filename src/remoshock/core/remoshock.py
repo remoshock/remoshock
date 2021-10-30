@@ -14,6 +14,7 @@ from remoshock.receiver.dogtra import Dogtra
 from remoshock.receiver.pac import Pac
 from remoshock.receiver.petrainer import Petrainer
 from remoshock.receiver.wodondog import Wodondog
+from remoshock.receiver.nameless915 import Nameless915
 
 lock = threading.RLock()
 
@@ -52,6 +53,8 @@ class Remoshock:
 
         if receiver_type.lower() == "dogtra200ncp":
             receiver = Dogtra(name, color, code, channel)
+        elif receiver_type.lower() == "nameless915":
+            receiver = Nameless915(name, color, code, channel)
         elif receiver_type.lower() == "pac":
             receiver = Pac(name, color, code, channel)
         elif receiver_type.lower() == "petrainer":

@@ -97,7 +97,8 @@ class ConfigManager:
                 print("  1 PAC / Pacdog  (tested ATX/DTX and ACX)")
                 print("  2 Wodondog 433 Mhz")
                 print("  3 Petrainer")
-                receiver_type = self.__input_number("Which type is receiver " + str(i) + "? ", 0, 1, 3)
+                print("  4 Nameless 91 5Mhz")
+                receiver_type = self.__input_number("Which type is receiver " + str(i) + "? ", 0, 1, 4)
                 types.append(receiver_type - 1)
 
             config = self.__generate_configuration(sdr, types)
@@ -146,6 +147,15 @@ channel=1
 [receiver]
 type=petrainer
 name=Petrainer[number]
+color=[color]
+transmitter_code=[transmitter_code_16bit]
+channel=1
+""",
+
+            """
+[receiver]
+type=nameless915
+name=Nameless915_[number]
 color=[color]
 transmitter_code=[transmitter_code_16bit]
 channel=1
