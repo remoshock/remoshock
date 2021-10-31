@@ -171,7 +171,7 @@ channel=1
 web_port = 7777
 web_authentication_token = [web_authentication_token]
 #for https support:
-#web_server_certile=key_and_cert.pem
+#web_server_certfile=key_and_cert.pem
 
 # URH supports the following hardware, that can transmit on 27.195 MHz (upper/lower case is important):
 # HackRF, LimeSDR
