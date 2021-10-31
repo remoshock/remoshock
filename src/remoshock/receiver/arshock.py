@@ -74,7 +74,7 @@ class ArduinoBasedReceiver(Receiver):
         return True
 
 
-    def boot(self, _remoshock, _receiver, arduino_manager, _sdr_sender):
+    def boot(self, arduino_manager, _sdr_sender):
         self.arduino_manager = arduino_manager
         self.index = arduino_manager.register_receiver(self.receiver_type.value, self.arg1, self.arg2, self.arg3)
 

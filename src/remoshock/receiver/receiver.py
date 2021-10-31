@@ -24,11 +24,9 @@ class Receiver:
         return False
 
 
-    def boot(self, _remoshock, _receiver, _arduino_manager, _sdr_sender):
+    def boot(self, _arduino_manager, _sdr_sender):
         """initializes the receiver, sub-classes will do something useful here
 
-        @param _remoshock a reference to the manager class
-        @param _receiver receiver number if this instance
         @param _arduino_manager reference to the arduino manager
         @param _sdr_sender reference to the software defined radio transmitter
         """

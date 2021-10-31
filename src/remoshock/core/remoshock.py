@@ -16,6 +16,10 @@ from remoshock.receiver.petrainer import Petrainer
 from remoshock.receiver.wodondog import Wodondog
 from remoshock.receiver.nameless915 import Nameless915
 from remoshock.core.receiverproperties import ReceiverProperties
+from remoshock.scheduler.commandtask import CommandTask
+from remoshock.core.action import Action
+from remoshock.scheduler.periodictask import PeriodicTask
+from remoshock.scheduler.scheduler import scheduler
 
 lock = threading.RLock()
 
@@ -177,7 +181,15 @@ class Remoshock:
 
         i = 1
         for receiver in self.receivers:
-            receiver.boot(self, i, arduino_manager, sdr_sender)
+            receiver.boot(arduino_manager, sdr_sender)
+
+            # schedule keep awake timer
+            awake_time_s = receiver.receiver_properties.awake_time_s
+            if awake_time_s > 0:
+                command_task = CommandTask(None, None, None, self, i, Action.KEEPAWAKE, 0, 250)
+                periodic_task = PeriodicTask(awake_time_s / 2 - 5, command_task)
+                scheduler().schedule_task(periodic_task)
+
             i = i + 1
 
 

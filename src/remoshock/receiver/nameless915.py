@@ -8,9 +8,6 @@ import threading
 
 from remoshock.core.action import Action
 from remoshock.receiver.receiver import Receiver
-from remoshock.scheduler.commandtask import CommandTask
-from remoshock.scheduler.periodictask import PeriodicTask
-from remoshock.scheduler.scheduler import scheduler
 
 lock = threading.RLock()
 
@@ -61,14 +58,9 @@ class Nameless915(Receiver):
         return True
 
 
-    def boot(self, remoshock, receiver, _arduino_manader, sdr_sender):
+    def boot(self, _arduino_manader, sdr_sender):
         """keep a references to the sdr_sender for later use"""
         self.sender = sdr_sender
-
-        # schedule keep awake timer
-        command_task = CommandTask(None, None, None, remoshock, receiver, Action.KEEPAWAKE, 0, 250)
-        periodic_task = PeriodicTask(1 * 60 / 2 - 5, command_task)
-        scheduler().schedule_task(periodic_task)
 
 
     def generate(self, action, power):
