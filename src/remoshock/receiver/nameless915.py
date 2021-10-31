@@ -32,8 +32,10 @@ class Nameless915(Receiver):
         Action.SHOCK:   "0011"   # noqa: E241
     }
 
-    def __init__(self, name, color, transmitter_code, channel):
-        super().__init__(name, color)
+    def __init__(self, receiver_properties, transmitter_code, channel):
+        super().__init__(receiver_properties)
+        receiver_properties.capabilities(action_light=True, action_beep=True, action_vibrate=True, action_shock=True)
+        receiver_properties.timings(duration_min_ms=500, duration_increment_ms=250, awake_time_s=60)
         self.transmitter_code = transmitter_code
         self.channel = channel
 
@@ -157,9 +159,3 @@ class Nameless915(Receiver):
             message = message + message_template
 
         self.send(message)
-
-
-
-    def get_impulse_duration(self):
-        """duration of one impulse in milliseconds"""
-        return 500

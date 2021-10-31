@@ -59,8 +59,11 @@ class ReceiverType(Enum):
 class ArduinoBasedReceiver(Receiver):
     """parent class for receivers controlled via arshock on Arduino"""
 
-    def __init__(self, name, color, receiver_type, arg1, arg2, arg3):
-        super().__init__(name, color)
+    def __init__(self, receiver_properties, receiver_type, arg1, arg2, arg3):
+        super().__init__(receiver_properties)
+        receiver_properties.capabilities(action_light=True, action_beep=True, action_vibrate=True, action_shock=True)
+        receiver_properties.timings(duration_min_ms=500, duration_increment_ms=500, awake_time_s=0)
+
         self.receiver_type = receiver_type
         self.arg1 = arg1
         self.arg2 = arg2
@@ -76,11 +79,6 @@ class ArduinoBasedReceiver(Receiver):
         self.index = arduino_manager.register_receiver(self.receiver_type.value, self.arg1, self.arg2, self.arg3)
 
 
-    def get_impulse_duration(self):
-        """duration of one impulse in milliseconds"""
-        return 500
-
-
     def command(self, action, power, duration):
         if action == Action.KEEPAWAKE:
             return
@@ -93,18 +91,18 @@ class ArduinoBasedReceiver(Receiver):
 
 
 class ArduinoPetainer(ArduinoBasedReceiver):
-    def __init__(self, name, color, code_first_byte, code_second_byte, channel):
-        super().__init__(name, color, ReceiverType.PETAINER, code_first_byte, code_second_byte, channel)
+    def __init__(self, receiver_properties, code_first_byte, code_second_byte, channel):
+        super().__init__(receiver_properties, ReceiverType.PETAINER, code_first_byte, code_second_byte, channel)
 
 
 class ArduinoOptocoupler(ArduinoBasedReceiver):
-    def __init__(self, name, color, pin_beep, pin_vib, pin_SHOCK):
-        super().__init__(name, color, ReceiverType.OPTOCOUPLER, pin_beep, pin_vib, pin_SHOCK)
+    def __init__(self, receiver_properties, pin_beep, pin_vib, pin_SHOCK):
+        super().__init__(receiver_properties, ReceiverType.OPTOCOUPLER, pin_beep, pin_vib, pin_SHOCK)
 
 
 class ArduinoOptocouplerBeepModifier(ArduinoBasedReceiver):
-    def __init__(self, name, color, pin_modifier_beep, pin_button):
-        super().__init__(name, color, ReceiverType.OPTOCOUPLER_BEEP_MODIFIER, pin_modifier_beep, 0, pin_button)
+    def __init__(self, receiver_properties, pin_modifier_beep, pin_button):
+        super().__init__(receiver_properties, ReceiverType.OPTOCOUPLER_BEEP_MODIFIER, pin_modifier_beep, 0, pin_button)
 
 
 class ArduinoManager():

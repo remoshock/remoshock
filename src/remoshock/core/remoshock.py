@@ -15,6 +15,7 @@ from remoshock.receiver.pac import Pac
 from remoshock.receiver.petrainer import Petrainer
 from remoshock.receiver.wodondog import Wodondog
 from remoshock.receiver.nameless915 import Nameless915
+from remoshock.core.receiverproperties import ReceiverProperties
 
 lock = threading.RLock()
 
@@ -41,6 +42,7 @@ class Remoshock:
         receiver_type = self.config.get(section, "type")
         name = self.config.get(section, "name")
         color = self.config.get(section, "color")
+        receiver_properties = ReceiverProperties(name, color)
         code = self.config.get(section, "transmitter_code")
 
         channel = self.config.get(section, "channel", fallback=None)
@@ -52,17 +54,17 @@ class Remoshock:
         channel = self.config.getint(section, "channel")
 
         if receiver_type.lower() == "dogtra200ncp":
-            receiver = Dogtra(name, color, code, channel)
+            receiver = Dogtra(receiver_properties, code, channel)
         elif receiver_type.lower() == "nameless915":
-            receiver = Nameless915(name, color, code, channel)
+            receiver = Nameless915(receiver_properties, code, channel)
         elif receiver_type.lower() == "pac":
-            receiver = Pac(name, color, code, channel)
+            receiver = Pac(receiver_properties, code, channel)
         elif receiver_type.lower() == "petrainer":
-            receiver = Petrainer(name, color, code, channel)
+            receiver = Petrainer(receiver_properties, code, channel)
         elif receiver_type.lower() == "wodondog":
-            receiver = Wodondog(name, color, code, channel)
+            receiver = Wodondog(receiver_properties, code, channel)
         else:
-            print("ERROR: Unknown receiver type \"" + receiver_type + "\" in remoshock.ini. Supported types: pac, wodondog, petainer")
+            print("ERROR: Unknown receiver type \"" + receiver_type + "\" in remoshock.ini. Supported types: nameless915, pac, wodondog, petrainer")
             return None
 
         if receiver.validate_config():
@@ -208,11 +210,12 @@ class Remoshock:
             logging.error("Power level \"" + str(power) + "\" is out of range. It should be between 1 and 100")
             return
 
-        impulse_duration = self.receivers[receiver - 1].get_impulse_duration()
-        normalized_duration = round(duration / impulse_duration) * impulse_duration
+        duration_increment_ms = self.receivers[receiver - 1].receiver_properties.duration_increment_ms
+        duration_min_ms = self.receivers[receiver - 1].receiver_properties.duration_min_ms
+        normalized_duration = max(duration_min_ms, round(duration / duration_increment_ms) * duration_increment_ms)
         logging.info("receiver: " + str(receiver) + ", action: " + action.name + ", power: " + str(power) + "%, duration: " + str(normalized_duration) + "ms")
 
-        self._process_command(receiver, action, power, duration)
+        self._process_command(receiver, action, power, normalized_duration)
 
     def get_config(self):
         """get configuration information for website"""
