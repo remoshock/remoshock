@@ -154,8 +154,8 @@ channel=1
 
             """
 [receiver]
-type=nameless915
-name=Nameless915_[number]
+type=nameless915m
+name=Nameless915m[number]
 color=[color]
 transmitter_code=[transmitter_code_16bit]
 channel=1

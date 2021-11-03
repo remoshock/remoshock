@@ -14,8 +14,12 @@ from remoshock.receiver.dogtra import Dogtra
 from remoshock.receiver.pac import Pac
 from remoshock.receiver.petrainer import Petrainer
 from remoshock.receiver.wodondog import Wodondog
-from remoshock.receiver.nameless915 import Nameless915
+from remoshock.receiver.nameless915m import Nameless915m
 from remoshock.core.receiverproperties import ReceiverProperties
+from remoshock.scheduler.commandtask import CommandTask
+from remoshock.core.action import Action
+from remoshock.scheduler.periodictask import PeriodicTask
+from remoshock.scheduler.scheduler import scheduler
 
 lock = threading.RLock()
 
@@ -55,8 +59,8 @@ class Remoshock:
 
         if receiver_type.lower() == "dogtra200ncp":
             receiver = Dogtra(receiver_properties, code, channel)
-        elif receiver_type.lower() == "nameless915":
-            receiver = Nameless915(receiver_properties, code, channel)
+        elif receiver_type.lower() == "nameless915m":
+            receiver = Nameless915m(receiver_properties, code, channel)
         elif receiver_type.lower() == "pac":
             receiver = Pac(receiver_properties, code, channel)
         elif receiver_type.lower() == "petrainer":
@@ -64,7 +68,7 @@ class Remoshock:
         elif receiver_type.lower() == "wodondog":
             receiver = Wodondog(receiver_properties, code, channel)
         else:
-            print("ERROR: Unknown receiver type \"" + receiver_type + "\" in remoshock.ini. Supported types: nameless915, pac, wodondog, petrainer")
+            print("ERROR: Unknown receiver type \"" + receiver_type + "\" in remoshock.ini. Supported types: nameless915m, pac, wodondog, petrainer")
             return None
 
         if receiver.validate_config():
@@ -177,7 +181,15 @@ class Remoshock:
 
         i = 1
         for receiver in self.receivers:
-            receiver.boot(self, i, arduino_manager, sdr_sender)
+            receiver.boot(arduino_manager, sdr_sender)
+
+            # schedule keep awake timer
+            awake_time_s = receiver.receiver_properties.awake_time_s
+            if awake_time_s > 0:
+                command_task = CommandTask(None, None, None, self, i, Action.KEEPAWAKE, 0, 250)
+                periodic_task = PeriodicTask(awake_time_s / 2 - 5, command_task)
+                scheduler().schedule_task(periodic_task)
+
             i = i + 1
 
 
