@@ -6,13 +6,13 @@ import unittest
 
 from remoshock.core.action import Action
 from remoshock.core.receiverproperties import ReceiverProperties
-from remoshock.receiver.nameless915 import Nameless915
+from remoshock.receiver.nameless915m import Nameless915m
 
 
-class PacTestCase(unittest.TestCase):
+class Nameless915mTestCase(unittest.TestCase):
 
     def test_encoding(self):
-        receiver = Nameless915(ReceiverProperties(), "0101010101010101", 1)
+        receiver = Nameless915m(ReceiverProperties(), "0101010101010101", 1)
         expected = "11110000100001000010000100001000000001000010000100000000100001000000001000010000000010000100000000100001000000001000010000000010000100000000100001000000001000010000000010000100001000010000100001000010000100001000000001000000001000010000100000000100000000100001000000001"
         data = "0000100101010101010101010000000011001101"
 
@@ -21,7 +21,7 @@ class PacTestCase(unittest.TestCase):
 
 
     def test_generate(self):
-        receiver = Nameless915(ReceiverProperties(), "0101010101010101", 1)
+        receiver = Nameless915m(ReceiverProperties(), "0101010101010101", 1)
         expected = "0000100101010101010101010000000011001101"
         generated = receiver.generate(Action.BEEP, 0)
         self.assertEqual(expected, generated, "generation beep")

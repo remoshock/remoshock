@@ -12,7 +12,7 @@ from remoshock.receiver.receiver import Receiver
 lock = threading.RLock()
 
 
-class Nameless915(Receiver):
+class Nameless915m(Receiver):
 
     channel_codes_normal  = ["0000", "1110"]  # noqa: E221
     channel_codes_inverse = ["1101", "0001"]  # noqa: E221
