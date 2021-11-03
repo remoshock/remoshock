@@ -60,7 +60,7 @@ class Remoshock:
         if receiver_type.lower() == "dogtra200ncp":
             receiver = Dogtra(receiver_properties, code, channel)
         elif receiver_type.lower() == "nameless915m":
-            receiver = Nameless915(receiver_properties, code, channel)
+            receiver = Nameless915m(receiver_properties, code, channel)
         elif receiver_type.lower() == "pac":
             receiver = Pac(receiver_properties, code, channel)
         elif receiver_type.lower() == "petrainer":

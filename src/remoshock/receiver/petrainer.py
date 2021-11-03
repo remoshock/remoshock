@@ -15,7 +15,7 @@ lock = threading.RLock()
 
 
 class Petrainer(Receiver):
-    """communication with Petainer collars. Note there are many brandnames for the same product."""
+    """communication with Petrainer collars. Note there are many brandnames for the same product."""
 
     channel_codes_normal  = ["1000", "1111"]  # noqa: E221
     channel_codes_inverse = ["1110", "0000"]  # noqa: E221
