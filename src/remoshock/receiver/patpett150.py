@@ -12,7 +12,7 @@ from remoshock.receiver.receiver import Receiver
 lock = threading.RLock()
 
 
-class Nameless915m(Receiver):
+class PatpetT150(Receiver):
 
     channel_codes_normal  = ["0000", "1110"]  # noqa: E221
     channel_codes_inverse = ["1101", "0001"]  # noqa: E221
@@ -121,10 +121,14 @@ class Nameless915m(Receiver):
         @param duration duration in ms
         """
 
-        if action == Action.KEEPAWAKE or action == Action.LIGHT:
+        if action == Action.KEEPAWAKE:
             action = Action.VIBRATE
             power = 0
             duration = 250
+
+        if action == Action.LIGHT:
+            action = Action.VIBRATE
+            power = 0
 
         message = ""
         if action == Action.BEEPSHOCK:

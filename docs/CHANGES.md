@@ -1,6 +1,6 @@
 # Next version
 
-- **[receiver]** added support for a nameless shock collar operating on 915 MHz
+- **[receiver]** added support for Patpet T150 shock collar operating on 915 MHz
 - **[internal]** dedicated action for keep-awake message to improve logging
 
 

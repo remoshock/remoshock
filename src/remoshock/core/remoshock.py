@@ -13,8 +13,8 @@ from remoshock.core.receiverproperties import ReceiverProperties
 
 from remoshock.receiver.arshock import ArduinoManager
 from remoshock.receiver.dogtra import Dogtra
-from remoshock.receiver.nameless915m import Nameless915m
 from remoshock.receiver.pac import Pac
+from remoshock.receiver.patpett150 import PatpetT150
 from remoshock.receiver.petrainer import Petrainer
 from remoshock.receiver.wodondog import Wodondog
 from remoshock.receiver.wodondogb import WodondogB
@@ -61,8 +61,8 @@ class Remoshock:
 
         if receiver_type.lower() == "dogtra200ncp":
             receiver = Dogtra(receiver_properties, code, channel)
-        elif receiver_type.lower() == "nameless915m":
-            receiver = Nameless915m(receiver_properties, code, channel)
+        elif receiver_type.lower() == "patpett150":
+            receiver = PatpetT150(receiver_properties, code, channel)
         elif receiver_type.lower() == "pac":
             receiver = Pac(receiver_properties, code, channel)
         elif receiver_type.lower() == "petrainer":
@@ -72,7 +72,7 @@ class Remoshock:
         elif receiver_type.lower() == "wodondogb":
             receiver = WodondogB(receiver_properties, code, channel)
         else:
-            print("ERROR: Unknown receiver type \"" + receiver_type + "\" in remoshock.ini. Supported types: nameless915m, pac, petrainer, wodondog, wodondogb")
+            print("ERROR: Unknown receiver type \"" + receiver_type + "\" in remoshock.ini. Supported types: pac, patpett150, petrainer, wodondog, wodondogb")
             return None
 
         if receiver.validate_config():
