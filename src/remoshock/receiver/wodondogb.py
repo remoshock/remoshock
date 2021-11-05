@@ -1,6 +1,7 @@
+#!/usr/bin/python3
 #
-# Copyright nilswinter 2021. License: AGPL
-# ________________________________________
+# Copyright nilswinter 2020-2021. License: AGPL
+# _____________________________________________
 
 
 import re
@@ -9,33 +10,35 @@ import threading
 from remoshock.core.action import Action
 from remoshock.receiver.receiver import Receiver
 
+
 lock = threading.RLock()
 
 
-class Nameless915m(Receiver):
+class WodondogB(Receiver):
+    """communication with Wodondog collars without flashlight on 433MHz."""
 
-    channel_codes_normal  = ["0000", "1110"]  # noqa: E221
-    channel_codes_inverse = ["1101", "0001"]  # noqa: E221
+    channel_codes_normal  = ["0100", "1111", "1000"]  # noqa: E221
+    channel_codes_inverse = ["1101", "0000", "1110"]  # noqa: E221
 
     action_code_normal = {
-        Action.BEEP:    "1001",  # noqa: E241
-        Action.VIBRATE: "0101",  # noqa: E241
-        Action.SHOCK:   "0011"   # noqa: E241
+        Action.BEEP:    "0100",  # noqa: E241
+        Action.VIBRATE: "0010",  # noqa: E241
+        Action.SHOCK:   "0001"   # noqa: E241
     }
 
     action_code_inverse = {
-        Action.BEEP:    "1100",  # noqa: E241
-        Action.VIBRATE: "0110",  # noqa: E241
-        Action.SHOCK:   "0011"   # noqa: E241
+        Action.BEEP:    "1101",  # noqa: E241
+        Action.VIBRATE: "1011",  # noqa: E241
+        Action.SHOCK:   "0111"   # noqa: E241
     }
+
 
     def __init__(self, receiver_properties, transmitter_code, channel):
         super().__init__(receiver_properties)
         receiver_properties.capabilities(action_light=True, action_beep=True, action_vibrate=True, action_shock=True)
-        receiver_properties.timings(duration_min_ms=500, duration_increment_ms=250, awake_time_s=60)
+        receiver_properties.timings(duration_min_ms=500, duration_increment_ms=500, awake_time_s=5 * 60)
         self.transmitter_code = transmitter_code
         self.channel = channel
-
 
     def validate_config(self):
         """validates remoshock.ini configuration and prints errors"""
@@ -45,21 +48,23 @@ class Nameless915m(Receiver):
             print("The transmitter_code must be sequence of length 16 consisting of the characters 0 and 1")
             return False
 
-        if self.channel < 1 or self.channel > 2:
+        if self.channel < 1 or self.channel > 3:
             print("ERROR: Invalid channel \"" + str(self.channel) + "\" in remoshock.ini.")
-            print("This parameter needs to be a whole number between 1 and 2 inclusive.")
+            print("This parameter needs to be a whole number between 1 and 3 inclusive.")
             return False
 
         return True
 
 
     def is_sdr_required(self):
-        """we require a SDR (software defined radio) transmitter."""
+        """we require a SDR (software defined radio) transmitter.
+        There is an alternative implementation which uses Arduino."""
         return True
 
 
     def boot(self, _arduino_manader, sdr_sender):
-        """keep a references to the sdr_sender for later use"""
+        """keep a references to the sdr_sender for later use
+        and schedules keep-awake messages"""
         self.sender = sdr_sender
 
 
@@ -80,16 +85,16 @@ class Nameless915m(Receiver):
     def encode_for_transmission(self, data):
         """encodes a command data structure for transmission over the air.
 
-        This methods adds the synchronization prefix and suffix as well.
+        This methods adds the synchronization prefix and suffx as well.
         """
-        prefix = "11110000"
-        suffix = "1"
+        prefix = "111111000"
+        suffix = "100010001"
         res = prefix
         for bit in data:
             if bit == "0":
-                res = res + "10000"
+                res = res + "1000"
             else:
-                res = res + "100000000"
+                res = res + "1110"
         res = res + suffix
         return res
 
@@ -98,15 +103,16 @@ class Nameless915m(Receiver):
         """sends messages over the air using the SDR sender.
 
         @param messages messages that have already been encoded for transmission"""
+        # TODO duration of simples, heading, tailing, etc.
         self.sender.send(
-            frequency=915e6,
+            frequency=433e6,
             sample_rate=2e6,
-            carrier_frequency=0e3,
+            carrier_frequency=947e3,
             modulation_type="ASK",
-            samples_per_symbol=410,
+            samples_per_symbol=513,
             low_frequency="0",
             high_frequency="100",
-            pause=11531,
+            pause=7082,
             data=messages)
 
 
@@ -121,7 +127,7 @@ class Nameless915m(Receiver):
         @param duration duration in ms
         """
 
-        if action == Action.KEEPAWAKE or action == Action.LIGHT:
+        if action == Action.KEEPAWAKE:
             action = Action.VIBRATE
             power = 0
             duration = 250
@@ -129,23 +135,23 @@ class Nameless915m(Receiver):
         message = ""
         if action == Action.BEEPSHOCK:
             message = self.encode_for_transmission(self.generate(Action.BEEP, 1))
-            message = message + " " + message + " " + message + " " + message + " " + message + "/1.1s "
+            message = message + message + message + "/1.1s "
             action = Action.SHOCK
+
+        if action == Action.LIGHT:
+            action = Action.VIBRATE
+            power = 0
 
         if duration <= 500:
             duration = 500
         if duration > 10000:
             duration = 10000
 
+        # The shocker has a delay before it kicks in
+        if action == Action.SHOCK:
+            duration = duration + 500
 
-        # at least 5 repeats of the message
-        # one message takes 60ms
-        #
-        #  500ms ==> 5 messages
-        # 1000ms ==> messages for  500ms, followed by 5 messages
-        # 1500ms ==> messages for 1000ms, followed by 5 messages
-        repeats = round((duration - 500) / 60 + 5)
-
+        repeats = round((duration - 500) / 48 + 5)
         message_template = self.encode_for_transmission(self.generate(action, power)) + " "
         for _ in range(0, repeats):
             message = message + message_template

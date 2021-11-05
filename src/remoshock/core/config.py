@@ -95,10 +95,11 @@ class ConfigManager:
                 print()
                 print("Type of receiver " + str(i))
                 print("  1 PAC / Pacdog  (tested ATX/DTX and ACX)")
-                print("  2 Wodondog 433 Mhz")
+                print("  2 Patpet T150")
                 print("  3 Petrainer")
-                print("  4 Nameless 91 5Mhz")
-                receiver_type = self.__input_number("Which type is receiver " + str(i) + "? ", 0, 1, 4)
+                print("  4 Wodondog 433 Mhz with receiver flashlight")
+                print("  5 Wodondog 433 Mhz without receiver flashlight")
+                receiver_type = self.__input_number("Which type is receiver " + str(i) + "? ", 0, 1, 5)
                 types.append(receiver_type - 1)
 
             config = self.__generate_configuration(sdr, types)
@@ -134,14 +135,6 @@ transmitter_code=[transmitter_code_9bit]
 channel=1
 """,
 
-            """
-[receiver]
-type=wodondog
-name=Wodondog[number]
-color=[color]
-transmitter_code=[transmitter_code_16bit]
-channel=1
-""",
 
             """
 [receiver]
@@ -154,8 +147,26 @@ channel=1
 
             """
 [receiver]
-type=nameless915m
-name=Nameless915m[number]
+type=patpett150
+name=PatpetT150_[number]
+color=[color]
+transmitter_code=[transmitter_code_16bit]
+channel=1
+""",
+
+            """
+[receiver]
+type=wodondog
+name=Wodondog[number]
+color=[color]
+transmitter_code=[transmitter_code_16bit]
+channel=1
+""",
+
+            """
+[receiver]
+type=wodondogb
+name=WodondogB[number]
 color=[color]
 transmitter_code=[transmitter_code_16bit]
 channel=1
