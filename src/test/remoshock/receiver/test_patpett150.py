@@ -12,7 +12,7 @@ from remoshock.receiver.patpett150 import PatpetT150
 class Nameless915mTestCase(unittest.TestCase):
 
     def test_encoding(self):
-        receiver = PatpetT150(ReceiverProperties(), "0101010101010101", 1)
+        receiver = PatpetT150(ReceiverProperties("patpett150"), "0101010101010101", 1)
         expected = "11110000100001000010000100001000000001000010000100000000100001000000001000010000000010000100000000100001000000001000010000000010000100000000100001000000001000010000000010000100001000010000100001000010000100001000000001000000001000010000100000000100000000100001000000001"
         data = "0000100101010101010101010000000011001101"
 
@@ -21,7 +21,7 @@ class Nameless915mTestCase(unittest.TestCase):
 
 
     def test_generate(self):
-        receiver = PatpetT150(ReceiverProperties(), "0101010101010101", 1)
+        receiver = PatpetT150(ReceiverProperties("patpett150"), "0101010101010101", 1)
         expected = "0000100101010101010101010000000011001101"
         generated = receiver.generate(Action.BEEP, 0)
         self.assertEqual(expected, generated, "generation beep")

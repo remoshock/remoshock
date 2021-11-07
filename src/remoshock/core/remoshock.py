@@ -48,7 +48,7 @@ class Remoshock:
         receiver_type = self.config.get(section, "type")
         name = self.config.get(section, "name")
         color = self.config.get(section, "color")
-        receiver_properties = ReceiverProperties(name, color)
+        receiver_properties = ReceiverProperties(receiver_type, name, color)
         code = self.config.get(section, "transmitter_code")
 
         channel = self.config.get(section, "channel", fallback=None)
@@ -233,11 +233,23 @@ class Remoshock:
 
         self._process_command(receiver, action, power, normalized_duration)
 
+
     def get_config(self):
         """get configuration information for website"""
-        result = []
+        result = {}
+
+        config = {}
+        for section in self.config.sections():
+            if not section.startswith("receiver") and not section == "global":
+                config[section] = dict(self.config[section])
+
+        result['applications'] = config
+
+        receivers = []
         for receiver in self.receivers:
-            result.append(receiver.get_config())
+            receivers.append(receiver.receiver_properties.__dict__)
+        result['receivers'] = receivers
+
         return result
 
 
