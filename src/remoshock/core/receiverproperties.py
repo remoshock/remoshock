@@ -7,13 +7,14 @@ class ReceiverProperties:
     """properties of a receiver such as name and capabilities"""
 
     def __init__(self,
-                 name="receiver", color="#FFF",
+                 receiver_type, name="receiver", color="#FFF",
                  action_light=False, action_beep=False, action_vibrate=False, action_shock=False,
                  duration_min_ms=500, duration_increment_ms=250,
                  awake_time_s=0):
         """
         creates a ReceiverProperties object
 
+        @param receiver_type type of receiver
         @param name name of the receiver as displayed on the web remote control
         @param color color of the receiver used by the web remote control
         @param action_light does this receiver support light?
@@ -26,6 +27,7 @@ class ReceiverProperties:
                                 (0: indefinite, no keep awake messages required)
         """
 
+        self.receiver_type = receiver_type
         self.name = name
         self.color = color
 

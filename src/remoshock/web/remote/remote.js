@@ -8,13 +8,15 @@ function addreceiver(index) {
 	clone.querySelector(".receiver").style.backgroundColor = receiver.color;
 	clone.querySelector(".receiver").dataset.receiver = index + 1;
 	clone.querySelector("h2").innerText = receiver.name;
-	clone.querySelector(".power_input").value = receiver.power;
-	clone.querySelector(".power_range").value = receiver.power;
-	clone.querySelector(".duration_input").value = receiver.duration;
-	clone.querySelector(".duration_input").step = receiver.durationIncrement;
-	clone.querySelector(".duration_range").value = receiver.duration;
-	clone.querySelector(".duration_range").step = receiver.durationIncrement;
-	
+	clone.querySelector(".power_input").value = 5;
+	clone.querySelector(".power_range").value = 5;
+	clone.querySelector(".duration_input").value = receiver.duration_min_ms;
+	clone.querySelector(".duration_input").min = receiver.duration_min_ms;
+	clone.querySelector(".duration_input").step = receiver.duration_increment_ms;
+	clone.querySelector(".duration_range").value = receiver.duration_min_ms;
+	clone.querySelector(".duration_range").min = receiver.duration_min_ms;
+	clone.querySelector(".duration_range").step = receiver.duration_increment_ms;
+
 	document.getElementById("receivers").appendChild(clone);   
 }
 
@@ -68,7 +70,8 @@ async function init() {
 	if (response.status == 403) {
 		alert("Please make sure to end the URL with \"#token=\" followed by the value from web_authentication_token in remoshock.ini")
 	}
-	window.receivers = await response.json();
+	window.config = await response.json()
+	window.receivers = window.config.receivers;
 	for (let i = 0; i < receivers.length; i++) {
 		addreceiver(i);
 	}
