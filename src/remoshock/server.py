@@ -69,8 +69,13 @@ class RemoshockRequestHandler(BaseHTTPRequestHandler):
         expected_token = remoshock.config.get("global", "web_authentication_token")
 
         auth_header = headers.get("Authorization")
-        if auth_header == "Bearer " + expected_token:
-            return True
+        if auth_header:
+            parts = auth_header.split()
+            if len(parts) == 2:
+                if parts[0].lower() == "bearer":
+                    if parts[1] == expected_token:
+                        return True
+            print("Invalid authentication header or invalid Bearer token.")
 
         if "token" in params:
             return params["token"][0] == expected_token
