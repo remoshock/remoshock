@@ -30,6 +30,7 @@ class Remoshock:
     """This is the manager class. It basically coordinates everything and
     delegate the actual work to specialized classes."""
 
+    debug_duration_in_message_count = False
 
     def __init__(self, args):
         """Constructor of the manager class Remoshock
@@ -226,10 +227,14 @@ class Remoshock:
             logging.error("Power level \"" + str(power) + "\" is out of range. It should be between 1 and 100")
             return
 
-        duration_increment_ms = self.receivers[receiver - 1].receiver_properties.duration_increment_ms
-        duration_min_ms = self.receivers[receiver - 1].receiver_properties.duration_min_ms
-        normalized_duration = max(duration_min_ms, round(duration / duration_increment_ms) * duration_increment_ms)
-        logging.info("receiver: " + str(receiver) + ", action: " + action.name + ", power: " + str(power) + "%, duration: " + str(normalized_duration) + "ms")
+        if self.debug_duration_in_message_count:
+            normalized_duration = duration
+            logging.info("receiver: " + str(receiver) + ", action: " + action.name + ", power: " + str(power) + "%, duration: " + str(normalized_duration) + "n")
+        else:
+            duration_increment_ms = self.receivers[receiver - 1].receiver_properties.duration_increment_ms
+            duration_min_ms = self.receivers[receiver - 1].receiver_properties.duration_min_ms
+            normalized_duration = max(duration_min_ms, round(duration / duration_increment_ms) * duration_increment_ms)
+            logging.info("receiver: " + str(receiver) + ", action: " + action.name + ", power: " + str(power) + "%, duration: " + str(normalized_duration) + "ms")
 
         self._process_command(receiver, action, power, normalized_duration)
 
