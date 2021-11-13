@@ -148,7 +148,7 @@ class Pac(Receiver):
 
         message = ""
         if action == Action.BEEPSHOCK:
-            message = self.encode_for_transmission(self.generate(self.transmitter_code, 0, self.button, 1)) + "/1s"
+            message = self.encode_for_transmission(self.generate(self.transmitter_code, 0, self.button, 1)) + "/1s "
 
         beep = 0
         if action == Action.BEEP or action == Action.VIBRATE:
@@ -164,6 +164,6 @@ class Pac(Receiver):
 
         message_template = self.encode_for_transmission(self.generate(self.transmitter_code, power * 63 // 100, self.button, beep))
         for _ in range(0, round(duration / 250)):
-            message = message + " " + message_template
+            message = message + message_template + " "
 
         self.send(message)
