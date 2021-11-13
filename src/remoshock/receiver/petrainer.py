@@ -107,14 +107,14 @@ class Petrainer(Receiver):
         @param messages messages that have already been encoded for transmission"""
         # TODO duration of simples, heading, tailing, etc.
         self.sender.send(
-            frequency=433.98e6,
+            frequency=433e6,
             sample_rate=2e6,
-            carrier_frequency=0e3,
+            carrier_frequency=98e3,
             modulation_type="ASK",
             samples_per_symbol=500,
             low_frequency="0",
             high_frequency="100",
-            pause=0,
+            pause=16954,
             data=messages)
 
 
@@ -137,7 +137,7 @@ class Petrainer(Receiver):
         message = ""
         if action == Action.BEEPSHOCK:
             message = self.encode_for_transmission(self.generate(Action.BEEP, 1))
-            message = message + message + message + "/1.1s "
+            message = message + " " + message + " " + message + " " + "/1.1s "
             action = Action.SHOCK
 
         if duration <= 500:
@@ -146,16 +146,12 @@ class Petrainer(Receiver):
             duration = 10000
 
 
-        # at least 1 repeats of the message
-        # one message takes 45.75ms (after transfer encoding: 170 symbols,
-        # 500 samples/symbols, 2000000 samples/second)
-        #
         #  500ms ==> 1 messages
         # 1000ms ==> messages for  500ms, followed by 1 message
         # 1500ms ==> messages for 1000ms, followed by 1 message
-        repeats = round((duration - 500) / 42.5 + 1)
+        repeats = round((duration - 500) / 51 + 1)
         message_template = self.encode_for_transmission(self.generate(action, power))
         for _ in range(0, repeats):
-            message = message + message_template
+            message = message + message_template + " "
 
         self.send(message)

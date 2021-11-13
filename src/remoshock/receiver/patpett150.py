@@ -150,8 +150,8 @@ class PatpetT150(Receiver):
         # 1500ms ==> messages for 1000ms, followed by 5 messages
         repeats = round((duration - 500) / 60 + 5)
 
-        message_template = self.encode_for_transmission(self.generate(action, power)) + " "
+        message_template = self.encode_for_transmission(self.generate(action, power))
         for _ in range(0, repeats):
-            message = message + message_template
+            message = message + message_template + " "
 
         self.send(message)

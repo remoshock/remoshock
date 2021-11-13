@@ -148,12 +148,13 @@ class WodondogB(Receiver):
             duration = 10000
 
         # The shocker has a delay before it kicks in
+        shock_delay = 0
         if action == Action.SHOCK:
-            duration = duration + 500
+            shock_delay = 15
 
-        repeats = round((duration - 500) / 48 + 5)
-        message_template = self.encode_for_transmission(self.generate(action, power)) + " "
+        repeats = round((duration - 500) / 48 + 5) + shock_delay
+        message_template = self.encode_for_transmission(self.generate(action, power))
         for _ in range(0, repeats):
-            message = message + message_template
+            message = message + message_template + " "
 
         self.send(message)
