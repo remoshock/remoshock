@@ -11,10 +11,10 @@ function addreceiver(index) {
 	clone.querySelector(".power_input").value = 5;
 	clone.querySelector(".power_range").value = 5;
 	clone.querySelector(".duration_input").value = receiver.duration_min_ms;
-	clone.querySelector(".duration_input").min = receiver.duration_min_ms;
+	clone.querySelector(".duration_input").min = 0; // receiver.duration_min_ms;
 	clone.querySelector(".duration_input").step = receiver.duration_increment_ms;
 	clone.querySelector(".duration_range").value = receiver.duration_min_ms;
-	clone.querySelector(".duration_range").min = receiver.duration_min_ms;
+	clone.querySelector(".duration_range").min = 0; // receiver.duration_min_ms;
 	clone.querySelector(".duration_range").step = receiver.duration_increment_ms;
 
 	document.getElementById("receivers").appendChild(clone);   

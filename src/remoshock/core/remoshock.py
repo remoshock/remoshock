@@ -227,6 +227,9 @@ class Remoshock:
             logging.error("Power level \"" + str(power) + "\" is out of range. It should be between 1 and 100")
             return
 
+        if duration == 0:
+            return
+
         if self.debug_duration_in_message_count:
             normalized_duration = duration
             logging.info("receiver: " + str(receiver) + ", action: " + action.name + ", power: " + str(power) + "%, duration: " + str(normalized_duration) + "n")
