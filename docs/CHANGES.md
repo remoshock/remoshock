@@ -1,6 +1,8 @@
 # Next version
 
-- **[receiver]** added support for Patpet T150 shock collar operating on 915 MHz
+- **[receiver]** added support for Patpet T150 shock collars operating on 915 MHz
+- **[receiver]** added support for second kind of Wodondog style shock collars
+- **[rest]**     provide additional information about receivers via the REST API.
 - **[internal]** dedicated action for keep-awake message to improve logging
 
 

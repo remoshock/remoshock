@@ -135,20 +135,20 @@ transmitter_code=[transmitter_code_9bit]
 channel=1
 """,
 
-
             """
 [receiver]
-type=petrainer
-name=Petrainer[number]
+type=patpett150
+name=PatpetT150_[number]
 color=[color]
 transmitter_code=[transmitter_code_16bit]
 channel=1
 """,
 
+
             """
 [receiver]
-type=patpett150
-name=PatpetT150_[number]
+type=petrainer
+name=Petrainer[number]
 color=[color]
 transmitter_code=[transmitter_code_16bit]
 channel=1

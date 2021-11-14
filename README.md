@@ -32,14 +32,15 @@ It consists of
 
 - One or more compatible shock collars:
   - PAC collars (compatible with ATX or DTX remote)
-  - Wodondog "Dog Shock Collar"
+  - Patpet T150
   - Petrainer
+  - Wodondog "Dog Shock Collar"
 - A Software Defined Radio (SDR) transmitter that works on the required frequencies (tested using a HackRF device).
 - Linux with Python 3 (tested on Ubuntu 20.04)
 - Universal Radio Hacker:<br>
   `sudo apt install python3-pip python3-pyqt5; sudo pip3 install urh`
 - `sudo pip3 install remoshock` 
-  <br>Alternatively: Download [remoshock-0.6.zip](https://github.com/remoshock/remoshock/releases/download/v0.6/remoshock-0.6.zip) manually.
+  <br>Alternatively: Download [remoshock-0.7.zip](https://github.com/remoshock/remoshock/releases/download/v0.7/remoshock-0.7.zip) manually.
 - Please see [docs/FAQ.md](https://github.com/remoshock/remoshock/blob/master/docs/FAQ.md) for troubleshooting tips.
 
 
