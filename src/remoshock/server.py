@@ -158,7 +158,7 @@ class RemoshockServer:
     def __parse_args(self):
         """parses command line arguments"""
         parser = argparse.ArgumentParser(description="Shock collar remote control",
-                                         epilog="Please see https://github.com/remoshock/remoshock for documentation.")
+                                         epilog="Please see https://remoshock.github.io/applications.html for documentation.")
         parser.add_argument("--mock",
                             action="store_true",
                             help=argparse.SUPPRESS)
