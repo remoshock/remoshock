@@ -16,7 +16,7 @@ class RemoshockCli:
     def __parse_args(self):
         """parses command line arguments"""
         parser = argparse.ArgumentParser(description="Shock collar remote",
-                                         epilog="Please see https://github.com/remoshock/remoshock for documentation.")
+                                         epilog="Please see https://remoshock.github.io/applications.html for documentation.")
         parser.add_argument("-r", "--receiver",
                             type=int,
                             default=1,

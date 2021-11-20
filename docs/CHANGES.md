@@ -1,4 +1,4 @@
-# Next version
+# Version 0.7 released on 2021-11-14
 
 - **[receiver]** added support for Patpet T150 shock collars operating on 915 MHz
 - **[receiver]** added support for second kind of Wodondog style shock collars

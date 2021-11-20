@@ -174,7 +174,7 @@ channel=1
         ]
         config = """
 #
-# Configuration file for remoshock. Please see https://github.com/remoshock/remoshock#readme
+# Configuration file for remoshock. Please see https://remoshock.github.io/setup.html
 # Lines starting with a # are ignored.
 #
 

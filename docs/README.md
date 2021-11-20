@@ -1,1 +1,1 @@
-Please see [/README.md](https://github.com/remoshock/remoshock#readme).
+Please see [https://remoshock.github.io](https://remoshock.github.io)

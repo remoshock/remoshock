@@ -38,5 +38,5 @@ setuptools.setup(
     package_dir={'': 'src'},
     packages=setuptools.find_namespace_packages(where='src'),
     python_requires = '>=3.6',
-    url = 'https://github.com/remoshock/remoshock',
+    url = 'https://remoshock.github.io',
 )
