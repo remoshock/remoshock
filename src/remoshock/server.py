@@ -2,8 +2,6 @@
 # Copyright nilswinter 2020-2021. License: AGPL
 # _____________________________________________
 
-from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from urllib.parse import parse_qs, unquote, urlparse
 import argparse
 import html
 import json
@@ -12,6 +10,9 @@ import ssl
 import sys
 import shutil
 import traceback
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from http.cookies import SimpleCookie
+from urllib.parse import parse_qs, unquote, urlparse
 
 from remoshock.core.remoshock import Remoshock, RemoshockMock
 from remoshock.core.action import Action
@@ -60,6 +61,17 @@ class RemoshockRequestHandler(BaseHTTPRequestHandler):
             print("Browser disconnected")
 
 
+    def verify_authentication_cookie(self):
+        """verifies the authentication cookie"""
+
+        cookies = SimpleCookie(self.headers.get("Cookie"))
+        if "authentication_token" not in cookies:
+            return False
+
+        expected_token = remoshock.config.get("global", "web_authentication_token")
+        return cookies["authentication_token"].value == expected_token
+
+
     def verify_authentication_token(self, headers, params):
         """validates authentication token
 
@@ -85,6 +97,7 @@ class RemoshockRequestHandler(BaseHTTPRequestHandler):
 
     def handle_command(self, params):
         """Sends the specified command to specified receiver"""
+
         action = Action[params["action"][0]]
         receiver = int(params["receiver"][0])
         power = int(params["power"][0])
@@ -94,6 +107,23 @@ class RemoshockRequestHandler(BaseHTTPRequestHandler):
             raise Exception("Invalid action")
 
         remoshock.command(receiver, action, power, duration)
+
+
+    def serve_rest(self):
+        """serves a rest request"""
+
+        params = parse_qs(urlparse(self.path).query)
+        if not self.verify_authentication_token(self.headers, params):
+            self.answer_html(403, "Missing or invalid authentication token")
+            return
+
+        if self.path.startswith("/remoshock/command"):
+            self.handle_command(params)
+            self.answer_json(200, {"status": "ok"})
+        elif self.path.startswith("/remoshock/config"):
+            self.answer_json(200, remoshock.get_config())
+        else:
+            self.answer_json(400, {"status": "unknown service"})
 
 
     def serve_file(self):
@@ -109,6 +139,12 @@ class RemoshockRequestHandler(BaseHTTPRequestHandler):
             self.answer_html(404, "Invalid file name.")
             return
 
+        if not self.path.startswith("/auth") and not self.verify_authentication_cookie():
+            filename = os.path.normpath(web_folder + "/auth/index.html")
+            self.send_file(filename, 403, False)
+            return
+
+
         if os.path.isdir(filename):
             filename = filename + "/index.html"
 
@@ -116,10 +152,23 @@ class RemoshockRequestHandler(BaseHTTPRequestHandler):
             self.answer_html(404, "Not found.")
             return
 
+        self.send_file(filename, 200, True)
+
+
+    def send_file(self, filename, status, cache):
+        """answers a browser request with the content of a file
+
+        @param filename filename on disk
+        @paran status http status code
+        @param cache False to prevent caching
+        """
+
         ext = os.path.splitext(filename)[1]
-        self.send_response(200)
+        self.send_response(status)
         self.send_header("Content-Type", MIME_CONTENT_TYPES.get(ext.lower(), "application/octet-stream"))
         self.send_header("Content-Security-Policy", "default-src 'self'")
+        if not cache:
+            self.send_header("Cache-Control", "no-cache, no-store, must-revalidate")
         self.end_headers()
         with open(filename, "rb") as content:
             shutil.copyfileobj(content, self.wfile)
@@ -131,21 +180,27 @@ class RemoshockRequestHandler(BaseHTTPRequestHandler):
         path starting with /remoshock are interpreted as commands.
         everything else is seen as a reference to the web-folder"""
 
-        params = parse_qs(urlparse(self.path).query)
         try:
             if self.path.startswith("/remoshock/"):
-                if not self.verify_authentication_token(self.headers, params):
-                    self.answer_html(403, "Missing or invalid authentication token")
-                    return
-
-                if self.path.startswith("/remoshock/command"):
-                    self.handle_command(params)
-                    self.answer_json(200, {"status": "ok"})
-                elif self.path.startswith("/remoshock/config"):
-                    self.answer_json(200, remoshock.get_config())
-
+                self.serve_rest()
             else:
                 self.serve_file()
+        except Exception as ex:
+            print("".join(traceback.TracebackException.from_exception(ex).format()))
+            self.answer_html(500, str(sys.exc_info()[0]) + ": " + str(sys.exc_info()[1]))
+
+
+    def do_POST(self):
+        """handles a browser request.
+
+        path starting with /remoshock are REST services.
+        everything else is rejected"""
+
+        try:
+            if self.path.startswith("/remoshock/"):
+                self.serve_rest()
+            else:
+                self.answer_html(500, "POST is only valid for REST services")()
         except Exception as ex:
             print("".join(traceback.TracebackException.from_exception(ex).format()))
             self.answer_html(500, str(sys.exc_info()[0]) + ": " + str(sys.exc_info()[1]))
