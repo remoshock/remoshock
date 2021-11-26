@@ -34,8 +34,9 @@ async function command(receiver, action, power, duration) {
             + "&duration=" + escape(duration);
 	return fetch(url, {
 		headers: {
-			Authorization: "bearer " + token
-		}
+			Authorization: "Bearer " + token
+		},
+		method: "POST"
 	});
 }
  
@@ -62,20 +63,17 @@ async function clickHandler(e) {
 	let power = receiver.querySelector(".power_input").value;
 	let duration = receiver.querySelector(".duration_input").value;
 	
-	let res = await command(receiver.dataset.receiver, action, power, duration);
+	let res = await remoshock.command(receiver.dataset.receiver, action, power, duration);
 	if (res.status == 200 && navigator.vibrate) {
 		navigator.vibrate([50]);
 	}
 }
 
 async function init() {
-	let token = window.location.hash.substring(7);
-	let response = await fetch("/remoshock/config.json?token=" + escape(token));
-	if (response.status == 403) {
-		alert("Please make sure to end the URL with \"#token=\" followed by the value from web_authentication_token in remoshock.ini")
-	}
-	window.config = await response.json()
-	window.receivers = window.config.receivers;
+	window.remoshock = new Remoshock();
+	await remoshock.init();
+
+	window.receivers = remoshock.config.receivers;
 	for (let i = 0; i < receivers.length; i++) {
 		addreceiver(i);
 	}
