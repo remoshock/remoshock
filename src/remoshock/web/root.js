@@ -1,1 +1,0 @@
-window.location = "/remote/" + window.location.hash

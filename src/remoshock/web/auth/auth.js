@@ -27,7 +27,6 @@
 
 	function onLoginClick(event) {
 		let token = document.getElementById("authenticationtoken").value;
-		window.location.hash = "#token=" + encodeURIComponent(token);
 		createAuthCookie(token);
 		event.preventDefault();
 		window.location.reload();
