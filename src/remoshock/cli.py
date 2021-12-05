@@ -40,6 +40,9 @@ class RemoshockCli:
                             default=1,
                             metavar="n",
                             help="power level (1-100)")
+        parser.add_argument("--experimental",
+                            action="store_true",
+                            help=argparse.SUPPRESS)
         parser.add_argument("--sdr",
                             help=argparse.SUPPRESS)
         parser.add_argument("-v", "--verbose",
