@@ -60,7 +60,7 @@ class Remoshock:
                 return None
         channel = self.config.getint(section, "channel")
 
-        if receiver_type.lower() == "dogtra200ncp":
+        if receiver_type.lower() == "dogtra200ncp" and "experimental" in self.args:
             receiver = Dogtra(receiver_properties, code, channel)
         elif receiver_type.lower() == "patpett150":
             receiver = PatpetT150(receiver_properties, code, channel)

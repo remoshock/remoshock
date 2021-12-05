@@ -35,9 +35,6 @@ class Dogtra(Receiver):
             print("This parameter needs to be 1")
             return False
 
-        print("Dogtra is not supported, yet.")
-        return False
-
 
     def is_sdr_required(self):
         """we require a SDR (software defined radio) transmitter.
