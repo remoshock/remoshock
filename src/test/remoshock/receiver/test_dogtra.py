@@ -20,9 +20,9 @@ class DogtraTestCase(unittest.TestCase):
 
     def test_calculate_intensity_code(self):
         dogtra = Dogtra(ReceiverProperties("dogtra200ncp"), "010110110", 1)
-        self.assertEqual("0101000000000000000000", dogtra.calculate_intensity_code(0), "intensity 0")
-        self.assertEqual("0001111111110100000000", dogtra.calculate_intensity_code(28), "intensity 28")
-        self.assertEqual("0000000111010000000000", dogtra.calculate_intensity_code(62), "intensity 62")
-        self.assertEqual("1011110100000000000000", dogtra.calculate_intensity_code(103), "intensity 103")
-        self.assertEqual("1000000001101000000000", dogtra.calculate_intensity_code(171), "intensity 171")
-        self.assertEqual("1100000011111101000000", dogtra.calculate_intensity_code(255), "intensity 255")
+        self.assertEqual("0101000000000000000000", dogtra.calculate_intensity_code(0), "intensity 0% / 0")
+        self.assertEqual("0000101000000000000000", dogtra.calculate_intensity_code(20), "intensity 20% / 30")
+        self.assertEqual("0000000111101000000000", dogtra.calculate_intensity_code(40), "intensity 40% / 63")
+        self.assertEqual("1011110100000000000000", dogtra.calculate_intensity_code(60), "intensity 60% / 103")
+        self.assertEqual("1000000001010000000000", dogtra.calculate_intensity_code(80), "intensity 80% / 170")
+        self.assertEqual("1100000011111101000000", dogtra.calculate_intensity_code(100), "intensity 100% / 255")
