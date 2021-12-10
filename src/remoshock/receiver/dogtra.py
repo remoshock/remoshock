@@ -12,12 +12,27 @@ lock = threading.RLock()
 
 
 class Dogtra(Receiver):
+    end_one = True
+
     """communication with Dogtra collars"""
+    power_mapping = [
+        0, 0, 0, 0, 0, 1, 3, 5, 7, 8,
+        10, 12, 14, 16, 18, 20, 22, 24, 26, 28,
+        30, 31, 32, 34, 36, 37, 38, 40, 42, 43,
+        45, 47, 49, 50, 52, 54, 56, 57, 59, 61,
+        63, 64, 65, 66, 68, 70, 72, 74, 76, 78,
+        80, 82, 85, 87, 89, 91, 93, 95, 98, 100,
+        103, 105, 107, 109, 111, 114, 117, 120, 124, 126,
+        128, 132, 137, 140, 144, 149, 154, 157, 161, 165,
+        170, 174, 179, 184, 190, 195, 200, 205, 210, 215,
+        221, 226, 231, 237, 243, 249, 255, 255, 255, 255,
+        255]
+
 
     def __init__(self, receiver_properties, transmitter_code, channel):
         super().__init__(receiver_properties)
         receiver_properties.capabilities(action_light=False, action_beep=False, action_vibrate=True, action_shock=True)
-        receiver_properties.timings(duration_min_ms=500, duration_increment_ms=500, awake_time_s=0)  # TODO
+        receiver_properties.timings(duration_min_ms=250, duration_increment_ms=250, awake_time_s=0)  # TODO
         self.transmitter_code = transmitter_code
         self.channel = channel
 
@@ -34,6 +49,8 @@ class Dogtra(Receiver):
             print("ERROR: Invalid channel \"" + str(self.channel) + "\" in remoshock.ini.")
             print("This parameter needs to be 1")
             return False
+
+        return True
 
 
     def is_sdr_required(self):
@@ -62,7 +79,7 @@ class Dogtra(Receiver):
         return transmitter_code + "1" + cmd + self.calculate_intensity_code(intensity)
 
 
-    def calculate_intensity_code(self, intensity):
+    def calculate_intensity_code(self, power):
         """expands power level (in Dogtra scale from 0-255) from integer to bit-string"""
 
         #   0% -->   0: 0101000000000000000000
@@ -71,6 +88,13 @@ class Dogtra(Receiver):
         #  60% --> 103: 1011110100000000000000
         #  80% --> 171: 1000000001101000000000
         # 100% --> 255: 1100000011111101000000
+
+        # (number of leading 1)   times 100 (may be none, one or two)
+        # (number of 0 minus one) times  10
+        # (number of 1 minus one) times   1
+        # some transmitter have a suffix of 01, others don't have it
+
+        intensity = self.power_mapping[power]
 
         res = ""
         for _ in range(0, intensity // 100):
@@ -84,7 +108,10 @@ class Dogtra(Receiver):
         for _ in range(0, intensity + 1):
             res = res + "1"
 
-        res = res + "01"
+        if self.end_one:
+            res = res + "01"
+        else:
+            res = res + "00"
         return res.ljust(22, "0")
 
 
@@ -94,7 +121,11 @@ class Dogtra(Receiver):
         This methods adds the synchronization prefix as well as the fillers
         between each bit in the first part of the message."""
 
-        prefix = "11100"
+        if self.end_one:
+            prefix = "11100"
+        else:
+            prefix = "1111100"
+
         filler = "01"
         res = prefix + filler
         for i in range(0, 16):
@@ -134,7 +165,8 @@ class Dogtra(Receiver):
 
         message = ""
         if action == Action.BEEPSHOCK:
-            message = self.encode_for_transmission(self.generate(self.transmitter_code, 0, 1)) + "/1s"
+            message_template = self.encode_for_transmission(self.generate(self.transmitter_code, 50, 1))
+            message = message_template + message_template + message_template + "/1s "
 
         beep = 0
         if action == Action.BEEP or action == Action.VIBRATE:
@@ -148,11 +180,8 @@ class Dogtra(Receiver):
         if duration > 10000:
             duration = 10000
 
-        # TODO: the mapping from power% to intensity code is not linear
-        message_template = self.encode_for_transmission(self.generate(self.transmitter_code, power * 255 // 100, beep))
-        # TODO: duration
-        duration = 500
-        for _ in range(0, round(duration / 250)):
+        message_template = self.encode_for_transmission(self.generate(self.transmitter_code, power, beep))
+        for _ in range(0, round(duration / 60)):
             message = message + message_template
 
         start_of_transmission = "11111110000000111111100000000000"
