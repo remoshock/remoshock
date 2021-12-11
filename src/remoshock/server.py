@@ -29,7 +29,9 @@ MIME_CONTENT_TYPES = {
     ".jpg": "image/jpeg",
     ".js": "application/javascript",
     ".json": "application/json",
-    ".png": "image/png"
+    ".png": "image/png",
+    ".svg": "image/svg+xml",
+    ".woff2": "font/woff2"
 }
 
 
@@ -47,6 +49,7 @@ class RemoshockRequestHandler(BaseHTTPRequestHandler):
             self.wfile.write(json.dumps(data).encode('utf-8'))
         except BrokenPipeError:
             print("Browser disconnected")
+
 
     def answer_html(self, status, text):
         """Sends a message as HTML-response"""
@@ -141,26 +144,31 @@ class RemoshockRequestHandler(BaseHTTPRequestHandler):
 
         if not self.path.startswith("/auth") and not self.verify_authentication_cookie():
             filename = os.path.normpath(web_folder + "/auth/index.html")
-            self.send_file(filename, 403, False)
+            self.send_file(filename, 403, False, False)
             return
 
 
         if os.path.isdir(filename):
             filename = filename + "/index.html"
 
+        compressed = False
         if not os.path.isfile(filename):
-            self.answer_html(404, "Not found.")
-            return
+            if os.path.isfile(filename + ".gz"):
+                compressed = True
+            else:
+                self.answer_html(404, "Not found.")
+                return
 
-        self.send_file(filename, 200, True)
+        self.send_file(filename, 200, True, compressed)
 
 
-    def send_file(self, filename, status, cache):
+    def send_file(self, filename, status, cache, compressed):
         """answers a browser request with the content of a file
 
         @param filename filename on disk
         @paran status http status code
         @param cache False to prevent caching
+        @param compressed True, if the file gzip-compressed
         """
 
         ext = os.path.splitext(filename)[1]
@@ -169,7 +177,13 @@ class RemoshockRequestHandler(BaseHTTPRequestHandler):
         self.send_header("Content-Security-Policy", "default-src 'self'")
         if not cache:
             self.send_header("Cache-Control", "no-cache, no-store, must-revalidate")
+        if compressed:
+            self.send_header("Content-Encoding", "gzip")
         self.end_headers()
+
+        if compressed:
+            filename = filename + ".gz"
+
         with open(filename, "rb") as content:
             shutil.copyfileobj(content, self.wfile)
 
