@@ -4,7 +4,7 @@
 <title>Remote</title>
 <link rel="stylesheet" href="gamepad.css">
 <link rel="shortcut icon" href="/favicon.png">
-<link rel="manifest" href="/manifest.json">
+<link rel="manifest" href="/manifest.json" crossorigin="use-credentials">
 <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
 </head>
 <body>
@@ -12,42 +12,45 @@
 <div id="gamepad">
 <table>
 <tr>
-<td><span id="b0">↖️</span>&nbsp;</td>
-<td><span id="b1">⬆️</span>&nbsp;</td>
-<td><span id="b2">↗️</span>&nbsp;</td>
+<td id="t0"><span id="b0" class="b">↖️</span>&nbsp;</td>
+<td id="t1"><span id="b1" class="b">⬆️</span>&nbsp;</td>
+<td id="t2"><span id="b2" class="b">↗️</span>&nbsp;</td>
 <td><span></span>&nbsp;</td>
-<td><span id="b8">&nbsp;Y&nbsp;</span>&nbsp;</td>
+<td id="t9"><span id="b9" class="b">&nbsp;Y&nbsp;</span>&nbsp;</td>
 <td><span></span>&nbsp;</td>
 </tr>
 
 <tr>
-<td><span id="b3">⬅️</span>&nbsp;</td>
-<td><span id="bz">  </span>&nbsp;</td>
-<td><span id="b4">➡️</span>&nbsp;</td>
-<td><span id="b9">&nbsp;X&nbsp;</span>&nbsp;</td>
-<td></span>&nbsp;</td>
-<td><span id="b10">&nbsp;B&nbsp;</span>&nbsp;</td>
+<td id="t3"><span id="b3" class="b">⬅️</span>&nbsp;</td>
+<td id="t4"><span id="b4" class="b">🔄</span>&nbsp;</td>
+<td id="t5"><span id="b5" class="b">➡️</span>&nbsp;</td>
+<td id="t10"><span id="b10" class="b">&nbsp;X&nbsp;</span>&nbsp;</td>
+<td><span></span>&nbsp;</td>
+<td id="t11"><span id="b11" class="b">&nbsp;B&nbsp;</span>&nbsp;</td>
 </tr>
 
 <tr>
-<td><span id="b5">↙️</span>&nbsp;</td>
-<td><span id="b6">⬇️</span>&nbsp;</td>
-<td><span id="b7">↘️</span>&nbsp;</td>
-<td></span>&nbsp;</td>
-<td><span id="b11">&nbsp;A&nbsp;</span>&nbsp;</td>
-<td></span>&nbsp;</td></tr>
+<td id="t6"><span id="b6" class="b">↙️</span>&nbsp;</td>
+<td id="t7"><span id="b7" class="b">⬇️</span>&nbsp;</td>
+<td id="t8"><span id="b8" class="b">↘️</span>&nbsp;</td>
+<td><span></span>&nbsp;</td>
+<td id="t12"><span id="b12" class="b">&nbsp;A&nbsp;</span>&nbsp;</td>
+<td><span></span>&nbsp;</td></tr>
 </table>
+
+<div id="complianceStatus"></div>
 
 <!-- 
 
-0 1 2 3 4 5 6 7  8901
-↖️⬆️↗️⬅️➡️↙️⬇️↘️YXBA
+0 1 2 3 4 5 6  7 8 9012
+↖️⬆️↗️⬅️🔄➡️↙️⬇️↘️YXBA
 
 ↕️↔️↪️↩️⤵️🔙🔚🔝
  -->
 </div>
 
 <script type="application/javascript" src="/resources/remoshock.js"></script>
+<script type="application/javascript" src="rulesets.js"></script>
 <script type="application/javascript" src="gamepad.js"></script>
 </body>
 </html>

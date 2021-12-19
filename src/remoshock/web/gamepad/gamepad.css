@@ -7,19 +7,31 @@
 	display: none;
 }
 
-#b8 {
+#b9 {
 	color: #FF0;
 	background-color: #000;
 }
-#b9 {
+#b10 {
 	color: #7AF;
 	background-color: #000;
 }
-#b10 {
+#b11 {
 	color: #A00;
 	background-color: #000;
 }
-#b11 {
+#b12 {
 	color: #0F0;
 	background-color: #000;
+}
+
+.b {
+	opacity: 10%;
+}
+
+.desired {
+	opacity: 100%;
+}
+
+.pressed {
+	border: 2px solid #0A0;
 }
