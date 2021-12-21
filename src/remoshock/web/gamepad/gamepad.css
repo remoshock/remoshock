@@ -1,6 +1,11 @@
+
 #gamepad {
 	font-family: sans-serif;
 	font-size: 10vmin;
+}
+
+.punishing {
+	background-color: #F00;
 }
 
 .hidden {

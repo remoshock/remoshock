@@ -1,3 +1,7 @@
+//
+// Copyright nilswinter 2020-2021. License: AGPL
+// _____________________________________________
+
 "use strict";
 
 /**
@@ -18,11 +22,17 @@ class Ruleset {
 	 */
 	async punish() {
 		let currentTime = Date.now();
-		if (!this.#punishmentInProgress && this.#lastPunishmentTime + this.#appConfig.immuneDuration < currentTime) {
+		let immune_ms = parseInt(this.#appConfig.immune_ms, 10);
+		if (!this.#punishmentInProgress && this.#lastPunishmentTime + immune_ms < currentTime) {
 			this.#punishmentInProgress = true
-			console.log("punish", "start");
-			await remoshock.command(this.#appConfig.receiver, this.#appConfig.action, this.#appConfig.power, this.#appConfig.duration);
-			console.log("punish", "end");
+			let body = document.getElementsByTagName("body")[0];
+			body.classList.add("punishing");
+			await remoshock.command(
+				parseInt(this.#appConfig.receiver, 10),
+				this.#appConfig.action,
+				parseInt(this.#appConfig.power, 10),
+				parseInt(this.#appConfig.duration, 10));
+			body.classList.remove("punishing");
 			this.#punishmentInProgress = false
 			this.#lastPunishmentTime = currentTime;
 		}
@@ -32,6 +42,7 @@ class Ruleset {
 	 * starts compliance checks
 	 */
 	start() {
+		this.#lastPunishmentTime = Date.now();
 		this.#intervalHandle = setInterval(() => {
 			this._gameloop();
 		}, 100);
@@ -55,30 +66,69 @@ class Ruleset {
 	}
 }
 
+
 /**
- * a game which requires the player to press certain buttons
+ * a game which requires the player to stay on certain buttons
  */
 class StayRuleset extends Ruleset{
+	#appConfig;
 	#ui;
 	#gamepadManager;
+	#endTime;
+	#lastComplianceStatus;
+	#pendingStartTime;
 
 	constructor(appConfig, ui, gamepadManager) {
 		super(appConfig);
+		this.#appConfig = appConfig;
 		this.#ui = ui;
 		this.#gamepadManager = gamepadManager;
 	}
 
+	/**
+	 * starts the game
+	 */
+	start() {
+		for (let button of this.#gamepadManager.buttons) {
+			button.resetDesiredButtonStatus();
+		}
+		let buttons = this.#appConfig.buttons.trim().split(/[\s,]+/);
+		for (let button of buttons) {
+			this.#gamepadManager.getButtonByUiIndex(button).desiredButtonStatus = true;
+		}
+		this.#ui.displayButtonState();
+		this.#endTime = Date.now() + parseInt(this.#appConfig.runtime_min, 10) * 60 * 1000;
+		super.start();
+	}
+
+	/**
+	 * game logic
+	 */
 	_gameloop() {
-		if (!this.#ui.active) {
+		let currentTime = Date.now();
+		if (currentTime > this.#endTime) {
+			this.#ui.stop();
 			return;
 		}
+
 		let complianceStatus = this.#gamepadManager.checkComplianceStatus();
-		document.getElementById("complianceStatus").innerText = complianceStatus;
+		let countdown = new Date(this.#endTime - currentTime).toLocaleTimeString("de", { timeZone: 'UTC' });
+		document.getElementById("complianceStatus").innerText = countdown + " " + complianceStatus;
 
 		if (complianceStatus == ComplianceStatus.VIOLATED) {
 			this.punish();
 		}
 
-		// TODO: PENDING for too long
+		if (complianceStatus == ComplianceStatus.PENDING) {
+			if (complianceStatus !== this.#lastComplianceStatus) {
+				this.#pendingStartTime = currentTime;
+			}
+			let reaction_ms = parseInt(this.#appConfig.reaction_ms, 10);
+			if (this.#pendingStartTime + reaction_ms < currentTime) {
+				this.punish();
+			}
+		}
+
+		this.#lastComplianceStatus = complianceStatus;
 	}
 }

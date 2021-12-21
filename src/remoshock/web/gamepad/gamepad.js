@@ -1,3 +1,6 @@
+//
+// Copyright nilswinter 2020-2021. License: AGPL
+// _____________________________________________
 "use strict";
 
 
@@ -90,6 +93,11 @@ class GamepadButton {
 	isOppositeDirection(button) {
 		return this.#buttonIndex == button.#buttonIndex && this.#direction != button.#direction;
 	}
+
+	resetDesiredButtonStatus() {
+		this.#lastButtonStatus = false;
+		this.desiredButtonStatus = false;
+	}
 }
 
 /**
@@ -99,6 +107,7 @@ class GamepadManager {
 	gamepad;
 	buttons = [];
 	#userInterface;
+	#uiIndexMap = {};
 	#mapping = "";
 	#lastChangeTimestamp = 0;
 
@@ -123,16 +132,16 @@ class GamepadManager {
 			e.gamepad.index, e.gamepad.id,
 			e.gamepad.buttons.length, e.gamepad.axes.length);
 		this.gamepad = e.gamepad;
-		this.#parseConfiguration();
+		this.#parseButtonMapping();
 		this.#userInterface.onGamepadReady();
 	}
 
 	/**
 	 * parses the button mapping
 	 */
-	#parseConfiguration() {
+	#parseButtonMapping() {
 		let entries = this.#mapping.trim().split(/[\s,]+/);
-		
+
 		for (let uiIndex = 0; uiIndex < entries.length; uiIndex++) {
 			let entry = entries[uiIndex];
 			if (entry === "*") {
@@ -148,7 +157,9 @@ class GamepadManager {
 				entry = entry.substring(0, entry.length - 1);
 			}
 			let buttonIndex = Number.parseInt(entry, 10);
-			this.buttons.push(new GamepadButton(uiIndex, this, buttonIndex, direction));
+			let button = new GamepadButton(uiIndex, this, buttonIndex, direction);
+			this.buttons.push(button);
+			this.#uiIndexMap[uiIndex] = button;
 		}
 	}
 
@@ -187,11 +198,21 @@ class GamepadManager {
 	 */
 	isButtonPossible(desiredButton) {
 		for (let button of this.buttons) {
-			if (button.isPressed() && button.isOppositeDirection(desiredButton)) {
+			if (button.desiredButtonStatus && button.isOppositeDirection(desiredButton)) {
 				return false;
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * returns a button based on its uiIndex
+	 *
+	 * @param uiIndex
+	 * @return button
+	 */
+	getButtonByUiIndex(index) {
+		return this.#uiIndexMap[index];
 	}
 }
 
@@ -212,18 +233,24 @@ class UserInterface {
 	constructor(appConfig, mapping) {
 		this.#gamepadManager = new GamepadManager(this, mapping);
 		this.#ruleset = new StayRuleset(appConfig, this, this.#gamepadManager);
+		document.getElementById("start").addEventListener("click", () => {
+			this.start();
+		});
+		document.getElementById("stop").addEventListener("click", () => {
+			this.stop();
+		});
 	}
 
 	/**
 	 * event handler
 	 */
 	onGamepadReady() {
-		console.log(this.#gamepadManager);
 		this.#showConfiguredGamepad();
 		setInterval(() => {
 			this.#gameloop();
 		}, 1);
-		this.#ruleset.start();
+		document.getElementById("start").classList.remove("hidden");
+		document.getElementById("complianceStatus").innerText = "";
 	}
 
 	/**
@@ -241,42 +268,54 @@ class UserInterface {
 	/**
 	 * indicates the button state on the user interface
 	 */
-	#displayButtonState() {
-		if (!this.#gamepadManager.changesPressent()) {
-			return;
-		}
+	displayButtonState() {
 		for (let button of this.#gamepadManager.buttons) {
 			if (button.isPressed()) {
 				document.getElementById("t" + button.uiIndex).classList.add("pressed");
 			} else {
 				document.getElementById("t" + button.uiIndex).classList.remove("pressed");
 			}
+			if (button.desiredButtonStatus) {
+				document.getElementById("b" + button.uiIndex).classList.add("desired");
+			} else {
+				document.getElementById("b" + button.uiIndex).classList.remove("desired");
+			}
 		}
 	}
 
+	start() {
+		document.getElementById("start").classList.add("hidden")
+		document.getElementById("stop").classList.remove("hidden")
+		document.getElementById("complianceStatus").innerText = "";
+		this.active = true;
+		this.#ruleset.start();
+	}
+
+	stop() {
+		this.active = false;
+		this.#ruleset.stop();
+		document.getElementById("start").classList.remove("hidden")
+		document.getElementById("stop").classList.add("hidden")
+		document.getElementById("complianceStatus").innerText = "inactive";
+	}
+
 	#gameloop() {
-		this.#displayButtonState();
-		if (!this.active) {
+		if (!this.#gamepadManager.changesPressent()) {
 			return;
 		}
-		let complianceStatus = this.#gamepadManager.checkComplianceStatus();
-		document.getElementById("complianceStatus").innerText = complianceStatus;
+		this.displayButtonState();
 	}
 }
 
 async function init() {
 	window.remoshock = new Remoshock();
 	await remoshock.init();
-	let appConfig = {
-		immuneDuration: 3000,
-		action: "BEEPSHOCK",
-		receiver: 1,
-		power: 30,
-		duration: 500
-	};
-	//let ui = new UserInterface("    * 7- * 6- * 6+ * 7+ *, 3 2 1 0");
-	let ui = new UserInterface(appConfig, "2 5- 1 4- * 4+ 3 5+ 0"); // select: 8, start: 9
-	ui.active = true;
+	console.log(remoshock.config);
+	// let buttonMapping = "    * 7- * 6- * 6+ * 7+ *, 3 2 1 0";   // xbox
+	let buttonMapping = "2 5- 1 4- * 4+ 3 5+ 0"; // select: 8, start: 9;  // DDR
+
+	// TODO: support multipe sections
+	new UserInterface(remoshock.config.applications.gamepad, buttonMapping);
 }
 
 init();
