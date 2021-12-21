@@ -21,26 +21,6 @@ function addreceiver(index) {
 }
 
 
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-async function command(receiver, action, power, duration) {
-	let token = window.location.hash.substring(7);
-	let url = "/remoshock/command"
-            + "?receiver=" + escape(receiver)
-            + "&action=" + escape(action)
-            + "&power=" + escape(power)
-            + "&duration=" + escape(duration);
-	return fetch(url, {
-		headers: {
-			Authorization: "Bearer " + token
-		},
-		method: "POST"
-	});
-}
- 
-
 let lastNavigatorVibrate = 0;
 async function inputHandler(e) {
 	let input = e.target;
