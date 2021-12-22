@@ -1,22 +1,9 @@
+//
+// Copyright nilswinter 2020-2021. License: AGPL
+// _____________________________________________
 "use strict";
 
-async function sleep(ms) {
-	return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-async function command(receiver, action, power, duration) {
-	let token = window.location.hash.substring(7);
-	let url = "/remoshock/command"
-            + "?receiver=" + escape(receiver)
-            + "&action=" + escape(action)
-            + "&power=" + escape(power)
-            + "&duration=" + escape(duration);
-	return fetch(url, {
-		headers: {
-			Authorization: "bearer " + token
-		}
-	});
-}
+import "/resources/remoshock.js"
 
 
 async function clickHandler() {
@@ -30,4 +17,13 @@ async function clickHandler() {
 	}
 }
 
-document.getElementById("start").addEventListener("click", clickHandler);
+
+async function init() {
+	window.remoshock = new Remoshock();
+	await remoshock.init();
+	document.getElementById("start").addEventListener("click", clickHandler);
+}
+
+init();
+
+

@@ -1,5 +1,7 @@
 "use strict";
 
+import "/resources/remoshock.js"
+
 function addreceiver(index) {
 	let receiver = receivers[index];
 	let receiverTemplate = document.getElementById("receiver-template");

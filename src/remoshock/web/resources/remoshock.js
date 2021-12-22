@@ -108,3 +108,6 @@ class Remoshock {
 		this.config = await response.json()
 	}
 }
+
+// explicitly export class to support ES module imports
+globalThis.Remoshock = Remoshock;
