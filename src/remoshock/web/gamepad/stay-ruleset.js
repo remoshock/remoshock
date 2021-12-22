@@ -4,73 +4,14 @@
 
 "use strict";
 
-/**
- * an abstract class for rulesets
- */
-class Ruleset {
-	#lastPunishmentTime = 0;
-	#intervalHandle;
-	#punishmentInProgress = false;
-	#appConfig;
-
-	constructor(appConfig) {
-		this.#appConfig = appConfig;
-	}
-
-	/**
-	 * punishes the player, but makes sure not to stack punishments
-	 */
-	async punish() {
-		let currentTime = Date.now();
-		let immune_ms = parseInt(this.#appConfig.immune_ms, 10);
-		if (!this.#punishmentInProgress && this.#lastPunishmentTime + immune_ms < currentTime) {
-			this.#punishmentInProgress = true
-			let body = document.getElementsByTagName("body")[0];
-			body.classList.add("punishing");
-			await remoshock.command(
-				parseInt(this.#appConfig.receiver, 10),
-				this.#appConfig.action,
-				parseInt(this.#appConfig.power, 10),
-				parseInt(this.#appConfig.duration, 10));
-			body.classList.remove("punishing");
-			this.#punishmentInProgress = false
-			this.#lastPunishmentTime = currentTime;
-		}
-	}
-
-	/**
-	 * starts compliance checks
-	 */
-	start() {
-		this.#lastPunishmentTime = Date.now();
-		this.#intervalHandle = setInterval(() => {
-			this._gameloop();
-		}, 100);
-	}
-
-	/**
-	 * stops compliance checks
-	 */
-	stop() {
-		if (this.#intervalHandle) {
-			clearInterval(this.#intervalHandle)
-			this.#intervalHandle = undefined;
-		}
-	}
-
-	/**
-	 * the game loop which checks for compliance
-	 */
-	_gameloop() {
-		// overwrite in subclass
-	}
-}
+import { Ruleset } from "./ruleset.js";
+import { ComplianceStatus } from "./gamepad.js";
 
 
 /**
  * a game which requires the player to stay on certain buttons
  */
-class StayRuleset extends Ruleset{
+export class StayRuleset extends Ruleset{
 	#appConfig;
 	#ui;
 	#gamepadManager;
@@ -79,7 +20,7 @@ class StayRuleset extends Ruleset{
 	#pendingStartTime;
 
 	constructor(appConfig, ui, gamepadManager) {
-		super(appConfig);
+		super(appConfig, ui);
 		this.#appConfig = appConfig;
 		this.#ui = ui;
 		this.#gamepadManager = gamepadManager;
@@ -113,7 +54,7 @@ class StayRuleset extends Ruleset{
 
 		let complianceStatus = this.#gamepadManager.checkComplianceStatus();
 		let countdown = new Date(this.#endTime - currentTime).toLocaleTimeString("de", { timeZone: 'UTC' });
-		document.getElementById("complianceStatus").innerText = countdown + " " + complianceStatus;
+		this.#ui.showInformation(countdown + " " + complianceStatus);
 
 		if (complianceStatus == ComplianceStatus.VIOLATED) {
 			this.punish();
@@ -132,3 +73,6 @@ class StayRuleset extends Ruleset{
 		this.#lastComplianceStatus = complianceStatus;
 	}
 }
+
+window.rulesets = window.rulesets || {}
+rulesets["stay"] = StayRuleset;

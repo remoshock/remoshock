@@ -4,11 +4,15 @@
 
 "use strict";
 
+import "/resources/remoshock.js"
+import "./stay-ruleset.js";
+import { GamepadManager } from "./gamepad.js";
+
 
 /**
  * user interface
  */
-class UserInterface {
+export class UserInterface {
 	#MAX_BUTTONS = 13;
 	#gamepadManager;
 	#ruleset;
@@ -20,7 +24,8 @@ class UserInterface {
 	 */
 	constructor(appConfig, mapping) {
 		this.#gamepadManager = new GamepadManager(this, mapping);
-		this.#ruleset = new StayRuleset(appConfig, this, this.#gamepadManager);
+		let rulesetClass = window.rulesets[appConfig.ruleset];
+		this.#ruleset = new rulesetClass(appConfig, this, this.#gamepadManager);
 		document.getElementById("start").addEventListener("click", () => {
 			this.start();
 		});
@@ -71,22 +76,61 @@ class UserInterface {
 		}
 	}
 
+	/**
+	 * starts the game
+	 */
 	start() {
 		document.getElementById("start").classList.add("hidden")
 		document.getElementById("stop").classList.remove("hidden")
-		document.getElementById("complianceStatus").innerText = "";
+		this.showInformation("");
 		this.active = true;
 		this.#ruleset.start();
 	}
 
+	/**
+	 * ends the game
+	 */
 	stop() {
 		this.active = false;
 		this.#ruleset.stop();
 		document.getElementById("start").classList.remove("hidden")
 		document.getElementById("stop").classList.add("hidden")
-		document.getElementById("complianceStatus").innerText = "inactive";
+		this.showInformation("inactive");
 	}
 
+	/**
+	 * updates the status information
+	 *
+	 * @param message message to show
+	 */
+	showInformation(message) {
+		document.getElementById("complianceStatus").innerText = message;
+	}
+
+	/**
+	 * indicates a status
+	 *
+	 * @param indication status to indicate (e. g. "punishing")
+	 */
+	indicate(indication) {
+		let body = document.getElementsByTagName("body")[0];
+		body.classList.add(indication);
+	}
+
+	/**
+	 * stops indicating a status
+	 *
+	 * @param indication status to no longer indicate (e. g. "punishing")
+	 */
+	stopIndicating(indication) {
+		let body = document.getElementsByTagName("body")[0];
+		body.classList.remove(indication);
+	}
+
+	/**
+	 * updates the display of button status.
+	 * Note: game logic is implemented in rulesets.js
+	 */
 	#gameloop() {
 		if (!this.#gamepadManager.changesPressent()) {
 			return;
@@ -95,14 +139,16 @@ class UserInterface {
 	}
 }
 
+
 async function init() {
-	window.remoshock = new Remoshock();
+	globalThis.remoshock = new Remoshock();
 	await remoshock.init();
 	console.log(remoshock.config);
 	// let buttonMapping = "    * 7- * 6- * 6+ * 7+ *, 3 2 1 0";   // xbox
 	let buttonMapping = "2 5- 1 4- * 4+ 3 5+ 0"; // select: 8, start: 9;  // DDR
 
-	// TODO: support multipe sections
+	// TODO: support multiple sections
+	// TODO: validate configuration
 	new UserInterface(remoshock.config.applications.gamepad, buttonMapping);
 }
 

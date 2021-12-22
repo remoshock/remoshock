@@ -7,7 +7,7 @@
 /**
  * @enum
  */
-class ComplianceStatus {
+export class ComplianceStatus {
 
 	static get COMPLIANT() {
 		return "COMPLIANT";
@@ -44,7 +44,7 @@ class ComplianceStatus {
 /**
  * a gamepad button. This class handles both real buttons, and axis-based directional buttons.
  */
-class GamepadButton {
+export class GamepadButton {
 	uiIndex = -1;
 	#gamepadManager;
 	#buttonIndex;
@@ -103,7 +103,7 @@ class GamepadButton {
 /**
  * GamepadManager represents the state of the complete gamebad
  */
-class GamepadManager {
+export class GamepadManager {
 	gamepad;
 	buttons = [];
 	#userInterface;
