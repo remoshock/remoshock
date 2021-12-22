@@ -5,6 +5,7 @@
 import configparser
 import logging
 import sys
+import time
 import threading
 
 from remoshock.core.action import Action
@@ -266,8 +267,12 @@ class RemoshockMock(Remoshock):
     """A mock used for testing without requiring any SDR hardware."""
 
 
-    def _process_command(self, receiver, action, power, duration):
-        """do nothing as this is a mock only"""
+    def _process_command(self, _receiver, action, _power, duration):
+        """wait but do nothing, because this is a mock only"""
+
+        if action == Action.BEEPSHOCK:
+            time.sleep(1.2)
+        time.sleep(duration / 1000)
 
 
     def boot(self):
