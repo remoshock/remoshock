@@ -21,6 +21,7 @@ from remoshock.util import powermanager
 
 
 remoshock = None
+args = None
 
 MIME_CONTENT_TYPES = {
     ".css": "text/css",
@@ -220,6 +221,13 @@ class RemoshockRequestHandler(BaseHTTPRequestHandler):
             self.answer_html(500, str(sys.exc_info()[0]) + ": " + str(sys.exc_info()[1]))
 
 
+    def log_message(self, *arguments):
+        """log requests, if verbose logging is active"""
+
+        if args.verbose:
+            super().log_message(*arguments)
+
+
 
 class RemoshockServer:
     """remoshockserver is a web server that provides the remote-control user-interface """
@@ -248,7 +256,8 @@ class RemoshockServer:
 
     def __boot_remoshock(self):
         """starts up the remoshock infrastructure"""
-        global remoshock
+        global remoshock, args
+        args = self.args
         if self.args.mock:
             remoshock = RemoshockMock(self.args)
         else:
