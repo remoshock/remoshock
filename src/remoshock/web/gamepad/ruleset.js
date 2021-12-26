@@ -9,13 +9,15 @@
  */
 export class Ruleset {
 	#appConfig;
+	#gameloopPauseTime
 	#ui
 	#lastPunishmentTime = 0;
 	#intervalHandle;
 	#punishmentInProgress = false;
 
-	constructor(appConfig, ui) {
+	constructor(appConfig, gameloopPauseTime, ui) {
 		this.#appConfig = appConfig;
+		this.#gameloopPauseTime = gameloopPauseTime;
 		this.#ui = ui;
 	}
 
@@ -46,7 +48,7 @@ export class Ruleset {
 		this.#lastPunishmentTime = Date.now();
 		this.#intervalHandle = setInterval(() => {
 			this._gameloop();
-		}, 100);
+		}, this.#gameloopPauseTime);
 	}
 
 	/**

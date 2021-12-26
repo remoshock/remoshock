@@ -6,6 +6,7 @@
 
 import "/resources/remoshock.js"
 import "./stay-ruleset.js";
+import "./walk-ruleset.js";
 import { GamepadManager } from "./gamepad.js";
 
 

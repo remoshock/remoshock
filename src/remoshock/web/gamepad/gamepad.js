@@ -51,6 +51,8 @@ export class GamepadButton {
 	#direction = 0;
 	#lastButtonStatus = false;
 	desiredButtonStatus = false;
+	#buttonStatus = false;
+	pressCounter = 0;
 
 	/**
 	 * @param index          number - of the userinterface representation
@@ -67,13 +69,21 @@ export class GamepadButton {
 
 
 	isPressed() {
+		let pressed = false;
 		if (this.#direction == 0) {
 			let button = this.#gamepadManager.gamepad.buttons[this.#buttonIndex]
-			return button.pressed;
+			pressed = button.pressed;
 		} else {
 			let axis = this.#gamepadManager.gamepad.axes[this.#buttonIndex];
-			return axis * this.#direction > 0.5;
+			pressed = axis * this.#direction > 0.5;
 		}
+		if (this.#buttonStatus != pressed) {
+			this.#buttonStatus = pressed;
+			if (pressed) {
+				this.pressCounter++;
+			}
+		}
+		return pressed;
 	}
 
 	checkComplianceStatus() {

@@ -5,22 +5,22 @@
 "use strict";
 
 import { Ruleset } from "./ruleset.js";
-import { ComplianceStatus } from "./gamepad.js";
 
 
 /**
  * a game which requires the player to stay on certain buttons
  */
-export class StayRuleset extends Ruleset{
+export class WalkRuleset extends Ruleset{
 	#appConfig;
 	#ui;
 	#gamepadManager;
 	#endTime;
-	#lastComplianceStatus;
-	#pendingStartTime;
+	#buttons
+	#lastPressCounts
 
 	constructor(appConfig, ui, gamepadManager) {
-		super(appConfig, 100, ui);
+		let reaction_ms = parseInt(appConfig.reaction_ms, 10);
+		super(appConfig, reaction_ms, ui);
 		this.#appConfig = appConfig;
 		this.#ui = ui;
 		this.#gamepadManager = gamepadManager;
@@ -33,13 +33,21 @@ export class StayRuleset extends Ruleset{
 		for (let button of this.#gamepadManager.buttons) {
 			button.resetDesiredButtonStatus();
 		}
+
+		this.#buttons = [];
+		this.#lastPressCounts = [];
 		let buttons = this.#appConfig.buttons.trim().split(/[\s,]+/);
-		for (let button of buttons) {
-			this.#gamepadManager.getButtonByUiIndex(button).desiredButtonStatus = true;
+		for (let buttonUiIndex of buttons) {
+			let button = this.#gamepadManager.getButtonByUiIndex(buttonUiIndex)
+			button.desiredButtonStatus = true;
+			this.#buttons.push(button);
+			this.#lastPressCounts.push(Number.MIN_SAFE_INTEGER);
 		}
-		this.#ui.displayButtonState();
+
 		this.#endTime = Date.now() + parseInt(this.#appConfig.runtime_min, 10) * 60 * 1000;
+		this.#ui.displayButtonState();
 		super.start();
+		
 	}
 
 	/**
@@ -52,27 +60,27 @@ export class StayRuleset extends Ruleset{
 			return;
 		}
 
-		let complianceStatus = this.#gamepadManager.checkComplianceStatus();
 		let countdown = new Date(this.#endTime - currentTime).toLocaleTimeString("de", { timeZone: 'UTC' });
-		this.#ui.showInformation(countdown + " " + complianceStatus);
+		this.#ui.showInformation(countdown);
 
-		if (complianceStatus == ComplianceStatus.VIOLATED) {
+		let compliant = true;
+		let temp = "";
+		for (let i = 0; i < this.#buttons.length; i++) {
+			let currentCount = this.#buttons[i].pressCounter;
+			temp = temp + (currentCount - this.#lastPressCounts[i]) + "\t";
+			if (currentCount - this.#lastPressCounts[i] < 1) {
+				compliant = false;
+			}
+			this.#lastPressCounts[i] = currentCount;
+		}
+		console.log(temp);
+
+		if (!compliant) {
 			this.punish();
 		}
 
-		if (complianceStatus == ComplianceStatus.PENDING) {
-			if (complianceStatus !== this.#lastComplianceStatus) {
-				this.#pendingStartTime = currentTime;
-			}
-			let reaction_ms = parseInt(this.#appConfig.reaction_ms, 10);
-			if (this.#pendingStartTime + reaction_ms < currentTime) {
-				this.punish();
-			}
-		}
-
-		this.#lastComplianceStatus = complianceStatus;
 	}
 }
 
 window.rulesets = window.rulesets || {}
-rulesets["stay"] = StayRuleset;
+rulesets["walk"] = WalkRuleset;
