@@ -44,11 +44,20 @@ async function clickHandler(e) {
 	let action = button.className.toUpperCase();
 	let power = receiver.querySelector(".power_input").value;
 	let duration = receiver.querySelector(".duration_input").value;
+
+	let overlay = document.getElementById("overlay");
+	overlay.classList.add("wait");
 	
 	let res = await remoshock.command(receiver.dataset.receiver, action, power, duration);
-	if (res.status == 200 && navigator.vibrate) {
+	if (navigator.vibrate) { 
 		navigator.vibrate([50]);
 	}
+	if (res.status != 200) {
+		overlay.classList.add("error");
+		await sleep(500);
+		overlay.classList.remove("error");
+	}
+	overlay.classList.remove("wait");
 }
 
 async function init() {

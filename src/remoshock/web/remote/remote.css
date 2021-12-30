@@ -48,3 +48,23 @@ button {
 	font-size: 120%;
 	margin-top: .5em;
 }
+
+.overlay {
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	background-color: #AAA;
+	opacity: 80%;
+	z-index: 1000;
+	display: none;
+}
+
+.error {
+	background-color: #F00;
+}
+
+.wait {
+	display: block;
+}
