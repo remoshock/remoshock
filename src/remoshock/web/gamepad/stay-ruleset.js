@@ -22,8 +22,23 @@ export class StayRuleset extends Ruleset{
 	constructor(appConfig, ui, gamepadManager) {
 		super(appConfig, 100, ui);
 		this.#appConfig = appConfig;
+		this.#appConfig = appConfig;
 		this.#ui = ui;
 		this.#gamepadManager = gamepadManager;
+	}
+
+	/**
+	 * checks the configuration
+	 */
+	validateConfiguration() {
+		let error = super.validateConfiguration();
+		if (!this.#appConfig.buttons) {
+			error = error + "Required setting \"buttons\" is missing.\n"
+		}
+		if (isNaN(parseInt(this.#appConfig.reaction_ms))) {
+			error = error + "Required setting \"reaction_ms\" is missing or not a number.\n"
+		}
+		return error;
 	}
 
 	/**

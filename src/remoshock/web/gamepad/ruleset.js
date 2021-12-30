@@ -22,6 +22,33 @@ export class Ruleset {
 	}
 
 	/**
+	 * checks the configuration
+	 */
+	validateConfiguration() {
+		let error = "";
+		if (isNaN(parseInt(this.#appConfig.immune_ms))) {
+			error = error + "Required setting \"immune_ms\" is missing or not a number.\n"
+		}
+		if (isNaN(parseInt(this.#appConfig.receiver))) {
+			error = error + "Required setting \"receiver\" is missing or not a number.\n"
+		}
+		let actions = ["LIGHT", "BEEP", "VIBRATE", "SHOCK", "BEEPSHOCK"];
+		if (!actions.includes(this.#appConfig.action)) {
+			error = error + "Required setting \"action\" is missing or not one of LIGHT, BEEP, VIBRATE, SHOCK, BEEPSHOCK.\n"
+		}
+		if (isNaN(parseInt(this.#appConfig.power))) {
+			error = error + "Required setting \"power\" is missing or not a number.\n"
+		}
+		if (isNaN(parseInt(this.#appConfig.duration))) {
+			error = error + "Required setting \"duration\" is missing or not a number.\n"
+		}
+		if (isNaN(parseInt(this.#appConfig.runtime_min))) {
+			error = error + "Required setting \"runtime_min\" is missing or not a number.\n"
+		}
+		return error;
+	}
+
+	/**
 	 * punishes the player, but makes sure not to stack punishments
 	 */
 	async punish() {
@@ -45,6 +72,10 @@ export class Ruleset {
 	 * starts compliance checks
 	 */
 	start() {
+		let error = this.validateConfiguration();
+		if (error != "") {
+			alert(error);
+		}
 		this.#lastPunishmentTime = Date.now();
 		this.#intervalHandle = setInterval(() => {
 			this._gameloop();

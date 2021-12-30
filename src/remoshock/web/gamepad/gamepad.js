@@ -118,16 +118,16 @@ export class GamepadManager {
 	buttons = [];
 	#userInterface;
 	#uiIndexMap = {};
-	#mapping = "";
+	#mappings = "";
 	#lastChangeTimestamp = 0;
 
 	/**
 	 * @param userInterface UserInterface - references to the user interface object
-	 * @param mapping       string        - button mapping for ↖️⬆️↗️⬅️➡️↙️⬇️↘️YXBA
+	 * @param mappings      key/value        - button mapping for ↖️⬆️↗️⬅️➡️↙️⬇️↘️YXBA
 	 */
-	constructor(userInterface, mapping) {
+	constructor(userInterface, mappings) {
 		this.#userInterface = userInterface;
-		this.#mapping = mapping;
+		this.#mappings = mappings;
 		window.addEventListener("gamepadconnected", (e) => {
 			this.#onGamepadConnected(e);
 		});
@@ -142,15 +142,28 @@ export class GamepadManager {
 			e.gamepad.index, e.gamepad.id,
 			e.gamepad.buttons.length, e.gamepad.axes.length);
 		this.gamepad = e.gamepad;
-		this.#parseButtonMapping();
+		this.#parseButtonMapping(e.gamepad.id);
 		this.#userInterface.onGamepadReady();
 	}
 
 	/**
 	 * parses the button mapping
+	 *
+	 * @param gamepadId string - name of gamepad
 	 */
-	#parseButtonMapping() {
-		let entries = this.#mapping.trim().split(/[\s,]+/);
+	#parseButtonMapping(gamepadId) {
+		let mapping = undefined;
+		for (let mappingInfo of this.#mappings) {
+			if (new RegExp(mappingInfo.regex).exec(gamepadId)) {
+				mapping = mappingInfo.mapping;
+				break;
+			}
+		}
+		if (!mapping) {
+			alert("Unknown gamepad " + gamepadId);
+		}
+
+		let entries = mapping.trim().split(/[\s,]+/);
 
 		for (let uiIndex = 0; uiIndex < entries.length; uiIndex++) {
 			let entry = entries[uiIndex];

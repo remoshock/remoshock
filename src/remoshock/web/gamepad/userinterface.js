@@ -5,6 +5,7 @@
 "use strict";
 
 import "/resources/remoshock.js"
+import "./simon-ruleset.js";
 import "./stay-ruleset.js";
 import "./walk-ruleset.js";
 import { GamepadManager } from "./gamepad.js";
@@ -21,10 +22,10 @@ export class UserInterface {
 
 	/**
 	 * @param appConfig key/value - configuration for the app
-	 * @param mapping   string    - button mapping for ↖️⬆️↗️⬅️🔄➡️↙️⬇️↘️YXBA
+	 * @param mappings  keyvalue  - button mapping for ↖️⬆️↗️⬅️🔄➡️↙️⬇️↘️YXBA
 	 */
-	constructor(appConfig, mapping) {
-		this.#gamepadManager = new GamepadManager(this, mapping);
+	constructor(appConfig, mappings) {
+		this.#gamepadManager = new GamepadManager(this, mappings);
 		let rulesetClass = window.rulesets[appConfig.ruleset];
 		this.#ruleset = new rulesetClass(appConfig, this, this.#gamepadManager);
 		document.getElementById("start").addEventListener("click", () => {
@@ -145,12 +146,19 @@ async function init() {
 	globalThis.remoshock = new Remoshock();
 	await remoshock.init();
 	console.log(remoshock.config);
-	// let buttonMapping = "    * 7- * 6- * 6+ * 7+ *, 3 2 1 0";   // xbox
-	let buttonMapping = "2 5- 1 4- * 4+ 3 5+ 0"; // select: 8, start: 9;  // DDR
+	let buttonMappings = [
+		{
+			"regex": ".*Xbox.*",
+			"mapping": "    * 7- * 6- * 6+ * 7+ *, 3 2 1 0"
+		},
+		{
+			"regex": ".*",
+			"mapping": "2 5- 1 4- * 4+ 3 5+ 0" // select: 8, start: 9;  // DDR
 
+		}
+	];
 	// TODO: support multiple sections
-	// TODO: validate configuration
-	new UserInterface(remoshock.config.applications.gamepad, buttonMapping);
+	new UserInterface(remoshock.config.applications.gamepad, buttonMappings);
 }
 
 init();
