@@ -75,15 +75,18 @@ class Remoshock {
 	 */
 	command(receiver, action, power, duration) {
 		let url = this.urlprefix + "/command"
-	            + "?receiver=" + escape(receiver)
-	            + "&action=" + escape(action)
-	            + "&power=" + escape(power)
-	            + "&duration=" + escape(duration);
 		return fetch(url, {
+			method: "POST",
 			headers: {
-				Authorization: "Bearer " + this.authenticationToken
+				Authorization: "Bearer " + this.authenticationToken,
+				'Content-Type': 'application/json'
 			},
-			method: "POST"
+			body: JSON.stringify({
+				receiver: receiver,
+				action: action,
+				power: power,
+				duration: duration
+			})
 		});
 	}
  

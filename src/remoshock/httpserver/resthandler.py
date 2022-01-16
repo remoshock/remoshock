@@ -3,7 +3,7 @@
 # _____________________________________________
 
 import json
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import parse_qsl, urlparse
 
 from remoshock.core.action import Action
 
@@ -50,7 +50,7 @@ class RestHandler:
             print("Invalid authentication header or invalid Bearer token.")
 
         if "token" in params:
-            return params["token"][0] == expected_token
+            return params["token"] == expected_token
 
         return False
 
@@ -58,10 +58,10 @@ class RestHandler:
     def handle_command(self, params):
         """Sends the specified command to specified receiver"""
 
-        action = Action[params["action"][0]]
-        receiver = int(params["receiver"][0])
-        power = int(params["power"][0])
-        duration = int(params["duration"][0])
+        action = Action[params["action"]]
+        receiver = int(params["receiver"])
+        power = int(params["power"])
+        duration = int(params["duration"])
 
         if action not in [Action.LIGHT, Action.BEEP, Action.VIBRATE, Action.SHOCK, Action.BEEPSHOCK]:
             raise Exception("Invalid action")
@@ -69,11 +69,28 @@ class RestHandler:
         self.requesthandler.remoshock.command(receiver, action, power, duration)
 
 
+    def read_parameters(self):
+        """reads parameters from json body and url"""
+
+        request = self.requesthandler
+        params = {}
+
+        command = request.command.upper()
+        if command == "POST" or command == "PUT":
+            length = int(request.headers.get('content-length'))
+            if length > 0:
+                params = json.loads(request.rfile.read(length))
+
+        path = request.path
+        params.update(dict(parse_qsl(urlparse(path).query)))
+        return params
+
+
     def serve_rest(self):
         """serves a rest request"""
 
         path = self.requesthandler.path
-        params = parse_qs(urlparse(path).query)
+        params = self.read_parameters()
         if not self.verify_authentication_token(self.requesthandler.headers, params):
             self.answer_html(403, "Missing or invalid authentication token")
             return
