@@ -54,6 +54,22 @@ class Remoshock {
 		});
 	}
 
+	/**
+	 * invokes a REST service via POST with an json object
+	 *
+	 * @param url url to post to
+	 * @para data data to convert to JSON and post
+	 */
+	#postJson(url, data) {
+		return fetch(url, {
+			method: "POST",
+			headers: {
+				"Authorization": "Bearer " + this.authenticationToken,
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify(data)
+		});
+	}
 
 	/**
 	 * await-able sleep
@@ -61,9 +77,8 @@ class Remoshock {
 	 * @param ms duration in ms
 	 */
 	sleep(ms) {
-	    return new Promise(resolve => setTimeout(resolve, ms));
+		return new Promise(resolve => setTimeout(resolve, ms));
 	}
-
 
 	/**
 	 * sends a command to the server
@@ -75,21 +90,38 @@ class Remoshock {
 	 */
 	command(receiver, action, power, duration) {
 		let url = this.urlprefix + "/command"
-		return fetch(url, {
-			method: "POST",
-			headers: {
-				Authorization: "Bearer " + this.authenticationToken,
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				receiver: receiver,
-				action: action,
-				power: power,
-				duration: duration
-			})
-		});
+		let command = {
+			"receiver": receiver,
+			"action": action,
+			"power": power,
+			"duration": duration
+		}
+		return this.#postJson(url, command);
 	}
- 
+
+	/**
+	 * saves settings to the server
+	 *
+	 * @param section  name of section header
+	 * @param settings a map-like object
+	 */
+	saveSettings(section, settings) {
+
+		// update this.config.settings
+		if (!this.config["settings"][section]) {
+			this.config["settings"][section] = {};
+		}
+		for (let key of Object.keys(settings)) {
+			this.config["settings"][section][key] = settings[key];
+		}
+
+		// save to server
+		let url = this.urlprefix + "/config";
+		let config = {};
+		config["settings"] = {};
+		config["settings"][section] = settings;
+		return this.#postJson(url, config);
+	}
 
 	/**
 	 * initializes remoshock and download configuration from server

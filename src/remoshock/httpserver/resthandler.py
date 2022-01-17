@@ -7,9 +7,6 @@ from urllib.parse import parse_qsl, urlparse
 
 from remoshock.core.action import Action
 
-remoshock = None
-args = None
-
 
 class RestHandler:
     """handles requests for REST services"""
@@ -99,6 +96,8 @@ class RestHandler:
             self.handle_command(params)
             self.answer_json(200, {"status": "ok"})
         elif path.startswith("/remoshock/config"):
+            if self.requesthandler.command.upper() == "POST":
+                self.requesthandler.remoshock.config_manager.save_settings(params["settings"])
             self.answer_json(200, self.requesthandler.remoshock.get_config())
         else:
             self.answer_json(400, {"status": "unknown service"})
