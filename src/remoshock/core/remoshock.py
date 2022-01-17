@@ -130,7 +130,8 @@ class Remoshock:
 
     def _setup_from_config(self):
         try:
-            self.config = ConfigManager().config
+            self.config_manager = ConfigManager()
+            self.config = self.config_manager.config
             receivers = []
             for receiver in self.config.sections():
                 if receiver.startswith("receiver"):
@@ -249,10 +250,14 @@ class Remoshock:
 
         config = {}
         for section in self.config.sections():
-            if not section.startswith("receiver") and not section == "global":
+            if not section.startswith("#") and not section.startswith("receiver") and not section == "global":
                 config[section] = dict(self.config[section])
-
         result['applications'] = config
+
+        settings = {}
+        for section in self.config_manager.settings.sections():
+            settings[section] = dict(self.config_manager.settings[section])
+        result['settings'] = settings
 
         receivers = []
         for receiver in self.receivers:
