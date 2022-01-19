@@ -16,6 +16,7 @@ export class SimonRuleset extends Ruleset{
 	#ui;
 	#gamepadManager;
 	#availableButtons;
+	#holdButtons;
 	#nextButtonPick;
 	#endTime;
 	#lastComplianceStatus;
@@ -36,6 +37,9 @@ export class SimonRuleset extends Ruleset{
 		if (!this.#appConfig.buttons) {
 			error = error + "Required setting \"buttons\" is missing.\n"
 		}
+		if (this.#appConfig.hold_buttons === undefined || this.#appConfig.hold_buttons === null) {
+			error = error + "Required setting \"hold_buttons\" is missing.\n"
+		}
 		if (isNaN(parseInt(this.#appConfig.reaction_ms))) {
 			error = error + "Required setting \"reaction_ms\" is missing or not a number.\n"
 		}
@@ -51,7 +55,8 @@ export class SimonRuleset extends Ruleset{
 	start() {
 		let currentTime = Date.now();
 		this.#endTime = currentTime + parseInt(this.#appConfig.runtime_min, 10) * 60 * 1000;
-		this.#availableButtons = this.#appConfig.buttons.trim().split(/[\s,]+/);
+		this.#availableButtons = this.#appConfig.buttons.trim().split(/[\s,]+/).map(Number);
+		this.#holdButtons = this.#appConfig.hold_buttons.trim().split(/[\s,]+/).map(Number);
 		for (let button of this.#gamepadManager.buttons) {
 			button.resetDesiredButtonStatus();
 		}
@@ -71,7 +76,7 @@ export class SimonRuleset extends Ruleset{
 		}
 
 		if (complianceStatus == ComplianceStatus.PENDING) {
-			if (complianceStatus !== this.#lastComplianceStatus) {
+			if (this.#lastComplianceStatus !== ComplianceStatus.PENDING) {
 				this.#pendingStartTime = currentTime;
 			}
 			let reaction_ms = parseInt(this.#appConfig.reaction_ms, 10);
@@ -87,19 +92,22 @@ export class SimonRuleset extends Ruleset{
 
 	/**
 	 * picks the desired button.
-	 */	
+	 */
 	#pickDesiredButton(currentTime) {
-		console.log("pickDesiredButton", Math.floor(currentTime / 1000) % 60);
+
+		// reset desired button status to false, unless this is a button,
+		//  that must be hold down for the entire game
 		for (let button of this.#gamepadManager.buttons) {
-			button.desiredButtonStatus = false
+			button.desiredButtonStatus = this.#holdButtons.indexOf(button.uiIndex) > -1;
 		}
+
 		let randomButton = this.randomElement(this.#availableButtons)
 		this.#gamepadManager.getButtonByUiIndex(randomButton).desiredButtonStatus = true;
 		this.#ui.displayButtonState();
 		let offset = this.#appConfig.pick_interval_s * 1000;
 		offset = offset + Math.random(offset / 3);
 		this.#nextButtonPick = currentTime + offset;
-	}	
+	}
 
 	/**
 	 * picks a new button, if enough time has elapsed since the last pick
