@@ -19,6 +19,7 @@ export class UserInterface {
 	#gamepadManager;
 	#ruleset;
 	active = false;
+	#wakeLock;
 
 	/**
 	 * @param appConfig key/value - configuration for the app
@@ -34,6 +35,16 @@ export class UserInterface {
 		document.getElementById("stop").addEventListener("click", () => {
 			this.stop();
 		});
+		
+		document.addEventListener('visibilitychange', () => {
+			this.#onVisibilityChange();
+		});
+	}
+
+	async #onVisibilityChange() {
+		if (this.#wakeLock !== undefined && document.visibilityState === 'visible') {
+			this.#wakeLock = await navigator.wakeLock.request('screen');
+		}
 	}
 
 	/**
@@ -81,23 +92,30 @@ export class UserInterface {
 	/**
 	 * starts the game
 	 */
-	start() {
+	async start() {
 		document.getElementById("start").classList.add("hidden")
 		document.getElementById("stop").classList.remove("hidden")
 		this.showInformation("");
 		this.active = true;
 		this.#ruleset.start();
+		if ('wakeLock' in navigator) {
+			this.#wakeLock = await navigator.wakeLock.request('screen');
+		}
 	}
 
 	/**
 	 * ends the game
 	 */
-	stop() {
+	async stop() {
 		this.active = false;
 		this.#ruleset.stop();
 		document.getElementById("start").classList.remove("hidden")
 		document.getElementById("stop").classList.add("hidden")
 		this.showInformation("inactive");
+		if ('wakeLock' in navigator && this.#wakeLock) {
+			await this.#wakeLock.release();
+			this.#wakeLock = undefined;
+		}
 	}
 
 	/**
@@ -149,7 +167,8 @@ async function init() {
 	let buttonMappings = [
 		{
 			"regex": ".*Xbox.*",
-			"mapping": "    * 7- * 6- * 6+ * 7+ *, 3 2 1 0"
+//			"mapping": "    * 7- * 6- * 6+ * 7+ *, 3 2 1 0"
+			"mapping": "    * 1- * 0- * 0+ * 1+ *, 3 2 1 0"
 		},
 		{
 			"regex": ".*",
