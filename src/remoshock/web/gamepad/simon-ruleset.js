@@ -34,11 +34,8 @@ export class SimonRuleset extends Ruleset{
 	 */
 	validateConfiguration() {
 		let error = super.validateConfiguration();
-		if (!this.#appConfig.buttons) {
-			error = error + "Required setting \"buttons\" is missing.\n"
-		}
-		if (this.#appConfig.hold_buttons === undefined || this.#appConfig.hold_buttons === null) {
-			error = error + "Required setting \"hold_buttons\" is missing.\n"
+		if (!this.#appConfig.buttons && !this.#appConfig.hold_buttons) {
+			error = error + "Required setting \"buttons\" or \"hold_buttons\" are both missing.\n"
 		}
 		if (isNaN(parseInt(this.#appConfig.reaction_ms))) {
 			error = error + "Required setting \"reaction_ms\" is missing or not a number.\n"
@@ -55,14 +52,27 @@ export class SimonRuleset extends Ruleset{
 	start() {
 		let currentTime = Date.now();
 		this.#endTime = currentTime + parseInt(this.#appConfig.runtime_min, 10) * 60 * 1000;
-		this.#availableButtons = this.#appConfig.buttons.trim().split(/[\s,]+/).map(Number);
-		this.#holdButtons = this.#appConfig.hold_buttons.trim().split(/[\s,]+/).map(Number);
+		this.#availableButtons = this.#parseNumberArray(this.#appConfig.buttons);
+		this.#holdButtons = this.#parseNumberArray(this.#appConfig.hold_buttons);
 		for (let button of this.#gamepadManager.buttons) {
 			button.resetDesiredButtonStatus();
 		}
 		this.#pickDesiredButton(currentTime);
 		this.#pendingStartTime = currentTime;
 		super.start();
+	}
+
+	/**
+	 * parses a string to an array of numbers
+	 *
+	 * @param str string to parse, may be undefined, null or empty
+	 * @return array
+	 */
+	#parseNumberArray(str) {
+		if (str == undefined || str == "") {
+			return [];
+		}
+		return str.trim().split(/[\s,]+/).map(Number);
 	}
 
 	/**
@@ -95,10 +105,16 @@ export class SimonRuleset extends Ruleset{
 	 */
 	#pickDesiredButton(currentTime) {
 
-		// reset desired button status to false, unless this is a button,
-		//  that must be hold down for the entire game
+		// reset desired button status to false, unless it is a button,
+		// that must be hold down for the entire game
 		for (let button of this.#gamepadManager.buttons) {
 			button.desiredButtonStatus = this.#holdButtons.indexOf(button.uiIndex) > -1;
+		}
+
+		// if there are no play buttons, this is just a game of stay.
+		if (this.#availableButtons.length === 0) {
+			this.#ui.displayButtonState();
+			return;
 		}
 
 		let randomButton = this.randomElement(this.#availableButtons)
