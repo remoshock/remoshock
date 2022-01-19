@@ -114,7 +114,6 @@ export class GamepadButton {
  * GamepadManager represents the state of the complete gamebad
  */
 export class GamepadManager {
-	gamepad;
 	buttons = [];
 	#userInterface;
 	#uiIndexMap = {};
@@ -141,7 +140,6 @@ export class GamepadManager {
 		console.log("Gamepad connected at index %d: %s. %d buttons, %d axes.",
 			e.gamepad.index, e.gamepad.id,
 			e.gamepad.buttons.length, e.gamepad.axes.length);
-		this.gamepad = e.gamepad;
 		this.#parseButtonMapping(e.gamepad.id);
 		this.#userInterface.onGamepadReady();
 	}
@@ -199,6 +197,20 @@ export class GamepadManager {
 		this.#lastChangeTimestamp = this.gamepad.timestamp;
 		return changes;
 	}
+
+	/**
+	 * first gamepad 
+	 */
+	get gamepad() {
+		// In Firefox, it is possible to save a gamepad-reference to a global variable. But
+		// in Chrome, the gamepad.timestamp will not be updated on a saved reference.
+		let gamepads = navigator.getGamepads();
+		if (gamepads.length > 0) {
+			return gamepads[0];
+		}
+		return undefined;
+	}
+
 
 	/**
 	 * checks whether the user is complying with rules
