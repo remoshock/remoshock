@@ -29,6 +29,20 @@
 	background-color: #000;
 }
 
+#t14, #t16 {
+	text-align: right;
+}
+
+#b13, #b14, #b15, #b16 {
+	color: #AAA;
+	background-color: #000;
+	font-size: 7vmin;
+}
+
+#b13.desired, #b14.desired, #b15.desired, #b16.desired {
+	color: #FFF;
+}
+
 .b {
 	opacity: 10%;
 }

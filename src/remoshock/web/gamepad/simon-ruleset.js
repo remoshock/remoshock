@@ -52,8 +52,8 @@ export class SimonRuleset extends Ruleset{
 	start() {
 		let currentTime = Date.now();
 		this.#endTime = currentTime + parseInt(this.#appConfig.runtime_min, 10) * 60 * 1000;
-		this.#availableButtons = this.#parseNumberArray(this.#appConfig.buttons);
-		this.#holdButtons = this.#parseNumberArray(this.#appConfig.hold_buttons);
+		this.#availableButtons = this.#parseButtonArray(this.#appConfig.buttons);
+		this.#holdButtons = this.#parseButtonArray(this.#appConfig.hold_buttons);
 		for (let button of this.#gamepadManager.buttons) {
 			button.resetDesiredButtonStatus();
 		}
@@ -63,16 +63,24 @@ export class SimonRuleset extends Ruleset{
 	}
 
 	/**
-	 * parses a string to an array of numbers
+	 * parses a string of buttons an array of numbers, skipping missing buttons
 	 *
 	 * @param str string to parse, may be undefined, null or empty
 	 * @return array
 	 */
-	#parseNumberArray(str) {
+	#parseButtonArray(str) {
+		let res = [];
 		if (str == undefined || str == "") {
-			return [];
+			return es;
 		}
-		return str.trim().split(/[\s,]+/).map(Number);
+		let configured = str.trim().split(/[\s,]+/).map(Number);
+		for (let button of configured) {
+			// skipt buttons, that do not exist on the current gamepad
+			if (this.#gamepadManager.getButtonByUiIndex(button)) {
+				res.push(button);
+			}
+		}
+		return res;
 	}
 
 	/**

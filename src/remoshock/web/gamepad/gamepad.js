@@ -122,7 +122,7 @@ export class GamepadManager {
 
 	/**
 	 * @param userInterface UserInterface - references to the user interface object
-	 * @param mappings      key/value        - button mapping for ↖️⬆️↗️⬅️➡️↙️⬇️↘️YXBA
+	 * @param mappings      key/value        - button mapping for ↖️⬆️↗️⬅️➡️↙️⬇️↘️YXBA LB RB LT RT
 	 */
 	constructor(userInterface, mappings) {
 		this.#userInterface = userInterface;
@@ -248,6 +248,12 @@ export class GamepadManager {
 	 */
 	getButtonByUiIndex(index) {
 		return this.#uiIndexMap[index];
+	}
+
+	resetAllDesiredButtonStatus() {
+		for (let button of this.buttons) {
+			button.resetDesiredButtonStatus();
+		}
 	}
 }
 

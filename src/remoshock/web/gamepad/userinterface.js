@@ -14,7 +14,7 @@ import { GamepadManager } from "./gamepad.js";
  * user interface
  */
 export class UserInterface {
-	#MAX_BUTTONS = 13;
+	#MAX_BUTTONS = 17;
 	#gamepadManager;
 	#ruleset;
 	active = false;
@@ -115,6 +115,8 @@ export class UserInterface {
 			await this.#wakeLock.release();
 			this.#wakeLock = undefined;
 		}
+		this.#gamepadManager.resetAllDesiredButtonStatus()
+		this.displayButtonState();
 	}
 
 	/**
@@ -167,7 +169,7 @@ async function init() {
 		{
 			"regex": ".*Xbox.*",
 //			"mapping": "    * 7- * 6- * 6+ * 7+ *, 3 2 1 0"
-			"mapping": "    * 1- * 0- * 0+ * 1+ *, 3 2 1 0"
+			"mapping": "    * 1- * 0- * 0+ * 1+ *, 3 2 1 0 4 5 2+ 5+"
 		},
 		{
 			"regex": ".*",
