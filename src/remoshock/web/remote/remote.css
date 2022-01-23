@@ -1,7 +1,12 @@
-html, input, button {
+.appshell-content, input, button {
 	font-family: sans-serif;
 	font-size: 150%
 }
+
+.appshell-content {
+	margin: 1em .1em 1em .5em;
+}
+
 
 input[type=number] {
 	width: 4em

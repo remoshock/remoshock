@@ -1,6 +1,8 @@
 "use strict";
 
-import "/resources/remoshock.js"
+import "../resources/remoshock.js"
+import { UIFramework } from "../resources/uiframework.js"
+
 
 function addreceiver(index) {
 	let receiver = receivers[index];
@@ -61,6 +63,9 @@ async function clickHandler(e) {
 }
 
 async function init() {
+	new UIFramework().renderAppShell("Remote");
+	
+
 	window.remoshock = new Remoshock();
 	await remoshock.init();
 

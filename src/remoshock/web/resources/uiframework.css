@@ -1,0 +1,92 @@
+body {
+	font-family: sans-serif;
+	padding: 0;
+	margin: 0;
+}
+
+.appshell-content {
+	margin: 1em;
+}
+
+.appshell-header {
+	background-color: #6200ee;
+	color: #fff;
+	border-bottom: 5px solid #424242;
+	vertical-align: middle;
+	padding: 1em 0;
+}
+
+.appshell-title {
+	font-family: sans-serif;
+	font-size: 1.25rem;
+	line-height: 2rem;
+	font-weight: 500;
+	letter-spacing: .0125em;
+	padding-left: 3.5em;
+}
+
+.appshell-nav {
+	float: left;
+	position: absolute;
+	top: 15px;
+	left: 15px;
+	background-color: #fdfdfd;
+	border: 1px solid #e8e8e8;
+	border-radius: 5px;
+	z-index: 100;
+}
+
+.appshell-navtrigger {
+	display: none;
+}
+
+label[for="appshell-navtrigger"] {
+	display: block;
+	width: 36px;
+	height: 36px;
+	z-index: 2;
+	cursor: pointer;
+}
+
+.appshell-menuicon {
+	display: block;
+	float: left;
+	width: 36px;
+	height: 26px;
+	line-height: 0;
+	padding-top: 10px;
+	text-align: center;
+}
+
+.appshell-menuicon>svg {
+	fill: #424242;
+}
+
+.appshell-nav input ~ .appshell-navpopup {
+	clear: both;
+	display: none;
+}
+
+.appshell-nav input:checked ~ .appshell-navpopup {
+	display: block;
+	padding-bottom: 5px;
+}
+
+.appshell-navlink {
+	display: block;
+	color: #111;
+	padding: 5px 10px;
+	margin-left: 20px;
+	line-height: 2em;
+}
+
+.site-title img {
+	height: 1.2em;
+	width: auto;
+	vertical-align: text-bottom
+}
+
+input:checked ~ .appshell-navpopup {
+	box-shadow: 5px 5px 5px #777;
+}
+

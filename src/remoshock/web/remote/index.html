@@ -2,12 +2,17 @@
 <html>
 <head>
 <title>Remote</title>
+<link rel="stylesheet" href="../resources/uiframework.css">
 <link rel="stylesheet" href="remote.css">
 <link rel="shortcut icon" href="/favicon.png">
 <link rel="manifest" href="/manifest.json" crossorigin="use-credentials">
 <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
 </head>
 <body>
+
+<div id="appshell-headerslot"></div>
+
+<div class="appshell-content">
 
 <div id="receivers"></div>
 
@@ -16,7 +21,7 @@
 <h2>Receiver</h2>
 <div>
 <label for="power_input" title="Power">⚡</label>
-<input class="power_input" type="number" min="0" max="100" value="1">
+<input class="power_input" type="number" min="0" max="100" value="1"> %
 <input class="power_range" type="range"  min="0" max="100" value="1" step="1" list="tickmarks_percent">
 </div>
 
@@ -88,7 +93,11 @@
   <option value="10000" label="10s"></option>
 </datalist>
 
+</div>
+
 <div id="overlay" class="overlay"></div>
+
+
 <script type="module" src="remote.js"></script>
 </body>
 </html>

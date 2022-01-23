@@ -2,12 +2,17 @@
 <html>
 <head>
 <title>Remote</title>
+<link rel="stylesheet" href="../resources/uiframework.css">
 <link rel="stylesheet" href="gamepad.css">
 <link rel="shortcut icon" href="/favicon.png">
 <link rel="manifest" href="/manifest.json" crossorigin="use-credentials">
 <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
 </head>
 <body>
+
+<div id="appshell-headerslot"></div>
+
+<div class="appshell-content">
 
 <div id="gamepad">
 <table>
@@ -100,6 +105,8 @@
 <tr><td>LT<td id="mapping_"></td><td><select id="use_"><option value="game">Game</option><option value="always">Always</option><option value="never">Never</option></select></td></tr>
 <tr><td>RT<td id="mapping_"></td><td><select id="use_"><option value="game">Game</option><option value="always">Always</option><option value="never">Never</option></select></td></tr>
 </table>
+</div>
+
 </div>
 
 <script type="module" src="userinterface.js"></script>

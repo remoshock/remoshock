@@ -17,24 +17,16 @@ import { UIFramework } from "../resources/uiframework.js"
 export class UserInterface {
 	#MAX_BUTTONS = 17;
 
-	#uiFramework = new UIFramework();
+	#uiFramework;
 	#appConfig;
 	#gamepadManager;
 	#ruleset;
 	active = false;
 	#wakeLock;
 
-	/**
-	 * @param appConfig key/value - configuration for the app
-	 * @param mappings  keyvalue  - button mapping for ↖️⬆️↗️⬅️🔄➡️↙️⬇️↘️YXBA
-	 */
-	constructor(appConfig, mappings) {
-		this.#appConfig = appConfig;
-		this.#uiFramework.load(appConfig);
-
-		this.#gamepadManager = new GamepadManager(this, mappings);
-		let rulesetClass = window.rulesets[appConfig.ruleset];
-		this.#ruleset = new rulesetClass(appConfig, this, this.#gamepadManager);
+	constructor() {
+		this.#uiFramework = new UIFramework();
+		this.#uiFramework.renderAppShell("Gamepad (Experimental)");
 		document.getElementById("start").addEventListener("click", () => {
 			this.start();
 		});
@@ -45,7 +37,32 @@ export class UserInterface {
 		document.addEventListener('visibilitychange', () => {
 			this.#onVisibilityChange();
 		});
+		this.init();
 	}
+
+	async init() {
+		globalThis.remoshock = new Remoshock();
+		await remoshock.init();
+		console.log(remoshock.config);
+		let buttonMappings = [
+			{
+				"regex": ".*Xbox.*",
+	//			"mapping": "    * 7- * 6- * 6+ * 7+ *, 3 2 1 0"
+				"mapping": "    * 1- * 0- * 0+ * 1+ *, 3 2 1 0 4 5 2+ 5+"
+			},
+			{
+				"regex": ".*",
+				"mapping": "2 5- 1 4- * 4+ 3 5+ 0" // select: 8, start: 9;  // DDR
+	
+			}
+		];
+		this.#appConfig = remoshock.config.applications.gamepad;
+		this.#uiFramework.load(this.#appConfig);
+		this.#gamepadManager = new GamepadManager(this, buttonMappings);
+		let rulesetClass = window.rulesets[this.#appConfig.ruleset];
+		this.#ruleset = new rulesetClass(this.#appConfig, this, this.#gamepadManager);
+	}
+
 
 	async #onVisibilityChange() {
 		if (this.#wakeLock !== undefined && document.visibilityState === 'visible') {
@@ -171,28 +188,4 @@ export class UserInterface {
 	}
 }
 
-
-async function init() {
-	globalThis.remoshock = new Remoshock();
-	await remoshock.init();
-	console.log(remoshock.config);
-	let buttonMappings = [
-		{
-			"regex": ".*Xbox.*",
-//			"mapping": "    * 7- * 6- * 6+ * 7+ *, 3 2 1 0"
-			"mapping": "    * 1- * 0- * 0+ * 1+ *, 3 2 1 0 4 5 2+ 5+"
-		},
-		{
-			"regex": ".*",
-			"mapping": "2 5- 1 4- * 4+ 3 5+ 0" // select: 8, start: 9;  // DDR
-
-		}
-	];
-	// TODO: support multiple sections
-
-	new UserInterface(remoshock.config.applications.gamepad, buttonMappings);
-}
-
-init();
-
-
+new UserInterface();
