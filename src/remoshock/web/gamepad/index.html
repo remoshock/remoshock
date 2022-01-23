@@ -66,6 +66,42 @@
  -->
 </div>
 
+<div id="settings">
+
+<div><label for="runtime_min">Runtime: </label><input id="runtime_min"> min</div>
+<div><label for="pick_interval_s">Pick interval: </label><input id="pick_interval_s"> s</div>
+<div><label for="receiver">Receiver No: </label><input id="receiver"></div>
+<div><label for="action">Action: </label><select id="action"><option value="BEEP">BEEP</option><option value="VIBRATE">VIBRATE</option><option value="SHOCK">SHOCK</option><option value="BEEPSHOCK">BEEPSHOCK</option></select></div>
+<div><label for="power">Power: </label><input id="power"> %</div>
+<div><label for="duration">Duration: </label><input id="duration"> ms</div>
+<div><label for="reaction_ms">Reaction time: </label><input id="reaction_ms"> ms</div>
+<div><label for="immune_ms">Immune time: </label><input id="immune_ms"> ms</div>
+<div><label for="buttons">Play buttons: </label><input id="buttons"></div>
+<div><label for="hold_buttons">Hold buttons: </label><input id="hold_buttons"></div>
+
+
+
+<table border="1" class="hidden">
+<tr><th>Input</th><th>Mapping</th><th>Use</th></tr>
+<tr><td>Left Up<td id="mapping_"></td><td><select id="use_"><option value="game">Game</option><option value="always">Always</option><option value="never">Never</option></select></td></tr>
+<tr><td>Up<td id="mapping_"></td><td><select id="use_"><option value="game">Game</option><option value="always">Always</option><option value="never">Never</option></select></td></tr>
+<tr><td>Right Up<td id="mapping_"></td><td><select id="use_"><option value="game">Game</option><option value="always">Always</option><option value="never">Never</option></select></td></tr>
+<tr><td>Left<td id="mapping_"></td><td><select id="use_"><option value="game">Game</option><option value="always">Always</option><option value="never">Never</option></select></td></tr>
+<tr><td>Right<td id="mapping_"></td><td><select id="use_"><option value="game">Game</option><option value="always">Always</option><option value="never">Never</option></select></td></tr>
+<tr><td>Left Down<td id="mapping_"></td><td><select id="use_"><option value="game">Game</option><option value="always">Always</option><option value="never">Never</option></select></td></tr>
+<tr><td>Down<td id="mapping_"></td><td><select id="use_"><option value="game">Game</option><option value="always">Always</option><option value="never">Never</option></select></td></tr>
+<tr><td>Right Down<td id="mapping_"></td><td><select id="use_"><option value="game">Game</option><option value="always">Always</option><option value="never">Never</option></select></td></tr>
+<tr><td>Y<td id="mapping_"></td><td><select id="use_"><option value="game">Game</option><option value="always">Always</option><option value="never">Never</option></select></td></tr>
+<tr><td>X<td id="mapping_"></td><td><select id="use_"><option value="game">Game</option><option value="always">Always</option><option value="never">Never</option></select></td></tr>
+<tr><td>B<td id="mapping_"></td><td><select id="use_"><option value="game">Game</option><option value="always">Always</option><option value="never">Never</option></select></td></tr>
+<tr><td>A<td id="mapping_"></td><td><select id="use_"><option value="game">Game</option><option value="always">Always</option><option value="never">Never</option></select></td></tr>
+<tr><td>LB<td id="mapping_"></td><td><select id="use_"><option value="game">Game</option><option value="always">Always</option><option value="never">Never</option></select></td></tr>
+<tr><td>RB<td id="mapping_"></td><td><select id="use_"><option value="game">Game</option><option value="always">Always</option><option value="never">Never</option></select></td></tr>
+<tr><td>LT<td id="mapping_"></td><td><select id="use_"><option value="game">Game</option><option value="always">Always</option><option value="never">Never</option></select></td></tr>
+<tr><td>RT<td id="mapping_"></td><td><select id="use_"><option value="game">Game</option><option value="always">Always</option><option value="never">Never</option></select></td></tr>
+</table>
+</div>
+
 <script type="module" src="userinterface.js"></script>
 </body>
 </html>

@@ -8,6 +8,7 @@ import "/resources/remoshock.js"
 import "./simon-ruleset.js";
 import "./walk-ruleset.js";
 import { GamepadManager } from "./gamepad.js";
+import { UIFramework } from "../resources/uiframework.js"
 
 
 /**
@@ -15,6 +16,9 @@ import { GamepadManager } from "./gamepad.js";
  */
 export class UserInterface {
 	#MAX_BUTTONS = 17;
+
+	#uiFramework = new UIFramework();
+	#appConfig;
 	#gamepadManager;
 	#ruleset;
 	active = false;
@@ -25,6 +29,9 @@ export class UserInterface {
 	 * @param mappings  keyvalue  - button mapping for ↖️⬆️↗️⬅️🔄➡️↙️⬇️↘️YXBA
 	 */
 	constructor(appConfig, mappings) {
+		this.#appConfig = appConfig;
+		this.#uiFramework.load(appConfig);
+
 		this.#gamepadManager = new GamepadManager(this, mappings);
 		let rulesetClass = window.rulesets[appConfig.ruleset];
 		this.#ruleset = new rulesetClass(appConfig, this, this.#gamepadManager);
@@ -92,6 +99,9 @@ export class UserInterface {
 	 * starts the game
 	 */
 	async start() {
+		this.#uiFramework.save(document.getElementById("settings"), this.#appConfig);
+
+		document.getElementById("settings").classList.add("hidden")
 		document.getElementById("start").classList.add("hidden")
 		document.getElementById("stop").classList.remove("hidden")
 		this.showInformation("");
@@ -108,6 +118,7 @@ export class UserInterface {
 	async stop() {
 		this.active = false;
 		this.#ruleset.stop();
+		document.getElementById("settings").classList.remove("hidden")
 		document.getElementById("start").classList.remove("hidden")
 		document.getElementById("stop").classList.add("hidden")
 		this.showInformation("inactive");
@@ -178,6 +189,7 @@ async function init() {
 		}
 	];
 	// TODO: support multiple sections
+
 	new UserInterface(remoshock.config.applications.gamepad, buttonMappings);
 }
 

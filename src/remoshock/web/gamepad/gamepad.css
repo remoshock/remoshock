@@ -54,3 +54,8 @@
 .pressed {
 	border: 2px solid #0A0;
 }
+
+input, label, select {
+	width: 9em;
+	display: inline-block;
+}
