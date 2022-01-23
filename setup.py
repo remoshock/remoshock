@@ -22,9 +22,9 @@ setuptools.setup(
     description = 'Computer based shock-collar remote control with "evil" features.',
     entry_points={
         'console_scripts': [
-            'remoshockcli = remoshock.cli:main',
-            'remoshockrnd = remoshock.randomizer:main',
-            'remoshockserver = remoshock.server:main'
+            'remoshockcli = remoshock.application.cli:main',
+            'remoshockrnd = remoshock.application.randomizer:main',
+            'remoshockserver = remoshock.application.server:main'
         ],
     },
     install_requires=['numpy', 'serial'],
