@@ -1,5 +1,5 @@
 #
-# Copyright nilswinter 2020-2021. License: AGPL
+# Copyright nilswinter 2020-2022. License: AGPL
 # _____________________________________________
 
 import argparse
