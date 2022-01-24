@@ -80,13 +80,10 @@ label[for="appshell-navtrigger"] {
 	line-height: 2em;
 }
 
-.site-title img {
-	height: 1.2em;
-	width: auto;
-	vertical-align: text-bottom
-}
-
 input:checked ~ .appshell-navpopup {
 	box-shadow: 5px 5px 5px #777;
 }
 
+.hidden {
+	display: none;
+}
