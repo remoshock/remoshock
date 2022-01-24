@@ -72,6 +72,21 @@ class Remoshock {
 	}
 
 	/**
+	 * reads the response from a fetch and displays a dialog on errors
+	 *
+	 * @param response from a fetch
+	 * @return data or undefined in case of an error
+	 */
+	async #readResponseWithErrorPopup(response) {
+		if (response.status == 500) {
+			let message = await response.text();
+			alert("Error returned by server: \n" + message);
+			return undefined;
+		}
+		return await response.json()
+	}
+
+	/**
 	 * await-able sleep
 	 *
 	 * @param ms duration in ms
@@ -122,6 +137,42 @@ class Remoshock {
 		config["settings"][section] = settings;
 		return this.#postJson(url, config);
 	}
+
+	/**
+	 * starts the randomizer
+	 *
+	 * @param config temporary configuration
+	 */
+	async startRandomizer(config) {
+		let url = this.urlprefix + "/randomizer/start";
+		let response = await this.#postJson(url, config);
+		return await this.#readResponseWithErrorPopup(response);
+	}
+
+	/**
+	 * reads the randomizer status and configuration
+	 *
+	 * @return status and temporary config
+	 */
+	async readRandomizer() {
+		let url = this.urlprefix + "/randomizer";
+		let response = await fetch(url, {
+			headers: {
+				Authorization: "Bearer " + this.authenticationToken
+			}
+		});
+		return await this.#readResponseWithErrorPopup(response);
+	}
+
+	/**
+	 * stops the randomizer
+	 */
+	async stopRandomizer() {
+		let url = this.urlprefix + "/randomizer/stop";
+		let response = await this.#postJson(url, {});
+		return await this.#readResponseWithErrorPopup(response);
+	}
+
 
 	/**
 	 * initializes remoshock and download configuration from server

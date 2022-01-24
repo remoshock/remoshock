@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Randomizer</title>
+<link rel="stylesheet" href="../resources/uiframework.css">
+<link rel="stylesheet" href="randomizer.css">
+<link rel="shortcut icon" href="/favicon.png">
+<link rel="manifest" href="/manifest.json" crossorigin="use-credentials">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+</head>
+<body>
+
+<div id="appshell-headerslot"></div>
+
+<div class="appshell-content">
+
+<p>Status: <span id="randomizerstatus"></span><br>
+(when this page was last refreshed).</p>
+
+
+<div id="settings">
+
+<div><label for="beep_probability_percent">Beep probability: </label><input id="beep_probability_percent"> %</div>
+<div><label for="shock_probability_percent">Shock probability: </label><input id="shock_probability_percent"> %</div>
+<div><label for="shock_min_duration_ms">Shock min duration: </label><input id="shock_min_duration_ms"> ms</div>
+<div><label for="shock_max_duration_ms">Shock max duration: </label><input id="shock_max_duration_ms"> ms</div>
+<div><label for="shock_min_power_percent">Shock min power: </label><input id="shock_min_power_percent"> %</div>
+<div><label for="shock_max_power_percent">Shock max power: </label><input id="shock_max_power_percent"> %</div>
+<div><label for="pause_min_s">Pause min: </label><input id="pause_min_s"> s</div>
+<div><label for="pause_max_s">Pause max: </label><input id="pause_max_s"> s</div>
+<div><label for="start_delay_min_minutes">Start delay min: </label><input id="start_delay_min_minutes"> minutes</div>
+<div><label for="start_delay_max_minutes">Start delay max: </label><input id="start_delay_max_minutes"> minutes</div>
+<div><label for="runtime_min_minutes">Runtime min: </label><input id="runtime_min_minutes"> minutes</div>
+<div><label for="runtime_max_minutes">Runtime max: </label><input id="runtime_max_minutes"> minutes</div>
+</div>
+
+<button id="start">Start</button>
+<button id="stop">Stop</button>
+<button id="reload">Reload</button>
+
+</div>
+
+<script type="module" src="randomizer.js"></script>
