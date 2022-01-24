@@ -7,6 +7,7 @@ import configparser
 import datetime
 import random
 import sys
+import threading
 import time
 
 from remoshock.core.remoshock import Remoshock, RemoshockMock
@@ -14,9 +15,23 @@ from remoshock.core.action import Action
 from remoshock.core.version import VERSION
 from remoshock.util import powermanager
 
+lock = threading.RLock()
+
 
 class RemoshockRandomizer:
     """sends random commands at random intervals as configured"""
+
+    CONFIG_KEYS = ("beep_probability_percent", "shock_probability_percent",
+                   "shock_min_duration_ms", "shock_max_duration_ms",
+                   "shock_min_power_percent", "shock_max_power_percent",
+                   "pause_min_s", "pause_max_s",
+                   "start_delay_min_minutes", "start_delay_max_minutes",
+                   "runtime_min_minutes", "runtime_max_minutes")
+
+    def __init__(self):
+        self.threadEvent = None
+        self.cfg = {}
+
 
     def __parse_args(self):
         """parses command line arguments"""
@@ -52,27 +67,12 @@ class RemoshockRandomizer:
         self.remoshock.boot()
 
 
-    def __get_config_value(self, key):
-        """reads a configuration setting"""
-        return self.remoshock.config.getint(self.args.section, key)
-
-
     def __load_config(self):
         """loads configuration from remoshock.ini for the section
         specified on the command line"""
         try:
-            self.beep_probability_percent = self.__get_config_value("beep_probability_percent")
-            self.shock_probability_percent = self.__get_config_value("shock_probability_percent")
-            self.shock_min_duration_ms = self.__get_config_value("shock_min_duration_ms")
-            self.shock_max_duration_ms = self.__get_config_value("shock_max_duration_ms")
-            self.shock_min_power_percent = self.__get_config_value("shock_min_power_percent")
-            self.shock_max_power_percent = self.__get_config_value("shock_max_power_percent")
-            self.pause_min_s = self.__get_config_value("pause_min_s")
-            self.pause_max_s = self.__get_config_value("pause_max_s")
-            self.start_delay_min_minutes = self.__get_config_value("start_delay_min_minutes")
-            self.start_delay_max_minutes = self.__get_config_value("start_delay_max_minutes")
-            self.runtime_min_minutes = self.__get_config_value("runtime_min_minutes")
-            self.runtime_max_minutes = self.__get_config_value("runtime_max_minutes")
+            for key in self.CONFIG_KEYS:
+                self.cfg[key] = self.remoshock.config.getint(self.args.section, key)
         except configparser.NoOptionError as e:
             print(e)
             sys.exit(1)
@@ -91,44 +91,60 @@ class RemoshockRandomizer:
     def __determine_action(self):
         """determines whether there should be a beep, a shock, both or
         neither this time based on probabilities for beep and shock"""
-        if random.randrange(100) < self.beep_probability_percent:
-            if random.randrange(100) < self.shock_probability_percent:
+        if random.randrange(100) < self.cfg["beep_probability_percent"]:
+            if random.randrange(100) < self.cfg["shock_probability_percent"]:
                 return Action.BEEPSHOCK
             return Action.BEEP
 
-        if random.randrange(100) < self.shock_probability_percent:
+        if random.randrange(100) < self.cfg["shock_probability_percent"]:
             return Action.SHOCK
         return Action.LIGHT
 
 
-    def __execute(self):
+    def __execute(self, threadEvent):
         """the loop in which all the action happens"""
+
         try:
-            start_delay_s = random.randint(self.start_delay_min_minutes * 60, self.start_delay_max_minutes * 60)
+            start_delay_s = random.randint(self.cfg["start_delay_min_minutes"] * 60, self.cfg["start_delay_max_minutes"] * 60)
 
             if start_delay_s > 0:
                 print("Waiting according to start_delay_min_minutes and start_delay_max_minutes...")
-                time.sleep(start_delay_s)
+                if threadEvent.wait(start_delay_s):
+                    print("Randomizer canceled")
+                    with lock:
+                        if self.threadEvent == threadEvent:
+                            self.threadEvent = None
+                    return
 
-            runtime_s = random.randint(self.runtime_min_minutes * 60, self.runtime_max_minutes * 60)
+            runtime_s = random.randint(self.cfg["runtime_min_minutes"] * 60, self.cfg["runtime_max_minutes"] * 60)
             current_time = datetime.datetime.now()
             start_time = current_time
 
             while (current_time - start_time).total_seconds() < runtime_s:
-                time.sleep(random.randint(self.pause_min_s, self.pause_max_s))
+                wait_time_s = random.randint(self.cfg["pause_min_s"], self.cfg["pause_max_s"])
+                if threadEvent.wait(wait_time_s):
+                    print("Randomizer canceled")
+                    with lock:
+                        if self.threadEvent == threadEvent:
+                            self.threadEvent = None
+                    return
 
                 action = self.__determine_action()
-                power = random.randint(self.shock_min_power_percent, self.shock_max_power_percent)
+                power = random.randint(self.cfg["shock_min_power_percent"], self.cfg["shock_max_power_percent"])
                 if action == Action.BEEP:
                     duration = 250
                 else:
-                    duration = random.randint(self.shock_min_duration_ms, self.shock_max_duration_ms)
+                    duration = random.randint(self.cfg["shock_min_duration_ms"], self.cfg["shock_max_duration_ms"])
                 receiver = random.randrange(len(self.remoshock.receivers)) + 1
 
                 self.remoshock.command(receiver, action, power, duration)
                 current_time = datetime.datetime.now()
 
             print("Runtime completed.")
+
+            with lock:
+                if self.threadEvent == threadEvent:
+                    self.threadEvent = None
 
         except KeyboardInterrupt:
             print("Stopped by Ctrl+c.")
@@ -142,7 +158,53 @@ class RemoshockRandomizer:
         self.__load_config()
         powermanager.inhibit()
         self.__test_receivers()
-        self.__execute()
+        self.__execute(threading.Event())
+
+
+    def prepare_in_server_mode(self, remoshock):
+        """prepares remoshockrnd for being used by the REST server"""
+
+        self.__parse_args()
+        self.remoshock = remoshock
+        self.__load_config()
+
+
+    def stop_in_server_mode(self):
+        """stops the randomizer run"""
+
+        with lock:
+            if (self.threadEvent):
+                self.threadEvent.set()
+
+
+    def start_in_server_mode(self, config):
+        """updates non-persistent configuration and starts a new run.
+        If there is already a thread running, it will be stopped"""
+
+        with lock:
+            self.stop_in_server_mode()
+
+            for key in self.CONFIG_KEYS:
+                self.cfg[key] = int(config[key], base=10)
+
+            # start thread
+            self.threadEvent = threading.Event()
+            thread = threading.Thread(target=self.__run_in_thread, args=(self.threadEvent, ))
+            thread.start()
+
+    def __run_in_thread(self, threadEvent):
+        self.__test_receivers()
+        self.__execute(threadEvent)
+
+
+    def get_status_and_config(self):
+        """returns status and current config"""
+
+        status = "inactive"
+        if (self.threadEvent):
+            status = "running"
+        self.cfg["status"] = status
+        return self.cfg
 
 
 def main():

@@ -8,6 +8,7 @@ from remoshock.core.remoshock import Remoshock, RemoshockMock
 from remoshock.core.version import VERSION
 from remoshock.httpserver.httpserver import HttpServer
 from remoshock.util import powermanager
+from remoshock.application.randomizer import RemoshockRandomizer
 
 
 class RemoshockServer:
@@ -51,7 +52,9 @@ class RemoshockServer:
         self.__parse_args()
         self.__boot_remoshock()
         powermanager.inhibit()
-        HttpServer(self.remoshock, self.args).start_web_server()
+        randomizer = RemoshockRandomizer()
+        randomizer.prepare_in_server_mode(self.remoshock)
+        HttpServer(self.remoshock, self.args, randomizer).start_web_server()
 
 
 def main():

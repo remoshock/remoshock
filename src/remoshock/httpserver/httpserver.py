@@ -11,11 +11,11 @@ from remoshock.httpserver.requesthandler import RequestHandler
 class HttpServer:
     """A http server to handle static files and REST comands."""
 
-    def __init__(self, remoshock, args):
+    def __init__(self, remoshock, args, randomizer):
         self.remoshock = remoshock
         RequestHandler.remoshock = remoshock
         RequestHandler.args = args
-
+        RequestHandler.randomizer = randomizer
 
     def start_web_server(self):
         """starts the webserver on the tcp-port which is configured in remoshock.ini"""

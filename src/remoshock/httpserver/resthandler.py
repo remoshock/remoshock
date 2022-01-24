@@ -87,17 +87,31 @@ class RestHandler:
         """serves a rest request"""
 
         path = self.requesthandler.path
+        method = self.requesthandler.command.upper()
         params = self.read_parameters()
         if not self.verify_authentication_token(self.requesthandler.headers, params):
-            self.answer_html(403, "Missing or invalid authentication token")
+            self.requesthandler.answer_html(403, "Missing or invalid authentication token")
             return
 
         if path.startswith("/remoshock/command"):
             self.handle_command(params)
             self.answer_json(200, {"status": "ok"})
+
         elif path.startswith("/remoshock/config"):
-            if self.requesthandler.command.upper() == "POST":
+            if method == "POST":
                 self.requesthandler.remoshock.config_manager.save_settings(params["settings"])
             self.answer_json(200, self.requesthandler.remoshock.get_config())
+
+        elif path.startswith("/remoshock/randomizer"):
+            if method == "POST":
+                if "start" in path:
+                    self.requesthandler.randomizer.start_in_server_mode(params)
+                elif "stop" in path:
+                    self.requesthandler.randomizer.stop_in_server_mode()
+                else:
+                    self.answer_json(404, {"status": "unknown service for randomizer"})
+                    return
+            self.answer_json(200, self.requesthandler.randomizer.get_status_and_config())
+
         else:
-            self.answer_json(400, {"status": "unknown service"})
+            self.answer_json(404, {"status": "unknown service"})
