@@ -1,5 +1,5 @@
 //
-// Copyright nilswinter 2020-2021. License: AGPL
+// Copyright nilswinter 2020-2022. License: AGPL
 // _____________________________________________
 
 "use strict";
@@ -27,6 +27,9 @@ export class UserInterface {
 	constructor() {
 		this.#uiFramework = new UIFramework();
 		this.#uiFramework.renderAppShell("Gamepad (Experimental)");
+		document.getElementById("mapping").addEventListener("click", () => {
+			window.location = "/gamepad/mapping.html";
+		});
 		document.getElementById("start").addEventListener("click", () => {
 			this.start();
 		});
@@ -44,19 +47,8 @@ export class UserInterface {
 		globalThis.remoshock = new Remoshock();
 		await remoshock.init();
 		console.log(remoshock.config);
-		let buttonMappings = [
-			{
-				"regex": ".*Xbox.*",
-	//			"mapping": "    * 7- * 6- * 6+ * 7+ *, 3 2 1 0"
-				"mapping": "    * 1- * 0- * 0+ * 1+ *, 3 2 1 0 4 5 2+ 5+"
-			},
-			{
-				"regex": ".*",
-				"mapping": "2 5- 1 4- * 4+ 3 5+ 0" // select: 8, start: 9;  // DDR
-	
-			}
-		];
 		this.#appConfig = remoshock.config.applications.gamepad;
+		let buttonMappings = remoshock.config.settings["gamepad-mapping"] || {};
 		this.#uiFramework.load(this.#appConfig);
 		this.#gamepadManager = new GamepadManager(this, buttonMappings);
 		let rulesetClass = window.rulesets[this.#appConfig.ruleset];

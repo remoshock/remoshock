@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Remote</title>
+<title>Gamepad</title>
 <link rel="stylesheet" href="../resources/uiframework.css">
 <link rel="stylesheet" href="gamepad.css">
 <link rel="shortcut icon" href="/favicon.png">
@@ -13,6 +13,8 @@
 <div id="appshell-headerslot"></div>
 
 <div class="appshell-content">
+
+<button id="mapping">⚙️ Gamepad mapping</button>
 
 <div id="gamepad">
 <table>
@@ -58,9 +60,9 @@
 <td><span></span>&nbsp;</td></tr>
 </table>
 
-<button id="start" class="hidden">Start</button>
-<button id="stop" class="hidden">Stop</button>
-<div id="complianceStatus">Waiting for gamepad</div>
+<button id="start" class="hidden">▶️ Start</button>
+<button id="stop" class="hidden">⏏️ Stop</button>
+<div id="complianceStatus">Please press any button on your gamepad.</div>
 
 <!-- 
 
@@ -84,6 +86,10 @@
 <div><label for="buttons">Play buttons: </label><input id="buttons"></div>
 <div><label for="hold_buttons">Hold buttons: </label><input id="hold_buttons"></div>
 
+<pre>
+0 1 2  3 4 5  6 7 8   9 10 11 12   13 14 15 16
+↖️⬆️↗️  ⬅️🔄➡️  ↙️⬇️↘️   Y  X  B  A   LB RB LT RT
+</pre>
 
 
 <table border="1" class="hidden">

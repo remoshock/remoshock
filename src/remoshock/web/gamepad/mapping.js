@@ -62,6 +62,8 @@ class GamepadStateUtil {
 				change = "" + i;
 				if (newValue < 0) {
 					change = change + "-";
+				} else {
+					change = change + "+";
 				}
 			}
 		}
@@ -182,7 +184,7 @@ class Mapping {
 		let key = navigator.userAgent.replaceAll(/[^A-Za-z]/g, "")
 			+ "." + gamepad.id.replaceAll(/[^A-Za-z0-9]/g, "");
 		let settings = {}
-		settings[key] = this.#mapping.join(" ");
+		settings[key.toLowerCase()] = this.#mapping.join(" ");
 		await remoshock.saveSettings("gamepad-mapping", settings);
 		window.location = "/gamepad/";
 	}

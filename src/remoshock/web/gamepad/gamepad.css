@@ -65,3 +65,7 @@ button {
 	padding: .5em 1em;
 	margin-right: 1em;
 }
+
+button#mapping {
+	float: right;
+}

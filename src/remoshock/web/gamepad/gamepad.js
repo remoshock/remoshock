@@ -130,6 +130,9 @@ export class GamepadManager {
 		window.addEventListener("gamepadconnected", (e) => {
 			this.#onGamepadConnected(e);
 		});
+		window.addEventListener("gamepaddisconnected", (e) => {
+			window.location.reload();
+		});
 	}
 
 	/**
@@ -150,15 +153,14 @@ export class GamepadManager {
 	 * @param gamepadId string - name of gamepad
 	 */
 	#parseButtonMapping(gamepadId) {
-		let mapping = undefined;
-		for (let mappingInfo of this.#mappings) {
-			if (new RegExp(mappingInfo.regex).exec(gamepadId)) {
-				mapping = mappingInfo.mapping;
-				break;
-			}
-		}
+		let key = navigator.userAgent.replaceAll(/[^A-Za-z]/g, "")
+			+ "." + gamepadId.replaceAll(/[^A-Za-z0-9]/g, "");
+		let mapping = this.#mappings[key.toLowerCase()];
+
 		if (!mapping) {
-			alert("Unknown gamepad " + gamepadId);
+			alert("Unknown gamepad. Please configure a button mapping.");
+			window.location = "/gamepad/mapping.html";
+			return;
 		}
 
 		let entries = mapping.trim().split(/[\s,]+/);
