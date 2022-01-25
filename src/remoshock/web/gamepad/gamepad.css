@@ -59,3 +59,9 @@ input, label, select {
 	width: 9em;
 	display: inline-block;
 }
+
+
+button {
+	padding: .5em 1em;
+	margin-right: 1em;
+}
