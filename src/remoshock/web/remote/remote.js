@@ -52,13 +52,27 @@ class Remote {
 		clone.querySelector(".receiver").style.backgroundColor = receiver.color;
 		clone.querySelector(".receiver").dataset.receiver = index + 1;
 		clone.querySelector("h2").innerText = receiver.name;
+
+		// power
 		clone.querySelector(".power_input").value = 5;
+		clone.querySelector(".power_input").max
+			= receiver.shock_max_power_percent || receiver.default_shock_max_power_percent || 100;
+
 		clone.querySelector(".power_range").value = 5;
+		clone.querySelector(".power_range").max
+			= receiver.shock_max_power_percent || receiver.default_shock_max_power_percent || 100;
+
+		// duration
 		clone.querySelector(".duration_input").value = receiver.duration_min_ms;
 		clone.querySelector(".duration_input").min = 0; // receiver.duration_min_ms;
+		clone.querySelector(".duration_input").max
+			= receiver.duration_max_ms || receiver.default_duration_max_ms || 2000;
 		clone.querySelector(".duration_input").step = receiver.duration_increment_ms;
+
 		clone.querySelector(".duration_range").value = receiver.duration_min_ms;
 		clone.querySelector(".duration_range").min = 0; // receiver.duration_min_ms;
+		clone.querySelector(".duration_range").max
+			= receiver.duration_max_ms || receiver.default_duration_max_ms || 2000;
 		clone.querySelector(".duration_range").step = receiver.duration_increment_ms;
 
 		document.getElementById("receivers").appendChild(clone);
