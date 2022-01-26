@@ -43,6 +43,7 @@ export class UserInterface {
 		this.init();
 	}
 
+
 	async init() {
 		globalThis.remoshock = new Remoshock();
 		await remoshock.init();
@@ -56,11 +57,16 @@ export class UserInterface {
 	}
 
 
+	/**
+	 * aquire the wake lock again after the user switched to this browser tab again,
+	 * if we had the wake lock before they left
+	 */
 	async #onVisibilityChange() {
 		if (this.#wakeLock !== undefined && document.visibilityState === 'visible') {
 			this.#wakeLock = await navigator.wakeLock.request('screen');
 		}
 	}
+
 
 	/**
 	 * event handler
@@ -74,6 +80,7 @@ export class UserInterface {
 		document.getElementById("complianceStatus").innerText = "";
 	}
 
+
 	/**
 	 * configures the gamepad on screen by hiding missing buttons
 	 */
@@ -85,6 +92,7 @@ export class UserInterface {
 			document.getElementById("b" + button.uiIndex).classList.remove("hidden");
 		}
 	}
+
 
 	/**
 	 * indicates the button state on the user interface
@@ -104,6 +112,7 @@ export class UserInterface {
 		}
 	}
 
+
 	/**
 	 * starts the game
 	 */
@@ -120,6 +129,7 @@ export class UserInterface {
 			this.#wakeLock = await navigator.wakeLock.request('screen');
 		}
 	}
+
 
 	/**
 	 * ends the game
@@ -139,6 +149,7 @@ export class UserInterface {
 		this.displayButtonState();
 	}
 
+
 	/**
 	 * updates the status information
 	 *
@@ -147,6 +158,7 @@ export class UserInterface {
 	showInformation(message) {
 		document.getElementById("complianceStatus").innerText = message;
 	}
+
 
 	/**
 	 * indicates a status
@@ -158,6 +170,7 @@ export class UserInterface {
 		body.classList.add(indication);
 	}
 
+
 	/**
 	 * stops indicating a status
 	 *
@@ -167,6 +180,7 @@ export class UserInterface {
 		let body = document.getElementsByTagName("body")[0];
 		body.classList.remove(indication);
 	}
+
 
 	/**
 	 * updates the display of button status.

@@ -7,6 +7,9 @@
 import "../resources/remoshock.js"
 import { UIFramework } from "../resources/uiframework.js"
 
+/**
+ * configuration interface for the randomizer
+ */
 class Randomizer {
 
 	#uiFramework;

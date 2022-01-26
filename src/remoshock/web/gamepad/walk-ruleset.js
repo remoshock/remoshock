@@ -26,6 +26,7 @@ export class WalkRuleset extends Ruleset{
 		this.#gamepadManager = gamepadManager;
 	}
 
+
 	/**
 	 * checks the configuration
 	 */
@@ -39,6 +40,7 @@ export class WalkRuleset extends Ruleset{
 		}
 		return error;
 	}
+
 
 	/**
 	 * starts the game
@@ -63,6 +65,7 @@ export class WalkRuleset extends Ruleset{
 		super.start();
 		
 	}
+
 
 	/**
 	 * game logic

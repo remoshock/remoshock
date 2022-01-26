@@ -8,11 +8,22 @@ import { UIFramework } from "../resources/uiframework.js"
 import "/resources/remoshock.js"
 
 
+/**
+ * a gamepad state recording pressed buttons and axes
+ */
 class GamepadState {
 	axes = [];
 	buttons = [];
 
+	/**
+	 * saves the current state of the gamepad
+	 *
+	 * @param gamepad optional reference to the gamepad to save
+	 */
 	constructor(gamepad) {
+		if (!gamepad) {
+			return;
+		}
 		for (let value of gamepad.axes) {
 			if (value > 0.5) {
 				this.axes.push(1);
@@ -28,11 +39,23 @@ class GamepadState {
 	}
 }
 
+/**
+ * utility class to process GamepadState
+ */
 class GamepadStateUtil {
-	
+
+	/**
+	 * which button has been pressed between two gamepad states.
+	 *
+	 * @param oldGamepadState the gamepad state before the button (axis) was pressed
+	 * @param newGamepadState the gamepad state after a button (axis) was pressed
+	 * @return button (axis) code of the newly pressed button, 
+	 *         undefined if no or more than one button were pressed 
+	 */
 	static newlyPressed(oldGamepadState, newGamepadState) {
 		let change = undefined;
 
+		// check buttons
 		for (let i = 0; i < newGamepadState.buttons.length; i++) {
 			let newValue = newGamepadState.buttons[i];
 			if (!newValue) {
@@ -48,6 +71,7 @@ class GamepadStateUtil {
 			}
 		}
 
+		// check axes
 		for (let i = 0; i < newGamepadState.axes.length; i++) {
 			let newValue = newGamepadState.axes[i];
 			if (!newValue) {
@@ -72,8 +96,12 @@ class GamepadStateUtil {
 	}
 }
 
+/**
+ * a settings page to configure gamepad mapping
+ */
 class Mapping {
 
+	// for now ignore upper/left, upper/right, lower/left and lower/right buttons
 	SUPPORTED_BUTTONS = [1, 3, 5, 7, 9, 10, 11, 12, 13, 14, 15, 16];
 	#uiFramework;
 	#lastGamepadState;
@@ -81,9 +109,19 @@ class Mapping {
 	#mapping = ["*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*"];
 	#index = 0;
 
+
 	constructor() {
+		// render the app shell
 		this.#uiFramework = new UIFramework();
 		this.#uiFramework.renderAppShell("Gamepad Mapping");
+
+		// register event listeners
+		window.addEventListener("gamepadconnected", (e) => {
+			this.#onGamepadConnected(e);
+		});
+		window.addEventListener("gamepaddisconnected", () => {
+			window.location.reload();
+		});
 		document.getElementById("save").addEventListener("click", () => {
 			this.#onSave();
 		});
@@ -93,23 +131,23 @@ class Mapping {
 		document.getElementById("reload").addEventListener("click", () => {
 			window.location.reload();
 		});
+
+		// init remoshock, which we will need later to save the settings
 		this.init();
 	}
 
+
+	/**
+	 * initializes remoshock
+	 */
 	async init() {
 		globalThis.remoshock = new Remoshock();
-		window.addEventListener("gamepadconnected", (e) => {
-			this.#onGamepadConnected(e);
-		});
-		window.addEventListener("gamepaddisconnected", (e) => {
-			window.location.reload();
-		});
 		await remoshock.init();
 	}
 
+
 	/**
 	 * eventhandler triggered by activating the gamepad.
-	 * it configures the on-screen gamepad
 	 */
 	#onGamepadConnected(e) {
 		console.log("Gamepad connected at index %d: %s. %d buttons, %d axes.",
@@ -129,6 +167,10 @@ class Mapping {
 		this.#displayButtonState();
 	}
 
+
+	/**
+	 * read and handle gamepad state
+	 */
 	#onAnimationFrame() {
 		let gamepad = navigator.getGamepads()[0];
 		if (gamepad.timestamp > this.#lastTimestamp) {
@@ -148,11 +190,16 @@ class Mapping {
 		});
 	}
 
+	/**
+	 * advance the wizard to the next button and handles the last one.
+	 */
 	#advance(code) {
 		if (this.#index < this.SUPPORTED_BUTTONS.length) {
 			this.#mapping[this.SUPPORTED_BUTTONS[this.#index]] = code;
 			this.#index++;
 			this.#displayButtonState();
+
+			// we are done
 			if (this.#index >= this.SUPPORTED_BUTTONS.length) {
 				document.getElementById("save").classList.remove("hidden");
 				document.getElementById("skip").classList.add("hidden");
@@ -160,6 +207,7 @@ class Mapping {
 			document.getElementById("instruction").textContent = "Configuration completed. You may save it.";
 		}
 	}
+
 
 	/**
 	 * indicates the button state on the user interface
@@ -173,12 +221,21 @@ class Mapping {
 				document.getElementById("b" + button).classList.remove("desired");
 			}
 		}
+		// TODO: indicate pressed buttons to allow players to test their mappings
 	}
 
+
+	/**
+	 * this button does not exist on the gamepad
+	 */
 	#onSkip() {
 		this.#advance("*");
 	}
 
+
+	/**
+	 * save the settings using a unified browser name and gamepad name as key
+	 */
 	async #onSave() {
 		let gamepad = navigator.getGamepads()[0];
 		let key = navigator.userAgent.replaceAll(/[^A-Za-z]/g, "")

@@ -1,9 +1,10 @@
 
+/* use really large font size */
 #gamepad {
-	font-family: sans-serif;
 	font-size: 10vmin;
 }
 
+/** indicate that a punishment is in progress */
 .punishing {
 	background-color: #F00;
 }
@@ -12,6 +13,7 @@
 	display: none;
 }
 
+/* display gamepad similar to the real world controller */
 #b9 {
 	color: #FF0;
 	background-color: #000;
@@ -28,44 +30,41 @@
 	color: #0F0;
 	background-color: #000;
 }
-
 #t14, #t16 {
 	text-align: right;
 }
-
 #b13, #b14, #b15, #b16 {
 	color: #AAA;
 	background-color: #000;
 	font-size: 7vmin;
 }
-
 #b13.desired, #b14.desired, #b15.desired, #b16.desired {
 	color: #FFF;
 }
 
+/* show buttons pale and with an invisible border,
+   but the desire button full bright
+   and pressed buttons with a green border */
 .b {
 	opacity: 10%;
+	border: 2px solid #FFF;
 }
-
 .desired {
 	opacity: 100%;
 }
-
 .pressed {
 	border: 2px solid #0A0;
 }
 
+/* settings */
 input, label, select {
 	width: 9em;
 	display: inline-block;
 }
-
-
 button {
 	padding: .5em 1em;
 	margin-right: 1em;
 }
-
 button#mapping {
 	float: right;
 }

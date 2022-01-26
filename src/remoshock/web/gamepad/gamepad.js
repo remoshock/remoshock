@@ -5,18 +5,23 @@
 
 
 /**
+ * compliance status
+ *
  * @enum
  */
 export class ComplianceStatus {
 
+	/** the user does as they are told */
 	static get COMPLIANT() {
 		return "COMPLIANT";
 	}
 
+	/** the user has not (yet) done as they were told */
 	static get PENDING() {
 		return "PENDING";
 	}
 
+	/** the user hadd done as they were told, but stopped complying */
 	static get VIOLATED() {
 		return "VIOLATED";
 	}
@@ -67,7 +72,10 @@ export class GamepadButton {
 		this.#buttonIndex = buttonIndex;
 	}
 
-
+	/**
+	 * checks whether this button is pressed (regardless of whether it is
+	 * an actual button or the desired direction of a joystick or d-pad)
+	 */
 	isPressed() {
 		let pressed = false;
 		if (this.#direction == 0) {
@@ -86,6 +94,12 @@ export class GamepadButton {
 		return pressed;
 	}
 
+	/**
+	 * checks whether the user is complying with the requirements.
+	 * In case the user is not compliant, this method distinguishes
+	 * whether the user has not (yet) fulfiled the requirement (pending) or
+	 * whether the user has stopped fulfilling it (violated).
+	 */
 	checkComplianceStatus() {
 		let status = this.isPressed();
 		if (status == this.desiredButtonStatus) {
@@ -100,6 +114,18 @@ export class GamepadButton {
 		return ComplianceStatus.VIOLATED;
 	}
 
+	/**
+	 * checks whether the other button is mapped as the oposite direction
+	 * on the same axis as this button. (i. e. both buttons cannot be pressed
+	 * at the same time). This method always returns false for actual buttons,
+	 * that are mapped as buttons.
+	 *
+	 * Please note: Some dance mats map the direction buttons onto an axis
+	 * thus preventing the dection of left/right or up/down at the same time.
+	 *
+	 * @param button another button
+	 * @return true, iff the other button is mapped to the opposite end of the same exit
+	 */
 	isOppositeDirection(button) {
 		return this.#buttonIndex == button.#buttonIndex && this.#direction != button.#direction;
 	}
@@ -130,7 +156,10 @@ export class GamepadManager {
 		window.addEventListener("gamepadconnected", (e) => {
 			this.#onGamepadConnected(e);
 		});
-		window.addEventListener("gamepaddisconnected", (e) => {
+
+		// if the gamepad was disconnected (cabel pulled, out of power),
+		// cancel the current game and reload the page
+		window.addEventListener("gamepaddisconnected", () => {
 			window.location.reload();
 		});
 	}
@@ -252,6 +281,9 @@ export class GamepadManager {
 		return this.#uiIndexMap[index];
 	}
 
+	/**
+	 * clears the desire status of all buttons to start a new
+	 */
 	resetAllDesiredButtonStatus() {
 		for (let button of this.buttons) {
 			button.resetDesiredButtonStatus();

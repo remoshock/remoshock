@@ -5,7 +5,9 @@
 
 "use strict";
 
-
+/**
+ * global user interface
+ */
 export class UIFramework {
 
 	#appShellHTML = `<header class="appshell-header">
@@ -29,6 +31,11 @@ export class UIFramework {
 	<div class="appshell-title"></div>
 </header>`;
 
+	/**
+	 * renders the app shell (header, footer, etc.)
+	 *
+	 * @param title page title as displayed in the app bard
+	 */
 	renderAppShell(title) {
 		let header = document.getElementById("appshell-headerslot")
 		if (header.childElementCount > 0) {
@@ -38,6 +45,11 @@ export class UIFramework {
 		document.querySelector(".appshell-title").textContent = title;
 	}
 
+	/**
+	 * loads data into a web page
+	 *
+	 * @param data a map-like object
+	 */
 	load(data) {
 		for (let key of Object.keys(data)) {
 			let element = document.getElementById(key);
@@ -48,6 +60,13 @@ export class UIFramework {
 		}
 	}
 
+	/**
+	 * saves input fields from a webpage to a javascript object
+	 *
+	 * @param rootElement HTMLElement
+	 * @param data map-like object to save to
+	 * @return data
+	 */
 	save(rootElement, data) {
 		let elements = rootElement.querySelectorAll("input, select")
 		for (let element of elements) {

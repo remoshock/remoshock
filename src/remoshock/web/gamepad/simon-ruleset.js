@@ -22,12 +22,14 @@ export class SimonRuleset extends Ruleset{
 	#lastComplianceStatus;
 	#pendingStartTime;
 
+
 	constructor(appConfig, ui, gamepadManager) {
 		super(appConfig, 100, ui);
 		this.#appConfig = appConfig;
 		this.#ui = ui;
 		this.#gamepadManager = gamepadManager;
 	}
+
 
 	/**
 	 * checks the configuration
@@ -46,6 +48,7 @@ export class SimonRuleset extends Ruleset{
 		return error;
 	}
 
+
 	/**
 	 * starts the game
 	 */
@@ -61,6 +64,7 @@ export class SimonRuleset extends Ruleset{
 		this.#pendingStartTime = currentTime;
 		super.start();
 	}
+
 
 	/**
 	 * parses a string of buttons an array of numbers, skipping missing buttons
@@ -83,6 +87,7 @@ export class SimonRuleset extends Ruleset{
 		return res;
 	}
 
+
 	/**
 	 * If the player has violated the rules or is too slow to react, punishment will be triggered
 	 *
@@ -104,9 +109,16 @@ export class SimonRuleset extends Ruleset{
 		}
 	}
 
+	/**
+	 * picks a random element from an array
+	 *
+	 * @param array to pick from
+	 * @return random element
+	 */
 	randomElement(array) {
 		return array[Math.floor(Math.random() * array.length)];
 	}
+
 
 	/**
 	 * picks the desired button.
@@ -133,6 +145,7 @@ export class SimonRuleset extends Ruleset{
 		this.#nextButtonPick = currentTime + offset;
 	}
 
+
 	/**
 	 * picks a new button, if enough time has elapsed since the last pick
 	 */
@@ -141,6 +154,7 @@ export class SimonRuleset extends Ruleset{
 			this.#pickDesiredButton(currentTime);
 		}
 	}
+
 
 	/**
 	 * game logic
