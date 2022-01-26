@@ -36,7 +36,7 @@ export class SimonRuleset extends Ruleset{
 	 */
 	validateConfiguration() {
 		let error = super.validateConfiguration();
-		if (!this.#appConfig.buttons && !this.#appConfig.hold_buttons) {
+		if (!this.#appConfig.play_buttons && !this.#appConfig.hold_buttons) {
 			error = error + "Required setting \"buttons\" or \"hold_buttons\" are both missing.\n"
 		}
 		if (isNaN(parseInt(this.#appConfig.reaction_ms))) {
@@ -55,7 +55,7 @@ export class SimonRuleset extends Ruleset{
 	start() {
 		let currentTime = Date.now();
 		this.#endTime = currentTime + parseInt(this.#appConfig.runtime_min, 10) * 60 * 1000;
-		this.#availableButtons = this.#parseButtonArray(this.#appConfig.buttons);
+		this.#availableButtons = this.#parseButtonArray(this.#appConfig.play_buttons);
 		this.#holdButtons = this.#parseButtonArray(this.#appConfig.hold_buttons);
 		for (let button of this.#gamepadManager.buttons) {
 			button.resetDesiredButtonStatus();
@@ -75,7 +75,7 @@ export class SimonRuleset extends Ruleset{
 	#parseButtonArray(str) {
 		let res = [];
 		if (str == undefined || str == "") {
-			return es;
+			return res;
 		}
 		let configured = str.trim().split(/[\s,]+/).map(Number);
 		for (let button of configured) {

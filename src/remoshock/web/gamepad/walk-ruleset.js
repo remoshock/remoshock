@@ -32,8 +32,8 @@ export class WalkRuleset extends Ruleset{
 	 */
 	validateConfiguration() {
 		let error = super.validateConfiguration();
-		if (!this.#appConfig.buttons) {
-			error = error + "Required setting \"buttons\" is missing.\n"
+		if (!this.#appConfig.play_buttons) {
+			error = error + "Required setting \"play_buttons\" is missing.\n"
 		}
 		if (isNaN(parseInt(this.#appConfig.reaction_ms))) {
 			error = error + "Required setting \"reaction_ms\" is missing or not a number.\n"
@@ -52,7 +52,7 @@ export class WalkRuleset extends Ruleset{
 
 		this.#buttons = [];
 		this.#lastPressCounts = [];
-		let buttons = this.#appConfig.buttons.trim().split(/[\s,]+/);
+		let buttons = this.#appConfig.play_buttons.trim().split(/[\s,]+/);
 		for (let buttonUiIndex of buttons) {
 			let button = this.#gamepadManager.getButtonByUiIndex(buttonUiIndex)
 			button.desiredButtonStatus = true;

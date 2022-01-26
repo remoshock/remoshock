@@ -36,11 +36,11 @@ export class Ruleset {
 		if (!actions.includes(this.#appConfig.action)) {
 			error = error + "Required setting \"action\" is missing or not one of LIGHT, BEEP, VIBRATE, SHOCK, BEEPSHOCK.\n"
 		}
-		if (isNaN(parseInt(this.#appConfig.power))) {
-			error = error + "Required setting \"power\" is missing or not a number.\n"
+		if (isNaN(parseInt(this.#appConfig.shock_power_percent))) {
+			error = error + "Required setting \"shock_power_percent\" is missing or not a number.\n"
 		}
-		if (isNaN(parseInt(this.#appConfig.duration))) {
-			error = error + "Required setting \"duration\" is missing or not a number.\n"
+		if (isNaN(parseInt(this.#appConfig.duration_ms))) {
+			error = error + "Required setting \"duration_ms\" is missing or not a number.\n"
 		}
 		if (isNaN(parseInt(this.#appConfig.runtime_min))) {
 			error = error + "Required setting \"runtime_min\" is missing or not a number.\n"
@@ -60,8 +60,8 @@ export class Ruleset {
 			await remoshock.command(
 				parseInt(this.#appConfig.receiver, 10),
 				this.#appConfig.action,
-				parseInt(this.#appConfig.power, 10),
-				parseInt(this.#appConfig.duration, 10));
+				parseInt(this.#appConfig.shock_power_percent, 10),
+				parseInt(this.#appConfig.duration_ms, 10));
 			this.#ui.stopIndicating("punishing");
 			this.#punishmentInProgress = false
 			this.#lastPunishmentTime = currentTime;

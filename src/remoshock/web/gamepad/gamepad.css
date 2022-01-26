@@ -47,13 +47,18 @@
    and pressed buttons with a green border */
 .b {
 	opacity: 10%;
+}
+.t {
 	border: 2px solid #FFF;
+}
+.punishing .t {
+	border: 2px solid #F00;
 }
 .desired {
 	opacity: 100%;
 }
 .pressed {
-	border: 2px solid #0A0;
+	border: 2px solid #0A0 !important;
 }
 
 /* settings */

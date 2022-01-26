@@ -51,6 +51,9 @@ export class UIFramework {
 	 * @param data a map-like object
 	 */
 	load(data) {
+		if (!data) {
+			return;
+		}
 		for (let key of Object.keys(data)) {
 			let element = document.getElementById(key);
 			if (element) {

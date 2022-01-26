@@ -49,6 +49,23 @@ export class UserInterface {
 		await remoshock.init();
 		console.log(remoshock.config);
 		this.#appConfig = remoshock.config.applications.gamepad;
+
+		if (!this.#appConfig) {
+			this.#appConfig = {};
+		}
+
+		this.#appConfig.ruleset     = this.#appConfig.ruleset     || "simon";
+		this.#appConfig.immune_ms   = this.#appConfig.immune_ms   || "3000";
+		this.#appConfig.reaction_ms = this.#appConfig.reaction_ms || "1000";
+		this.#appConfig.pick_interval_s = this.#appConfig.pick_interval_s || "15";
+		this.#appConfig.action      = this.#appConfig.action      || "BEEPSHOCK";
+		this.#appConfig.receiver    = this.#appConfig.receiver    || "1";
+		this.#appConfig.shock_power_percent = this.#appConfig.shock_power_percent || "10";
+		this.#appConfig.duration_ms  = this.#appConfig.duration_ms  || "500";
+		this.#appConfig.play_buttons = this.#appConfig.play_buttons || "1 3 5 7 9 10 11 12";
+		this.#appConfig.hold_buttons = this.#appConfig.hold_buttons || "15 16";
+		this.#appConfig.runtime_min  = this.#appConfig.runtime_min  || "10";
+
 		let buttonMappings = remoshock.config.settings["gamepad-mapping"] || {};
 		this.#uiFramework.load(this.#appConfig);
 		this.#gamepadManager = new GamepadManager(this, buttonMappings);
