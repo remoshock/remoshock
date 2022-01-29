@@ -60,7 +60,7 @@ class Randomizer {
 		let minElement = document.getElementById(minId);
 		let maxElement = document.getElementById(maxId);
 		
-		if (minElement.value > maxElement.value) {
+		if (parseInt(minElement.value, 10) > parseInt(maxElement.value, 10)) {
 			minElement.setCustomValidity("Min value must be smaller than max value.");
 			maxElement.setCustomValidity("Min value must be smaller than max value.");
 		} else {

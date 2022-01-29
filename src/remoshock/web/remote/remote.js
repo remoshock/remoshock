@@ -126,7 +126,7 @@ class Remote {
 		// error indication
 		if (res.status != 200) {
 			overlay.classList.add("error");
-			await sleep(500);
+			await remoshock.sleep(500);
 			overlay.classList.remove("error");
 		}
 
