@@ -25,9 +25,9 @@ class GamepadState {
 			return;
 		}
 		for (let value of gamepad.axes) {
-			if (value > 0.5) {
+			if (value > 0.8) {
 				this.axes.push(1);
-			} else if (value < -0.5) {
+			} else if (value < -0.8) {
 				this.axes.push(-1);
 			} else {
 				this.axes.push(0);
@@ -36,6 +36,29 @@ class GamepadState {
 		for (let button of gamepad.buttons) {
 			this.buttons.push(button.pressed);
 		}
+	}
+
+
+	#extractSignFromCode(code) {
+		let suffix = code.charAt(code.length - 1);
+		if (suffix === "+") {
+			return 1;
+		} else if (suffix === "-") {
+			return -1;
+		}
+		return 0;
+	}
+
+
+	isPressed(code) {
+		let sign = this.#extractSignFromCode(code);
+		if (sign === 0) {
+			return this.buttons[parseInt(code, 10)];
+		}
+
+		let index = parseInt(code.substring(0, code.length - 1), 10);
+		let value = this.axes[index];
+		return value === sign;
 	}
 }
 
@@ -104,8 +127,7 @@ class Mapping {
 	// for now ignore upper/left, upper/right, lower/left and lower/right buttons
 	SUPPORTED_BUTTONS = [1, 3, 5, 7, 9, 10, 11, 12, 13, 14, 15, 16];
 	#uiFramework;
-	#lastGamepadState;
-	#lastTimestamp = 0;
+	state;
 	#mapping = ["*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*"];
 	#index = 0;
 
@@ -153,18 +175,21 @@ class Mapping {
 		console.log("Gamepad connected at index %d: %s. %d buttons, %d axes.",
 			e.gamepad.index, e.gamepad.id,
 			e.gamepad.buttons.length, e.gamepad.axes.length);
-		this.#lastGamepadState = new GamepadState(e.gamepad);
-		requestAnimationFrame(() => {
-			this.#onAnimationFrame();
-		});
 
 		document.getElementById("skip").classList.remove("hidden");
 		document.getElementById("reload").classList.remove("hidden");
 		document.getElementById("save").classList.add("hidden");
 
 		document.getElementById("instruction").textContent = "Gamepad detected. Please press the indicated button on your camepad or click \"Skip this button\", if it does not exist.";
-		this.#index = 0;
-		this.#displayButtonState();
+
+		setTimeout(() => {
+			this.#index = 0;
+			this.displayButtonState(true);
+			this.state = new WaitForButtonPress(this);
+			requestAnimationFrame(() => {
+				this.#onAnimationFrame();
+			});
+		}, 200);
 	}
 
 
@@ -172,50 +197,42 @@ class Mapping {
 	 * read and handle gamepad state
 	 */
 	#onAnimationFrame() {
-		let gamepad = navigator.getGamepads()[0];
-		if (gamepad.timestamp > this.#lastTimestamp) {
-
-			let gamepadState = new GamepadState(gamepad);
-			let code = GamepadStateUtil.newlyPressed(this.#lastGamepadState, gamepadState);
-			if (code) {
-				this.#advance(code);
-			}
-
-			this.#lastGamepadState = gamepadState;
-			this.#lastTimestamp = gamepad.timestamp;
-		}
-
+		this.state.onAnimationFrame();
 		requestAnimationFrame(() => {
 			this.#onAnimationFrame();
 		});
 	}
 
+
 	/**
 	 * advance the wizard to the next button and handles the last one.
 	 */
-	#advance(code) {
+	advance(code) {
+		this.state = new WaitForButtonPress(this);
 		if (this.#index < this.SUPPORTED_BUTTONS.length) {
 			this.#mapping[this.SUPPORTED_BUTTONS[this.#index]] = code;
 			this.#index++;
-			this.#displayButtonState();
+			this.displayButtonState(true);
 
 			// we are done
 			if (this.#index >= this.SUPPORTED_BUTTONS.length) {
 				document.getElementById("save").classList.remove("hidden");
 				document.getElementById("skip").classList.add("hidden");
+				document.getElementById("instruction").textContent = "Configuration completed. You may save it.";
 			}
-			document.getElementById("instruction").textContent = "Configuration completed. You may save it.";
 		}
 	}
 
 
 	/**
 	 * indicates the button state on the user interface
+	 *
+	 * @param highlightDesired
 	 */
-	#displayButtonState() {
+	displayButtonState(highlightDesired) {
 		for (let i = 0; i < this.SUPPORTED_BUTTONS.length; i++) {
 			let button = this.SUPPORTED_BUTTONS[i];
-			if (i == this.#index) {
+			if (highlightDesired && (i == this.#index)) {
 				document.getElementById("b" + button).classList.add("desired");
 			} else {
 				document.getElementById("b" + button).classList.remove("desired");
@@ -229,7 +246,7 @@ class Mapping {
 	 * this button does not exist on the gamepad
 	 */
 	#onSkip() {
-		this.#advance("*");
+		this.advance("*");
 	}
 
 
@@ -246,5 +263,78 @@ class Mapping {
 		window.location = "/gamepad/";
 	}
 }
+
+class State {
+	onAnimationFrame() {};
+}
+
+class WaitForButtonPress extends State {
+	#mapping;
+	#lastGamepadState;
+	#lastTimestamp = 0;
+
+	constructor(mapping) {
+		super();
+		this.#mapping = mapping;
+		let gamepad = navigator.getGamepads()[0];
+		this.#lastGamepadState = new GamepadState(gamepad);
+		this.#lastTimestamp = gamepad.timestamp;
+	}
+
+	onAnimationFrame() {
+		let gamepad = navigator.getGamepads()[0];
+		if (gamepad.timestamp <= this.#lastTimestamp) {
+			return;
+		}
+	
+		let gamepadState = new GamepadState(gamepad);
+		let code = GamepadStateUtil.newlyPressed(this.#lastGamepadState, gamepadState);
+		if (code) {
+			this.#preAdvance(code);
+		}
+	
+		this.#lastGamepadState = gamepadState;
+		this.#lastTimestamp = gamepad.timestamp;
+	}
+
+	#preAdvance(code) {
+		this.#mapping.displayButtonState(false);
+		this.#mapping.state = new WaitForButtonRelease(this.#mapping, code);
+	}	
+}
+
+class WaitForButtonRelease extends State {
+	#done = false;
+	#mapping;
+	#code;
+	#lastTimestamp = 0;
+
+	constructor(mapping, code) {
+		super();
+		this.#mapping = mapping;
+		this.#code = code;
+	}
+
+	onAnimationFrame() {
+		if (this.#done) {
+			return;
+		}
+		let gamepad = navigator.getGamepads()[0];
+		if (gamepad.timestamp <= this.#lastTimestamp) {
+			return;
+		}
+	
+		let gamepadState = new GamepadState(gamepad);
+		if (!gamepadState.isPressed(this.#code)) {
+			this.#done = true;
+			setTimeout(() => this.#onTimeout(), 100);
+		}
+	}
+
+	#onTimeout() {
+		this.#mapping.advance(this.#code);
+	}
+}
+
 
 new Mapping();
