@@ -83,7 +83,7 @@ export class GamepadButton {
 			pressed = button.pressed;
 		} else {
 			let axis = this.#gamepadManager.gamepad.axes[this.#buttonIndex];
-			pressed = axis * this.#direction > 0.5;
+			pressed = axis * this.#direction > 0.8;
 		}
 		if (this.#buttonStatus != pressed) {
 			this.#buttonStatus = pressed;
