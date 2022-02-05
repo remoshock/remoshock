@@ -49,7 +49,7 @@ python3 -m venv env
 source env/bin/activate
 pip3 install urh
 pip3 uninstall remoshock
-pip3 install ../remoshock/dist/remoshock-*.whl
+pip3 install ../../workspace/remoshock/dist/remoshock-*.whl
 ~~~~
 
 </td>
@@ -67,7 +67,7 @@ Installation completes successfully
 - 4 Receivers
 - 1 PAC
 - 1 PAC
-- 2 Wodondog
+- 4 Wodondog with light
 - 3 Petrainer
 
 </td>
@@ -150,13 +150,62 @@ Press the shock button for the first Wodondog receiver.</td>
 
 <tr>
 <td>15.</td>
+<td>Select application menu entry "Randomizer"</td>
+<td>The randomizer configuration page is shown. Status: inactive</td>
+</tr>
+
+
+<tr>
+<td>16.</td>
+<td>Press "Start"</td>
+<td>Status: active. The console shows a beep sent to each receiver.</td>
+</tr>
+
+
+<tr>
+<td>17.</td>
+<td>Press "Stop"</td>
+<td>Status: stopped. The console says: "Randomizer canceled</td>
+</tr>
+
+
+<tr>
+<td>18.</td>
+<td>Select application menu entry "Gamepad"</td>
+<td>A text asks for pressing a button</td>
+</tr>
+
+
+<tr>
+<td>19.</td>
+<td>Click "Gamepad mapping"</td>
+<td>-</td>
+</tr>
+
+
+<tr>
+<td>20.</td>
+<td>Configure the gamepad and click save</td>
+<td>-</td>
+</tr>
+
+
+<tr>
+<td>21.</td>
+<td>Test the gamepad mapping</td>
+<td>The pressed buttons are highlighted.</td>
+</tr>
+
+
+<tr>
+<td>22.</td>
 <td>End the remoshockserver-process by pressing <code>ctrl+c</code></td>
 <td>No error message is shown. No traceback is shown.</td>
 </tr>
 
 
 <tr>
-<td>16.</td>
+<td>23.</td>
 <td>Edit remoshock.ini to setup the following randomizer configuration:
 
 ~~~~
@@ -182,7 +231,7 @@ runtime_max_minutes = 3
 
 
 <tr>
-<td>17.</td>
+<td>24.</td>
 <td>Run <code>remoshockrnd --mock</code></td>
 <td>
 
