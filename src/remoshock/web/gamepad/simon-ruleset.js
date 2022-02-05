@@ -141,7 +141,7 @@ export class SimonRuleset extends Ruleset{
 		this.#gamepadManager.getButtonByUiIndex(randomButton).desiredButtonStatus = true;
 		this.#ui.displayButtonState();
 		let offset = this.#appConfig.pick_interval_s * 1000;
-		offset = offset + Math.random(offset / 3);
+		offset = offset + Math.random() * offset / 3 - offset / 6;
 		this.#nextButtonPick = currentTime + offset;
 	}
 
