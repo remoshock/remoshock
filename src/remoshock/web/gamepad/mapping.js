@@ -9,7 +9,7 @@ import "/resources/remoshock.js"
 
 
 /**
- * a gamepad state recording pressed buttons and axes
+ * a gamepad state, recording pressed buttons and axes
  */
 class GamepadState {
 	axes = [];
@@ -38,7 +38,12 @@ class GamepadState {
 		}
 	}
 
-
+	/**
+	 * extracts direction of a button code
+	 *
+	 * @param code button code
+	 * @return -1: negative axis, 0: button, 1: positive axis
+	 */
 	#extractSignFromCode(code) {
 		let suffix = code.charAt(code.length - 1);
 		if (suffix === "+") {
@@ -49,7 +54,12 @@ class GamepadState {
 		return 0;
 	}
 
-
+	/**
+	 * checks whether a button is pressed
+	 *
+	 * @param code button code
+	 * @return true, if the button is pressed
+	 */
 	isPressed(code) {
 		let sign = this.#extractSignFromCode(code);
 		if (sign === 0) {
@@ -61,6 +71,7 @@ class GamepadState {
 		return value === sign;
 	}
 }
+
 
 /**
  * utility class to process GamepadState
@@ -119,6 +130,7 @@ class GamepadStateUtil {
 	}
 }
 
+
 /**
  * a settings page to configure gamepad mapping
  */
@@ -130,7 +142,6 @@ class Mapping {
 	state;
 	#mapping = ["*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*"];
 	#index = 0;
-
 
 	constructor() {
 		// render the app shell
@@ -158,7 +169,6 @@ class Mapping {
 		this.init();
 	}
 
-
 	/**
 	 * initializes remoshock
 	 */
@@ -167,9 +177,8 @@ class Mapping {
 		await remoshock.init();
 	}
 
-
 	/**
-	 * eventhandler triggered by activating the gamepad.
+	 * eventhandler, triggered by activating the gamepad.
 	 */
 	#onGamepadConnected(e) {
 		console.log("Gamepad connected at index %d: %s. %d buttons, %d axes.",
@@ -182,6 +191,7 @@ class Mapping {
 
 		document.getElementById("instruction").textContent = "Gamepad detected. Please press the indicated button on your camepad or click \"Skip this button\", if it does not exist.";
 
+		// delay initialisation of wizward to ignore the initial button press
 		setTimeout(() => {
 			this.#index = 0;
 			this.displayButtonState(true);
@@ -191,7 +201,6 @@ class Mapping {
 			});
 		}, 200);
 	}
-
 
 	/**
 	 * read and handle gamepad state
@@ -203,9 +212,8 @@ class Mapping {
 		});
 	}
 
-
 	/**
-	 * advance the wizard to the next button and handles the last one.
+	 * advance the wizard to the next button and store the last one.
 	 */
 	advance(code) {
 		this.state = new WaitForButtonPress(this);
@@ -222,7 +230,6 @@ class Mapping {
 			}
 		}
 	}
-
 
 	/**
 	 * indicates the button state on the user interface
@@ -241,14 +248,12 @@ class Mapping {
 		// TODO: indicate pressed buttons to allow players to test their mappings
 	}
 
-
 	/**
 	 * this button does not exist on the gamepad
 	 */
 	#onSkip() {
 		this.advance("*");
 	}
-
 
 	/**
 	 * save the settings using a unified browser name and gamepad name as key
@@ -264,10 +269,17 @@ class Mapping {
 	}
 }
 
+
+/**
+ * interface for the state of the wizard
+ */
 class State {
 	onAnimationFrame() {};
 }
 
+/**
+ * wizard is waiting for the user to press a button
+ */
 class WaitForButtonPress extends State {
 	#mapping;
 	#lastGamepadState;
@@ -286,7 +298,8 @@ class WaitForButtonPress extends State {
 		if (gamepad.timestamp <= this.#lastTimestamp) {
 			return;
 		}
-	
+
+		// check whether a button has been pressed since we last checked	
 		let gamepadState = new GamepadState(gamepad);
 		let code = GamepadStateUtil.newlyPressed(this.#lastGamepadState, gamepadState);
 		if (code) {
@@ -297,12 +310,21 @@ class WaitForButtonPress extends State {
 		this.#lastTimestamp = gamepad.timestamp;
 	}
 
+	/**
+	 * remebers the pressed button and waits for the user to release it
+	 *
+	 * @code button code 
+	 */
 	#preAdvance(code) {
 		this.#mapping.displayButtonState(false);
 		this.#mapping.state = new WaitForButtonRelease(this.#mapping, code);
 	}	
 }
 
+
+/**
+ * wait for the user to release a button
+ */
 class WaitForButtonRelease extends State {
 	#done = false;
 	#mapping;
@@ -323,7 +345,11 @@ class WaitForButtonRelease extends State {
 		if (gamepad.timestamp <= this.#lastTimestamp) {
 			return;
 		}
-	
+
+		// when the button was released, wait a little to work around
+		// a bug in Firefox: The LT and RT axes start at 0, go up to
+		// 1 when pressed, but return to -1 after release.
+		// Without this delay, we see the -1 as a new button press.	
 		let gamepadState = new GamepadState(gamepad);
 		if (!gamepadState.isPressed(this.#code)) {
 			this.#done = true;

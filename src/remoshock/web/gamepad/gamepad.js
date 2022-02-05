@@ -130,11 +130,15 @@ export class GamepadButton {
 		return this.#buttonIndex == button.#buttonIndex && this.#direction != button.#direction;
 	}
 
+	/**
+	 * do not treat this button as desired any more
+	 */
 	resetDesiredButtonStatus() {
 		this.#lastButtonStatus = false;
 		this.desiredButtonStatus = false;
 	}
 }
+
 
 /**
  * GamepadManager represents the state of the complete gamebad
