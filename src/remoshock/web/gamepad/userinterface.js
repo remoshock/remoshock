@@ -65,6 +65,7 @@ export class UserInterface {
 		this.#appConfig.play_buttons = this.#appConfig.play_buttons || "1 3 5 7 9 10 11 12";
 		this.#appConfig.hold_buttons = this.#appConfig.hold_buttons || "15 16";
 		this.#appConfig.runtime_min  = this.#appConfig.runtime_min  || "10";
+		this.#appConfig.show_timer   = this.#appConfig.show_timer  || "1";
 
 		let buttonMappings = remoshock.config.settings["gamepad-mapping"] || {};
 		this.#uiFramework.load(this.#appConfig);

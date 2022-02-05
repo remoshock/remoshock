@@ -170,7 +170,10 @@ export class SimonRuleset extends Ruleset{
 		if (complianceStatus == ComplianceStatus.COMPLIANT) {
 			this.#ui.displayButtonState();
 		}
-		let countdown = new Date(this.#endTime - currentTime).toLocaleTimeString("de", { timeZone: 'UTC' });
+		let countdown = "";
+		if (this.#appConfig.show_timer > 0) {
+			countdown = new Date(this.#endTime - currentTime).toLocaleTimeString("de", { timeZone: 'UTC' });
+		}
 		this.#ui.showInformation(countdown + " " + complianceStatus);
 
 		this.#punishIfRequired(complianceStatus, currentTime);
