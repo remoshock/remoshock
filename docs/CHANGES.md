@@ -1,7 +1,6 @@
 # Version 0.8.1
 
-- **[gamepad]**    increased tolerance on joystick direction
-- **[gamepad]**    improved gamepad button mapping wizard
+- **[gamepad]**    small improvements to the experimental game
 - **[randomizer]** fixed input validation error in web randomizer
 
 

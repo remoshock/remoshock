@@ -73,3 +73,9 @@ button {
 button#mapping {
 	float: right;
 }
+
+input:invalid+span:after {
+	content: '!';
+	padding-left: 5px;
+	color: #A00;
+}

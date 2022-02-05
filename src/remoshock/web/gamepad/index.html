@@ -75,21 +75,36 @@
 
 <div id="settings">
 
-<div><label for="runtime_min">Runtime: </label><input id="runtime_min"> min</div>
-<div><label for="show_timer">Show timer</label><select id="show_timer"><option value="1">Yes</option><option value="0">No</option></select></div>
-<div><label for="pick_interval_s">Pick interval: </label><input id="pick_interval_s"> s</div>
-<div><label for="receiver">Receiver No: </label><input id="receiver"></div>
-<div><label for="action">Action: </label><select id="action"><option value="BEEP">BEEP</option><option value="VIBRATE">VIBRATE</option><option value="SHOCK">SHOCK</option><option value="BEEPSHOCK">BEEPSHOCK</option></select></div>
-<div><label for="shock_power_percent">Power: </label><input id="shock_power_percent"> %</div>
-<div><label for="duration_ms">Duration: </label><input id="duration_ms"> ms</div>
-<div><label for="reaction_ms">Reaction time: </label><input id="reaction_ms"> ms</div>
-<div><label for="immune_ms">Immune time: </label><input id="immune_ms"> ms</div>
-<div><label for="play_buttons">Play buttons: </label><input id="play_buttons"></div>
-<div><label for="hold_buttons">Hold buttons: </label><input id="hold_buttons"></div>
+<div><label for="runtime_min">Runtime: </label>
+	<input id="runtime_min" type="number" min="1" required pattern="^\d+$"> min <span></span></div>
+<div><label for="show_timer">Show timer</label>
+	<select id="show_timer"><option value="1">Yes</option><option value="0">No</option></select> <span></span></div>
+<div><label for="pick_interval_s">Pick interval: </label>
+	<input id="pick_interval_s" type="number" min="1" required pattern="^\d+$"> s <span></span></div>
+<div><label for="receiver">Receiver No: </label>
+	<input id="receiver" type="number" min="1" required pattern="^\d+$"> <span></span></div>
+<div><label for="action">Action: </label>
+	<select id="action"><option value="BEEP">BEEP</option><option value="VIBRATE">VIBRATE</option><option value="SHOCK">SHOCK</option><option value="BEEPSHOCK">BEEPSHOCK</option></select> <span></span></div>
+<div><label for="shock_power_percent">Power: </label>
+	<input id="shock_power_percent" type="number" min="0" max="100" required pattern="^\d+$"> % <span></span></div>
+<div><label for="duration_ms">Duration: </label>
+	<input id="duration_ms" type="number" min="0" required pattern="^\d+$"> ms <span></span></div>
+<div><label for="reaction_ms">Reaction time: </label>
+	<input id="reaction_ms" type="number" min="0" required pattern="^\d+$"> ms <span></span></div>
+<div><label for="immune_ms">Immune time: </label>
+	<input id="immune_ms" type="number" min="0" required pattern="^\d+$"> ms <span></span></div>
+<div><label for="play_buttons">Play buttons: </label>
+	<input id="play_buttons"> <span></span></div>
+<div><label for="hold_buttons">Hold buttons: </label>
+	<input id="hold_buttons"> <span></span></div>
 
 <pre>
-0 1 2  3 4 5  6 7 8   9 10 11 12   13 14 15 16
-↖️⬆️↗️  ⬅️🔄➡️  ↙️⬇️↘️   Y  X  B  A   LB RB LT RT
+0:↖️, 1:⬆️, 2:↗️,
+3:⬅️, 4:🔄, 5:➡️,
+6:↙️, 7:⬇️, 8:↘️,
+9:Y, 10:X, 11:B, 12:A,
+13:LB, 14:, RB, 15:LT, 16:RT
+
 </pre>
 
 <!-- TODO: use dedicated interface for play and hold buttons instead
