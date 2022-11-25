@@ -56,23 +56,23 @@ class Remote {
 		// power
 		clone.querySelector(".power_input").value = 5;
 		clone.querySelector(".power_input").max
-			= receiver.shock_max_power_percent || receiver.default_shock_max_power_percent || 100;
+			= receiver.limit_shock_max_power_percent || 100;
 
 		clone.querySelector(".power_range").value = 5;
 		clone.querySelector(".power_range").max
-			= receiver.shock_max_power_percent || receiver.default_shock_max_power_percent || 100;
+			= receiver.limit_shock_max_power_percent || 100;
 
 		// duration
 		clone.querySelector(".duration_input").value = receiver.duration_min_ms;
 		clone.querySelector(".duration_input").min = 0; // receiver.duration_min_ms;
 		clone.querySelector(".duration_input").max
-			= receiver.duration_max_ms || receiver.default_duration_max_ms || 2000;
+			= Math.min(receiver.limit_shock_max_duration_ms || 2000, 2000);
 		clone.querySelector(".duration_input").step = receiver.duration_increment_ms;
 
 		clone.querySelector(".duration_range").value = receiver.duration_min_ms;
 		clone.querySelector(".duration_range").min = 0; // receiver.duration_min_ms;
 		clone.querySelector(".duration_range").max
-			= receiver.duration_max_ms || receiver.default_duration_max_ms || 2000;
+			= Math.min(receiver.limit_shock_max_duration_ms || 2000, 2000);
 		clone.querySelector(".duration_range").step = receiver.duration_increment_ms;
 
 		document.getElementById("receivers").appendChild(clone);
@@ -87,7 +87,13 @@ class Remote {
 
 		// keep input and slider consistant
 		let input = e.target;
-		let value = input.value;
+		let value = parseInt(input.value);
+		if (value < 0) {
+			value = 0;
+		}
+		if (value > e.target.max) {
+			value = e.target.max;
+		}
 		input.parentNode.querySelector("input[type=number]").value = value;
 		input.parentNode.querySelector("input[type=range]").value = value;
 
