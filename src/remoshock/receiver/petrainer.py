@@ -37,8 +37,8 @@ class Petrainer(Receiver):
 
     def __init__(self, receiver_properties, transmitter_code, channel):
         super().__init__(receiver_properties)
-        receiver_properties.capabilities(action_light=True, action_beep=True, action_vibrate=True, action_shock=True)
-        receiver_properties.timings(duration_min_ms=500, duration_increment_ms=500, awake_time_s=5 * 60)
+        self.receiver_properties.capabilities(action_light=True, action_beep=True, action_vibrate=True, action_shock=True)
+        self.receiver_properties.timings(duration_min_ms=500, duration_increment_ms=500, awake_time_s=5 * 60)
         self.transmitter_code = transmitter_code
         self.channel = channel
 
@@ -137,7 +137,8 @@ class Petrainer(Receiver):
         message = ""
         if action == Action.BEEPSHOCK:
             message = self.encode_for_transmission(self.generate(Action.BEEP, 1))
-            message = message + " " + message + " " + message + " " + "/1.1s "
+            delay = self.receiver_properties.beep_shock_delay_ms / 1000 + 0.1
+            message = message + " " + message + " " + message + "/" + str(delay) + "s "
             action = Action.SHOCK
 
         if duration <= 500:

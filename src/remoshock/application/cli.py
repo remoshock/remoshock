@@ -82,5 +82,6 @@ class RemoshockCli:
             print("Stopped by Ctrl+c.")
             sys.exit(0)
 
+
 def main():
     RemoshockCli().start()

@@ -29,8 +29,8 @@ class Pac(Receiver):
 
     def __init__(self, receiver_properties, transmitter_code, channel):
         super().__init__(receiver_properties)
-        receiver_properties.capabilities(action_light=False, action_beep=True, action_vibrate=False, action_shock=True)
-        receiver_properties.timings(duration_min_ms=250, duration_increment_ms=250, awake_time_s=0)
+        self.receiver_properties.capabilities(action_light=False, action_beep=True, action_vibrate=False, action_shock=True)
+        self.receiver_properties.timings(duration_min_ms=250, duration_increment_ms=250, awake_time_s=0)
         self.transmitter_code = transmitter_code
         self.button = channel
 
@@ -148,7 +148,8 @@ class Pac(Receiver):
 
         message = ""
         if action == Action.BEEPSHOCK:
-            message = self.encode_for_transmission(self.generate(self.transmitter_code, 0, self.button, 1)) + "/1s "
+            delay = self.receiver_properties.beep_shock_delay_ms / 1000
+            message = self.encode_for_transmission(self.generate(self.transmitter_code, 0, self.button, 1)) + "/" + str(delay) + "s "
 
         beep = 0
         if action == Action.BEEP or action == Action.VIBRATE:

@@ -31,8 +31,8 @@ class Dogtra(Receiver):
 
     def __init__(self, receiver_properties, transmitter_code, channel):
         super().__init__(receiver_properties)
-        receiver_properties.capabilities(action_light=False, action_beep=False, action_vibrate=True, action_shock=True)
-        receiver_properties.timings(duration_min_ms=250, duration_increment_ms=250, awake_time_s=0)  # TODO
+        self.receiver_properties.capabilities(action_light=False, action_beep=False, action_vibrate=True, action_shock=True)
+        self.receiver_properties.timings(duration_min_ms=250, duration_increment_ms=250, awake_time_s=0)  # TODO
         self.transmitter_code = transmitter_code
         self.channel = channel
 
@@ -166,7 +166,8 @@ class Dogtra(Receiver):
         message = ""
         if action == Action.BEEPSHOCK:
             message_template = self.encode_for_transmission(self.generate(self.transmitter_code, 50, 1))
-            message = message_template + message_template + message_template + "/1s "
+            delay = self.receiver_properties.beep_shock_delay_ms / 1000
+            message = message_template + message_template + message_template + "/" + str(delay) + "s "
 
         beep = 0
         if action == Action.BEEP or action == Action.VIBRATE:

@@ -10,21 +10,29 @@ class ReceiverProperties:
                  receiver_type, name="receiver", color="#FFF",
                  action_light=False, action_beep=False, action_vibrate=False, action_shock=False,
                  duration_min_ms=500, duration_increment_ms=250,
-                 awake_time_s=0):
+                 awake_time_s=0,
+                 beep_shock_delay_ms=1000,
+                 limit_shock_max_duration_ms=1000,
+                 limit_shock_max_power_percent=100,
+                 ):
         """
         creates a ReceiverProperties object
 
-        @param receiver_type type of receiver
-        @param name name of the receiver as displayed on the web remote control
-        @param color color of the receiver used by the web remote control
-        @param action_light does this receiver support light?
-        @param action_beep does this receiver support beep sounds?
-        @param action_vibrate does this receiver support vibrations?
-        @param action_shock does this receiver support shocks?
-        @param duration_min_ms minimum duration of a shock in milliseconds
-        @param duration_increment_ms duration increment for shocks in milliseconds
+        @param receiver_type   type of receiver
+        @param name            name of the receiver as displayed on the web remote control
+        @param color           color of the receiver used by the web remote control
+        @param action_light    does this receiver support light?
+        @param action_beep     does this receiver support beep sounds?
+        @param action_vibrate  does this receiver support vibrations?
+        @param action_shock    does this receiver support shocks?
+        @param duration_min_ms minimum  shortest duration of a shock in milliseconds supported by hardware
+        @param duration_increment_ms    duration increment for shocks in milliseconds
         @param awake_time_s how long does the receiver stay aware without receiving a message
                                 (0: indefinite, no keep awake messages required)
+        @param beep_shock_delay_ms            delay between beep and shock for Action.BEEPSHOCK
+        @param limit_shock_max_duration_ms    hard limit for shock duration
+        @param limit_shock_max_power_percent  hard limit for shock power
+
         """
 
         self.receiver_type = receiver_type
@@ -40,6 +48,10 @@ class ReceiverProperties:
         self.duration_increment_ms = duration_increment_ms
 
         self.awake_time_s = awake_time_s
+
+        self.beep_shock_delay_ms = beep_shock_delay_ms
+        self.limit_shock_max_duration_ms = limit_shock_max_duration_ms
+        self.limit_shock_max_power_percent = limit_shock_max_power_percent
 
 
     def capabilities(self, action_light=False, action_beep=False, action_vibrate=False, action_shock=False):

@@ -61,8 +61,8 @@ class ArduinoBasedReceiver(Receiver):
 
     def __init__(self, receiver_properties, receiver_type, arg1, arg2, arg3):
         super().__init__(receiver_properties)
-        receiver_properties.capabilities(action_light=True, action_beep=True, action_vibrate=True, action_shock=True)
-        receiver_properties.timings(duration_min_ms=500, duration_increment_ms=500, awake_time_s=0)
+        self.receiver_properties.capabilities(action_light=True, action_beep=True, action_vibrate=True, action_shock=True)
+        self.receiver_properties.timings(duration_min_ms=500, duration_increment_ms=500, awake_time_s=0)
 
         self.receiver_type = receiver_type
         self.arg1 = arg1
@@ -85,7 +85,7 @@ class ArduinoBasedReceiver(Receiver):
 
         if action == Action.BEEPSHOCK:
             self.arduino_manager.command(Action.BEEP, self.index, 0, 0)
-            time.sleep(1)
+            time.sleep(self.receiver_properties.beep_shock_delay_ms / 1000)
             action = Action.SHOCK
         self.arduino_manager.command(action, self.index, power, duration)
 

@@ -47,19 +47,33 @@ class Remoshock:
         @param section (mangled) name of the section from remoshock.ini
         """
 
-        receiver_type = self.config.get(section, "type")
-        name = self.config.get(section, "name")
-        color = self.config.get(section, "color")
-        receiver_properties = ReceiverProperties(receiver_type, name, color)
-        code = self.config.get(section, "transmitter_code")
+        try:
+            receiver_type = self.config.get(section, "type")
+            name = self.config.get(section, "name")
+            color = self.config.get(section, "color")
+            beep_shock_delay_ms = self.config.getint(section, "beep_shock_delay_ms", fallback=1000)
+            limit_shock_max_power_percent = self.config.getint(section, "limit_shock_max_power_percent", fallback=100)
+            limit_shock_max_duration_ms = self.config.getint(section, "limit_shock_max_duration_ms", fallback=10000)
 
-        channel = self.config.get(section, "channel", fallback=None)
-        if channel is None:
-            button = self.config.getint(section, "button", fallback=None)
-            if button is not None:
-                print("ERROR: Please rename parameter \"button\" to \"channel\" in remoshock.ini")
-                return None
-        channel = self.config.getint(section, "channel")
+            receiver_properties = ReceiverProperties(
+                receiver_type=receiver_type, name=name, color=color,
+                beep_shock_delay_ms=beep_shock_delay_ms,
+                limit_shock_max_duration_ms=limit_shock_max_duration_ms,
+                limit_shock_max_power_percent=limit_shock_max_power_percent,
+            )
+
+            code = self.config.get(section, "transmitter_code")
+
+            channel = self.config.get(section, "channel", fallback=None)
+            if channel is None:
+                button = self.config.getint(section, "button", fallback=None)
+                if button is not None:
+                    print("ERROR: Please rename parameter \"button\" to \"channel\" in remoshock.ini")
+                    return None
+            channel = self.config.getint(section, "channel")
+        except ValueError as e:
+            print("Error parsing configuration file section " + section + ": " + str(e))
+            sys.exit(1)
 
         if receiver_type.lower() == "dogtra200ncp":  # and self.args.experimental:
             receiver = Dogtra(receiver_properties, code, channel)
@@ -133,10 +147,10 @@ class Remoshock:
             self.config_manager = ConfigManager()
             self.config = self.config_manager.config
             receivers = []
-            for receiver in self.config.sections():
-                if receiver.startswith("receiver"):
+            for receiver_section_name in self.config.sections():
+                if receiver_section_name.startswith("receiver"):
                     try:
-                        receiver = self.__instantiate_receiver(receiver)
+                        receiver = self.__instantiate_receiver(receiver_section_name)
                         if receiver is not None:
                             receivers.append(receiver)
                     except configparser.NoOptionError as e:
@@ -225,9 +239,22 @@ class Remoshock:
             logging.error("Receiver number \"" + str(receiver) + "\" is out of range. It should be between 1 and " + str(len(self.receivers)))
             return
 
+        receiver_properties = self.receivers[receiver - 1].receiver_properties
         if power < 0 or power > 100:
             logging.error("Power level \"" + str(power) + "\" is out of range. It should be between 1 and 100")
             return
+
+        if duration < 0 or duration > 10000:
+            logging.error("Duration \"" + str(duration) + "\" is out of range. It should be between 1 and 10000")
+            return
+
+        if power > receiver_properties.limit_shock_max_power_percent:
+            logging.warn("Power level \"" + str(power) + "\" limited to " + str(receiver_properties.limit_shock_max_power_percent))
+            power = receiver_properties.limit_shock_max_power_percent
+
+        if duration > receiver_properties.limit_shock_max_duration_ms:
+            logging.warn("Duration \"" + str(duration) + "\" limited to " + str(receiver_properties.limit_shock_max_duration_ms))
+            duration = receiver_properties.limit_shock_max_duration_ms
 
         if duration == 0:
             return
@@ -236,8 +263,8 @@ class Remoshock:
             normalized_duration = duration
             logging.info("receiver: " + str(receiver) + ", action: " + action.name + ", power: " + str(power) + "%, duration: " + str(normalized_duration) + "n")
         else:
-            duration_increment_ms = self.receivers[receiver - 1].receiver_properties.duration_increment_ms
-            duration_min_ms = self.receivers[receiver - 1].receiver_properties.duration_min_ms
+            duration_increment_ms = receiver_properties.duration_increment_ms
+            duration_min_ms = receiver_properties.duration_min_ms
             normalized_duration = max(duration_min_ms, round(duration / duration_increment_ms) * duration_increment_ms)
             logging.info("receiver: " + str(receiver) + ", action: " + action.name + ", power: " + str(power) + "%, duration: " + str(normalized_duration) + "ms")
 
