@@ -206,11 +206,13 @@ runtime_min_minutes = 600
 runtime_max_minutes = 600
 """
 
-        receiver_randomizer_config = """
-#shock_min_duration_ms = 500
-#shock_max_duration_ms = 500
-#shock_min_power_percent = 10
-#shock_max_power_percent = 10
+        receiver_static_config = """
+#limit_shock_max_power_percent = 100
+#limit_shock_max_duration_ms = 10000
+#random_shock_min_duration_ms = 500
+#random_shock_max_duration_ms = 500
+#random_shock_min_power_percent = 10
+#random_shock_max_power_percent = 10
 """
 
         config = config.replace("[sdr]", sdrs[sdr])
@@ -223,7 +225,7 @@ runtime_max_minutes = 600
             receiver_config = receiver_config.replace("[color]", str(colors[i % len(colors)]))
             receiver_config = receiver_config.replace("[transmitter_code_9bit]", self.__generate_transmitter_code(9))
             receiver_config = receiver_config.replace("[transmitter_code_16bit]", self.__generate_transmitter_code(16))
-            config = config + receiver_config + receiver_randomizer_config
+            config = config + receiver_config + receiver_static_config
             i = i + 1
 
         return config
