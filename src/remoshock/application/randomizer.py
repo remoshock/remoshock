@@ -78,11 +78,60 @@ class RemoshockRandomizer:
             sys.exit(1)
 
 
+    def __parameter_range_check(self, key, min_value, max_value):
+        """validates the range of a parameter value"""
+        if self.cfg[key] < min_value or self.cfg[key] > max_value: 
+            print("ERROR: Randomizer parameter \"" + key + "\" must be between " + str(min_value) + " and " + str(max_value) + ".")
+            sys.exit(1)
+
+
+    def __parameter_min_smaller_max_check(self, min_key, max_key):
+        """validates that the minimum parameter is smaller than the maximum parameter"""
+        if self.cfg[min_key] > self.cfg[max_key]: 
+            print("ERROR: Randomizer parameter \"" + max_key + "\" must be equal to or larger than \"" + min_key + "\".")
+            sys.exit(1)
+
+
+    def __validate_configuration(self):
+        self.__parameter_range_check("beep_probability_percent", 0, 100)
+        self.__parameter_range_check("shock_probability_percent", 0, 100)
+        self.__parameter_range_check("shock_min_duration_ms", 0, 10000)
+        self.__parameter_range_check("shock_max_duration_ms", 0, 10000)
+        self.__parameter_range_check("shock_min_power_percent", 0, 100)
+        self.__parameter_range_check("shock_max_power_percent", 0, 100)
+        self.__parameter_range_check("pause_min_s", 0, 24 * 60 * 60)
+        self.__parameter_range_check("pause_max_s", 0, 24 * 60 * 60)
+        self.__parameter_range_check("start_delay_min_minutes", 0, 7 * 24 * 60)
+        self.__parameter_range_check("start_delay_max_minutes", 0, 7 * 24 * 60)
+        self.__parameter_range_check("runtime_min_minutes", 0, 365 * 24 * 60)
+        self.__parameter_range_check("runtime_max_minutes", 0, 365 * 24 * 60)
+        self.__parameter_min_smaller_max_check("shock_min_duration_ms", "shock_max_duration_ms")
+        self.__parameter_min_smaller_max_check("shock_min_power_percent", "shock_max_power_percent")
+        self.__parameter_min_smaller_max_check("pause_min_s", "pause_max_s")
+        self.__parameter_min_smaller_max_check("start_delay_min_minutes", "start_delay_max_minutes")
+        self.__parameter_min_smaller_max_check("runtime_min_minutes", "runtime_max_minutes")
+
+
+    def __receiver_parameter_min_smaller_max_check(self, receiver, min_key, max_key):
+        """validates that the minimum parameter is smaller than the maximum parameter"""
+        if self.get_overridable_config(receiver, min_key) > self.get_overridable_config(receiver, max_key): 
+            print("ERROR: Randomizer parameter \"" + max_key + "\" must be equal to or larger than \"" 
+                  + min_key + "\" but this is not the case of receiver " + str(receiver) + ".")
+            sys.exit(1)
+
+
+    def __validate_configuration_for_receiver(self, receiver):
+        """validates the configuration for a receiver"""
+        self.__receiver_parameter_min_smaller_max_check(receiver, "shock_min_duration_ms", "shock_max_duration_ms")
+        self.__receiver_parameter_min_smaller_max_check(receiver, "shock_min_power_percent", "shock_max_power_percent")
+
+
     def __test_receivers(self):
         """sends a beep command to all registered receivers to allow users
         to verify that all receivers are turned on and setup correctly"""
         for i in range(1, len(self.remoshock.receivers) + 1):
             print("Testing receiver " + str(i))
+            self.__validate_configuration_for_receiver(i)
             self.remoshock.command(i, Action.BEEP, 0, 250)
             time.sleep(1)
         print("Beep command sent to all known receivers. Starting randomizer... Press Ctrl+c to stop.")
@@ -99,6 +148,17 @@ class RemoshockRandomizer:
         if random.randrange(100) < self.cfg["shock_probability_percent"]:
             return Action.SHOCK
         return Action.LIGHT
+
+
+    def get_overridable_config(self, receiver, key):
+        """gets a configuration value which may be overridden in the receiver section"""
+        receiver_properties = self.remoshock.get_receiver_properties(receiver)
+        if hasattr(receiver_properties, "random_" + key):
+            res = getattr(receiver_properties, "random_" + key)
+            if res is not None:
+                return res
+
+        return self.cfg[key];
 
 
     def __execute(self, threadEvent):
@@ -129,13 +189,20 @@ class RemoshockRandomizer:
                             self.threadEvent = None
                     return
 
+                receiver = random.randrange(len(self.remoshock.receivers)) + 1
                 action = self.__determine_action()
-                power = random.randint(self.cfg["shock_min_power_percent"], self.cfg["shock_max_power_percent"])
+                 
+                power = random.randint(
+                    self.get_overridable_config(receiver, "shock_min_power_percent"),
+                    self.get_overridable_config(receiver, "shock_max_power_percent")
+                )
                 if action == Action.BEEP:
                     duration = 250
                 else:
-                    duration = random.randint(self.cfg["shock_min_duration_ms"], self.cfg["shock_max_duration_ms"])
-                receiver = random.randrange(len(self.remoshock.receivers)) + 1
+                    duration = random.randint(
+                        self.get_overridable_config(receiver, "shock_min_duration_ms"),
+                        self.get_overridable_config(receiver, "shock_max_duration_ms")
+                    )
 
                 self.remoshock.command(receiver, action, power, duration)
                 current_time = datetime.datetime.now()
@@ -157,6 +224,7 @@ class RemoshockRandomizer:
         self.__boot_remoshock()
         self.__load_config()
         powermanager.inhibit()
+        self.__validate_configuration()
         self.__test_receivers()
         self.__execute(threading.Event())
 
@@ -193,6 +261,7 @@ class RemoshockRandomizer:
             thread.start()
 
     def __run_in_thread(self, threadEvent):
+        self.__validate_configuration()
         self.__test_receivers()
         self.__execute(threadEvent)
 

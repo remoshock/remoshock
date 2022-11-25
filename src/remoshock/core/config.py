@@ -206,16 +206,24 @@ runtime_min_minutes = 600
 runtime_max_minutes = 600
 """
 
+        receiver_randomizer_config = """
+#shock_min_duration_ms = 500
+#shock_max_duration_ms = 500
+#shock_min_power_percent = 10
+#shock_max_power_percent = 10
+"""
+
         config = config.replace("[sdr]", sdrs[sdr])
         config = config.replace("[web_authentication_token]", self.__generate_web_authentication_token())
 
         i = 0
         for receiver_type in receiver_types:
-            config = config + receiver_type_configs[receiver_type]
-            config = config.replace("[number]", str(i + 1))
-            config = config.replace("[color]", str(colors[i % len(colors)]))
-            config = config.replace("[transmitter_code_9bit]", self.__generate_transmitter_code(9))
-            config = config.replace("[transmitter_code_16bit]", self.__generate_transmitter_code(16))
+            receiver_config =  receiver_type_configs[receiver_type]
+            receiver_config = receiver_config.replace("[number]", str(i + 1))
+            receiver_config = receiver_config.replace("[color]", str(colors[i % len(colors)]))
+            receiver_config = receiver_config.replace("[transmitter_code_9bit]", self.__generate_transmitter_code(9))
+            receiver_config = receiver_config.replace("[transmitter_code_16bit]", self.__generate_transmitter_code(16))
+            config = config + receiver_config + receiver_randomizer_config
             i = i + 1
 
         return config

@@ -54,12 +54,20 @@ class Remoshock:
             beep_shock_delay_ms = self.config.getint(section, "beep_shock_delay_ms", fallback=1000)
             limit_shock_max_power_percent = self.config.getint(section, "limit_shock_max_power_percent", fallback=100)
             limit_shock_max_duration_ms = self.config.getint(section, "limit_shock_max_duration_ms", fallback=10000)
+            random_shock_min_duration_ms = self.config.getint(section, "random_shock_min_duration_ms", fallback=None)
+            random_shock_max_duration_ms = self.config.getint(section, "random_shock_max_duration_ms", fallback=None)
+            random_shock_min_power_percent = self.config.getint(section, "random_shock_min_power_percent", fallback=None)
+            random_shock_max_power_percent = self.config.getint(section, "random_shock_max_power_percent", fallback=None)
 
             receiver_properties = ReceiverProperties(
                 receiver_type=receiver_type, name=name, color=color,
                 beep_shock_delay_ms=beep_shock_delay_ms,
                 limit_shock_max_duration_ms=limit_shock_max_duration_ms,
                 limit_shock_max_power_percent=limit_shock_max_power_percent,
+                random_shock_min_duration_ms=random_shock_min_duration_ms,
+                random_shock_max_duration_ms=random_shock_max_duration_ms,
+                random_shock_min_power_percent=random_shock_min_power_percent,
+                random_shock_max_power_percent=random_shock_max_power_percent
             )
 
             code = self.config.get(section, "transmitter_code")
@@ -269,6 +277,14 @@ class Remoshock:
             logging.info("receiver: " + str(receiver) + ", action: " + action.name + ", power: " + str(power) + "%, duration: " + str(normalized_duration) + "ms")
 
         self._process_command(receiver, action, power, normalized_duration)
+
+
+    def get_receiver_properties(self, receiver):
+        """provides the receiver_properties for the receiver"""
+        if receiver < 1 or receiver > len(self.receivers):
+            logging.error("Receiver number \"" + str(receiver) + "\" is out of range. It should be between 1 and " + str(len(self.receivers)))
+            return
+        return self.receivers[receiver - 1].receiver_properties
 
 
     def get_config(self):
