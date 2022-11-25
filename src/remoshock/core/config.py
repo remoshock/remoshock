@@ -218,7 +218,7 @@ runtime_max_minutes = 600
 
         i = 0
         for receiver_type in receiver_types:
-            receiver_config =  receiver_type_configs[receiver_type]
+            receiver_config = receiver_type_configs[receiver_type]
             receiver_config = receiver_config.replace("[number]", str(i + 1))
             receiver_config = receiver_config.replace("[color]", str(colors[i % len(colors)]))
             receiver_config = receiver_config.replace("[transmitter_code_9bit]", self.__generate_transmitter_code(9))

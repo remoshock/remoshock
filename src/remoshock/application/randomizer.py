@@ -80,14 +80,14 @@ class RemoshockRandomizer:
 
     def __parameter_range_check(self, key, min_value, max_value):
         """validates the range of a parameter value"""
-        if self.cfg[key] < min_value or self.cfg[key] > max_value: 
+        if self.cfg[key] < min_value or self.cfg[key] > max_value:
             print("ERROR: Randomizer parameter \"" + key + "\" must be between " + str(min_value) + " and " + str(max_value) + ".")
             sys.exit(1)
 
 
     def __parameter_min_smaller_max_check(self, min_key, max_key):
         """validates that the minimum parameter is smaller than the maximum parameter"""
-        if self.cfg[min_key] > self.cfg[max_key]: 
+        if self.cfg[min_key] > self.cfg[max_key]:
             print("ERROR: Randomizer parameter \"" + max_key + "\" must be equal to or larger than \"" + min_key + "\".")
             sys.exit(1)
 
@@ -114,8 +114,8 @@ class RemoshockRandomizer:
 
     def __receiver_parameter_min_smaller_max_check(self, receiver, min_key, max_key):
         """validates that the minimum parameter is smaller than the maximum parameter"""
-        if self.get_overridable_config(receiver, min_key) > self.get_overridable_config(receiver, max_key): 
-            print("ERROR: Randomizer parameter \"" + max_key + "\" must be equal to or larger than \"" 
+        if self.get_overridable_config(receiver, min_key) > self.get_overridable_config(receiver, max_key):
+            print("ERROR: Randomizer parameter \"" + max_key + "\" must be equal to or larger than \""
                   + min_key + "\" but this is not the case of receiver " + str(receiver) + ".")
             sys.exit(1)
 
@@ -158,7 +158,7 @@ class RemoshockRandomizer:
             if res is not None:
                 return res
 
-        return self.cfg[key];
+        return self.cfg[key]
 
 
     def __execute(self, threadEvent):
@@ -191,7 +191,7 @@ class RemoshockRandomizer:
 
                 receiver = random.randrange(len(self.remoshock.receivers)) + 1
                 action = self.__determine_action()
-                 
+
                 power = random.randint(
                     self.get_overridable_config(receiver, "shock_min_power_percent"),
                     self.get_overridable_config(receiver, "shock_max_power_percent")
