@@ -82,6 +82,9 @@ class Remoshock {
 			let message = await response.text();
 			alert("Error returned by server: \n" + message);
 			return undefined;
+		} else if (response.status == 422) {
+			let error = await response.json()
+			alert(error.error);
 		}
 		return await response.json()
 	}
