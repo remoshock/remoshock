@@ -31,6 +31,7 @@ class RemoshockRandomizer:
     def __init__(self):
         self.threadEvent = None
         self.cfg = {}
+        self.error = ""
 
 
     def __parse_args(self):
@@ -81,15 +82,25 @@ class RemoshockRandomizer:
     def __parameter_range_check(self, key, min_value, max_value):
         """validates the range of a parameter value"""
         if self.cfg[key] < min_value or self.cfg[key] > max_value:
-            print("ERROR: Randomizer parameter \"" + key + "\" must be between " + str(min_value) + " and " + str(max_value) + ".")
-            sys.exit(1)
+            self.error = self.error + "ERROR: Randomizer parameter \"" + key + "\" must be between " + str(min_value) + " and " + str(max_value) + ".\n"
 
 
     def __parameter_min_smaller_max_check(self, min_key, max_key):
         """validates that the minimum parameter is smaller than the maximum parameter"""
         if self.cfg[min_key] > self.cfg[max_key]:
-            print("ERROR: Randomizer parameter \"" + max_key + "\" must be equal to or larger than \"" + min_key + "\".")
-            sys.exit(1)
+            self.error = self.error + "ERROR: Randomizer parameter \"" + max_key + "\" (" + str(self.cfg[max_key]) \
+                    + ") must be equal to or larger than \"" + min_key + "\" (" + str(self.cfg[max_key]) \
+                    + ").\n"
+
+
+    def __receiver_parameter_min_smaller_max_check(self, receiver, min_key, max_key):
+        """validates that the minimum parameter is smaller than the maximum parameter"""
+        min_value = self.get_overridable_config(receiver, min_key)
+        max_value = self.get_overridable_config(receiver, max_key)
+        if min_value > max_value:
+            self.error = self.error + "ERROR: Randomizer parameter \"" + max_key + "\" (" + str(max_value) \
+                    + ") must be equal to or larger than \"" + min_key + "\" (" + str(min_value) \
+                    + ") but this is not the case of receiver " + str(receiver) + ".\n"
 
 
     def __validate_configuration(self):
@@ -110,20 +121,9 @@ class RemoshockRandomizer:
         self.__parameter_min_smaller_max_check("pause_min_s", "pause_max_s")
         self.__parameter_min_smaller_max_check("start_delay_min_minutes", "start_delay_max_minutes")
         self.__parameter_min_smaller_max_check("runtime_min_minutes", "runtime_max_minutes")
-
-
-    def __receiver_parameter_min_smaller_max_check(self, receiver, min_key, max_key):
-        """validates that the minimum parameter is smaller than the maximum parameter"""
-        if self.get_overridable_config(receiver, min_key) > self.get_overridable_config(receiver, max_key):
-            print("ERROR: Randomizer parameter \"" + max_key + "\" must be equal to or larger than \""
-                  + min_key + "\" but this is not the case of receiver " + str(receiver) + ".")
-            sys.exit(1)
-
-
-    def __validate_configuration_for_receiver(self, receiver):
-        """validates the configuration for a receiver"""
-        self.__receiver_parameter_min_smaller_max_check(receiver, "shock_min_duration_ms", "shock_max_duration_ms")
-        self.__receiver_parameter_min_smaller_max_check(receiver, "shock_min_power_percent", "shock_max_power_percent")
+        for receiver in range(1, len(self.remoshock.receivers) + 1):
+            self.__receiver_parameter_min_smaller_max_check(receiver, "shock_min_duration_ms", "shock_max_duration_ms")
+            self.__receiver_parameter_min_smaller_max_check(receiver, "shock_min_power_percent", "shock_max_power_percent")
 
 
     def __test_receivers(self):
@@ -223,8 +223,11 @@ class RemoshockRandomizer:
         self.__parse_args()
         self.__boot_remoshock()
         self.__load_config()
-        powermanager.inhibit()
         self.__validate_configuration()
+        if (self.error != ""):
+            print(self.error)
+            sys.exit(1)
+        powermanager.inhibit()
         self.__test_receivers()
         self.__execute(threading.Event())
 
@@ -248,6 +251,11 @@ class RemoshockRandomizer:
     def start_in_server_mode(self, config):
         """updates non-persistent configuration and starts a new run.
         If there is already a thread running, it will be stopped"""
+        
+        self.error = ""
+        self.__validate_configuration()
+        if self.error != "":
+            return self.error
 
         with lock:
             self.stop_in_server_mode()
@@ -259,9 +267,10 @@ class RemoshockRandomizer:
             self.threadEvent = threading.Event()
             thread = threading.Thread(target=self.__run_in_thread, args=(self.threadEvent, ))
             thread.start()
+        return ""
+
 
     def __run_in_thread(self, threadEvent):
-        self.__validate_configuration()
         self.__test_receivers()
         self.__execute(threadEvent)
 
