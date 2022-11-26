@@ -92,6 +92,7 @@ class Randomizer {
 		}
 		let config = {};
 		this.#uiFramework.save(document.getElementById("settings"), config);
+		config["skip_startup_beeps"] = !document.getElementById("startup_beeps").checked;
 		config = await remoshock.startRandomizer(config);
 		this.#updateUserInterface(config);
 	}

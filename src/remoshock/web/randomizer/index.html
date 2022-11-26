@@ -45,10 +45,12 @@
 <div><label for="runtime_max_minutes">Runtime max: </label>
 	<input id="runtime_max_minutes" type="number" min="0" max="14400" required pattern="^\d+$"> minutes <span></span></div>
 
+<div><label for="startup_beeps">Beep all receivers on startup:</label>
+	<input id="startup_beeps" type="checkbox" checked></div>
 </form>
 <br>
 
-<button id="start"> ▶️ Start</button>
+<button id="start"> ▶️ Start / Restart</button>
 <button id="stop"> ⏏️ Stop</button>
 <button id="reload">🔄 Reload</button>
 

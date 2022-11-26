@@ -129,12 +129,14 @@ class RemoshockRandomizer:
     def __test_receivers(self):
         """sends a beep command to all registered receivers to allow users
         to verify that all receivers are turned on and setup correctly"""
-        for i in range(1, len(self.remoshock.receivers) + 1):
-            print("Testing receiver " + str(i))
-            self.__validate_configuration_for_receiver(i)
-            self.remoshock.command(i, Action.BEEP, 0, 250)
-            time.sleep(1)
-        print("Beep command sent to all known receivers. Starting randomizer... Press Ctrl+c to stop.")
+        if "skip_startup_beeps" not in self.cfg or not self.cfg["skip_startup_beeps"]:
+            for i in range(1, len(self.remoshock.receivers) + 1):
+                print("Testing receiver " + str(i))
+                self.remoshock.command(i, Action.BEEP, 0, 250)
+                time.sleep(1)
+            print("Beep command sent to all known receivers. Starting randomizer... Press Ctrl+c to stop.")
+        else:
+            print("Starting randomizer... Press Ctrl+c to stop.")
 
 
     def __determine_action(self):
@@ -257,6 +259,7 @@ class RemoshockRandomizer:
 
             for key in self.CONFIG_KEYS:
                 self.cfg[key] = int(config[key], base=10)
+            self.cfg["skip_startup_beeps"] = bool(config["skip_startup_beeps"])
 
             self.error = ""
             self.__validate_configuration()
