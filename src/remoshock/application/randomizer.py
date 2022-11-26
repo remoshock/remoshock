@@ -89,7 +89,7 @@ class RemoshockRandomizer:
         """validates that the minimum parameter is smaller than the maximum parameter"""
         if self.cfg[min_key] > self.cfg[max_key]:
             self.error = self.error + "ERROR: Randomizer parameter \"" + max_key + "\" (" + str(self.cfg[max_key]) \
-                + ") must be equal to or larger than \"" + min_key + "\" (" + str(self.cfg[max_key]) \
+                + ") must be equal to or larger than \"" + min_key + "\" (" + str(self.cfg[min_key]) \
                 + ").\n"
 
 
@@ -252,16 +252,16 @@ class RemoshockRandomizer:
         """updates non-persistent configuration and starts a new run.
         If there is already a thread running, it will be stopped"""
 
-        self.error = ""
-        self.__validate_configuration()
-        if self.error != "":
-            return self.error
-
         with lock:
             self.stop_in_server_mode()
 
             for key in self.CONFIG_KEYS:
                 self.cfg[key] = int(config[key], base=10)
+
+            self.error = ""
+            self.__validate_configuration()
+            if self.error != "":
+                return self.error
 
             # start thread
             self.threadEvent = threading.Event()
