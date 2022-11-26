@@ -44,6 +44,9 @@ class RemoshockRandomizer:
         parser.add_argument("-s", "--section",
                             default="randomizer",
                             help="name of [section] in remoshock.ini to use. Default is [randomizer].")
+        parser.add_argument("--skip-startup-beeps",
+                            action="store_true",
+                            help="skips beeping on collars as test on startup.")
         parser.add_argument("--experimental",
                             action="store_true",
                             help=argparse.SUPPRESS)
@@ -77,6 +80,9 @@ class RemoshockRandomizer:
         except configparser.NoOptionError as e:
             print(e)
             sys.exit(1)
+
+        if self.args.skip_startup_beeps:
+            self.cfg["skip_startup_beeps"] = True
 
 
     def __parameter_range_check(self, key, min_value, max_value):
