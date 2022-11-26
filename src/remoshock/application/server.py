@@ -26,6 +26,11 @@ class RemoshockServer:
                             help=argparse.SUPPRESS)
         parser.add_argument("--sdr",
                             help=argparse.SUPPRESS)
+
+        parser.add_argument("-C", "--configfile",
+                            help="custom configuration file. Defaults to ~/.config/remoshock.ini")
+        parser.add_argument("-S", "--settingsfile",
+                            help="custom settings file. Defaults to ~/.config/remoshock.dat")
         parser.add_argument("-v", "--verbose",
                             action="store_true",
                             help="prints debug messages")

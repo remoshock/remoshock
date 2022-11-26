@@ -17,6 +17,11 @@ class RemoshockCli:
         """parses command line arguments"""
         parser = argparse.ArgumentParser(description="Shock collar remote",
                                          epilog="Please see https://remoshock.github.io/applications.html for documentation.")
+
+        parser.add_argument("-C", "--configfile",
+                            help="custom configuration file. Defaults to ~/.config/remoshock.ini")
+        parser.add_argument("-S", "--settingsfile",
+                            help="custom settings file. Defaults to ~/.config/remoshock.dat")
         parser.add_argument("-r", "--receiver",
                             type=int,
                             default=1,

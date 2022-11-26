@@ -152,7 +152,7 @@ class Remoshock:
 
     def _setup_from_config(self):
         try:
-            self.config_manager = ConfigManager()
+            self.config_manager = ConfigManager(self.args)
             self.config = self.config_manager.config
             receivers = []
             for receiver_section_name in self.config.sections():

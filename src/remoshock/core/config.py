@@ -26,10 +26,26 @@ class ConfigManager:
     """This class loads configuration from remoshock.ini and writes the
     default configuration with freshly created random values."""
 
-    def __init__(self):
+    def __init__(self, args):
         self.__tokens = []
-        self.config_filename = self.__determine_config_folder() + "/remoshock.ini"
-        self.settings_filename = self.__determine_config_folder() + "/remoshock.dat"
+
+        print((str(args)))
+        if "configfile" in args and args.configfile is not None:
+            self.config_filename = args.configfile
+            if not os.path.exists(args.configfile):
+                print("Error configuration file " + args.configfile + " does not exists.")
+                print("If you do not specific a configuration file, the default configuration file")
+                print("at ~/.config/remoshock.ini will be used. If that file does not exist, ")
+                print("the setup wizzard will create it for you.")
+                sys.exit(1)
+        else:
+            self.config_filename = self.__determine_config_folder() + "/remoshock.ini"
+
+        if "setttingsfile" in args and args.settingsfile is not None:
+            self.settings_filename = args.settingsfile
+        else:
+            self.settings_filename = self.__determine_config_folder() + "/remoshock.dat"
+
         self.__start_setup_assistant_if_config_missing()
         self.__read_configuration_from_file()
         self.__read_settings_from_file()

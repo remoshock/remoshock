@@ -41,17 +41,22 @@ class RemoshockRandomizer:
         parser.add_argument("--mock",
                             action="store_true",
                             help=argparse.SUPPRESS)
+        parser.add_argument("--experimental",
+                            action="store_true",
+                            help=argparse.SUPPRESS)
+        parser.add_argument("--sdr",
+                            help=argparse.SUPPRESS)
+
+        parser.add_argument("-C", "--configfile",
+                            help="custom configuration file. Defaults to ~/.config/remoshock.ini")
+        parser.add_argument("-S", "--settingsfile",
+                            help="custom settings file. Defaults to ~/.config/remoshock.dat")
         parser.add_argument("-s", "--section",
                             default="randomizer",
                             help="name of [section] in remoshock.ini to use. Default is [randomizer].")
         parser.add_argument("--skip-startup-beeps",
                             action="store_true",
                             help="skips beeping on collars as test on startup.")
-        parser.add_argument("--experimental",
-                            action="store_true",
-                            help=argparse.SUPPRESS)
-        parser.add_argument("--sdr",
-                            help=argparse.SUPPRESS)
         parser.add_argument("-v", "--verbose",
                             action="store_true",
                             help="prints debug messages")
