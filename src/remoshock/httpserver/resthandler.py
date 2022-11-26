@@ -105,7 +105,10 @@ class RestHandler:
         elif path.startswith("/remoshock/randomizer"):
             if method == "POST":
                 if "start" in path:
-                    self.requesthandler.randomizer.start_in_server_mode(params)
+                    error = self.requesthandler.randomizer.start_in_server_mode(params)
+                    if error != "":
+                        self.answer_json(422, {"status": "error", "error": error})
+                        return
                 elif "stop" in path:
                     self.requesthandler.randomizer.stop_in_server_mode()
                 else:
