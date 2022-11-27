@@ -300,4 +300,8 @@ class RemoshockRandomizer:
 
 
 def main():
-    RemoshockRandomizer().start()
+    try:
+        RemoshockRandomizer().start()
+    except KeyboardInterrupt:
+        print("Stopped by Ctrl+c.")
+        sys.exit(0)

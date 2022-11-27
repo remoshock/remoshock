@@ -3,6 +3,7 @@
 # _____________________________________________
 
 import argparse
+import sys
 
 from remoshock.core.remoshock import Remoshock, RemoshockMock
 from remoshock.core.version import VERSION
@@ -63,4 +64,8 @@ class RemoshockServer:
 
 
 def main():
-    RemoshockServer().start()
+    try:
+        RemoshockServer().start()
+    except KeyboardInterrupt:
+        print("Stopped by Ctrl+c.")
+        sys.exit(0)

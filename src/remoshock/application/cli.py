@@ -79,14 +79,14 @@ class RemoshockCli:
 
     def start(self):
         """starts up remoshockcli"""
-        try:
-            self.__parse_args()
-            self.__boot_remoshock()
-            self.__process_action()
-        except KeyboardInterrupt:
-            print("Stopped by Ctrl+c.")
-            sys.exit(0)
+        self.__parse_args()
+        self.__boot_remoshock()
+        self.__process_action()
 
 
 def main():
-    RemoshockCli().start()
+    try:
+        RemoshockCli().start()
+    except KeyboardInterrupt:
+        print("Stopped by Ctrl+c.")
+        sys.exit(0)
