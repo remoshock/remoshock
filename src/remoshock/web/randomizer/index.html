@@ -16,43 +16,65 @@
 
 <form id="settings">
 
-<div><label for="beep_probability_percent">Beep probability: </label>
-	<input id="beep_probability_percent" type="number" min="0" max="100" required pattern="^\d+$"> % <span></span></div>
-<div><label for="shock_probability_percent">Shock probability: </label>
-	<input id="shock_probability_percent" type="number" min="0" max="100" required pattern="^\d+$"> % <span></span></div>
-<br>
+<fieldset>
+<legend>General Settings</legend>
 
-<div><label for="shock_min_duration_ms">Shock min duration: </label>
-	<input id="shock_min_duration_ms" type="number" min="0" max="10000" required pattern="^\d+$"> ms <span></span></div>
-<div><label for="shock_max_duration_ms">Shock max duration: </label>
-	<input id="shock_max_duration_ms" type="number" min="0" max="1000" required pattern="^\d+$"> ms <span></span></div>
-<div><label for="shock_min_power_percent">Shock min power: </label>
-	<input id="shock_min_power_percent" type="number" min="0" max="100" required pattern="^\d+$"> % <span></span></div>
-<div><label for="shock_max_power_percent">Shock max power: </label>
-	<input id="shock_max_power_percent" type="number" min="0" max="100" required pattern="^\d+$"> % <span></span></div>
+<div><label for="beep_probability_percent">Beep probability: </label>
+	<span class="nobr"><input id="beep_probability_percent" type="number" min="0" max="100" required pattern="^\d+$"> % <span></span></span></div>
+<div><label for="shock_probability_percent">Shock probability: </label>
+	<span class="nobr"><input id="shock_probability_percent" type="number" min="0" max="100" required pattern="^\d+$"> % <span></span></span></div>
 <br>
 
 <div><label for="pause_min_s">Pause min: </label>
-	<input id="pause_min_s" type="number" min="0" max="86400" required pattern="^\d+$"> s <span></span></div>
+	<span class="nobr"><input id="pause_min_s" type="number" min="0" max="86400" required pattern="^\d+$"> s <span></span></span></div>
 <div><label for="pause_max_s">Pause max: </label>
-	<input id="pause_max_s" type="number" min="0" max="86400" required pattern="^\d+$"> s <span></span></div>
+	<span class="nobr"><input id="pause_max_s" type="number" min="0" max="86400" required pattern="^\d+$"> s <span></span></span></div>
 <div><label for="start_delay_min_minutes">Start delay min: </label>
-	<input id="start_delay_min_minutes" type="number" min="0" max="14400" required pattern="^\d+$"> minutes <span></span></div>
+	<span class="nobr"><input id="start_delay_min_minutes" type="number" min="0" max="14400" required pattern="^\d+$"> minutes <span></span></span></div>
 <div><label for="start_delay_max_minutes">Start delay max: </label>
-	<input id="start_delay_max_minutes" type="number" min="0" max="14400" required pattern="^\d+$"> minutes <span></span></div>
+	<span class="nobr"><input id="start_delay_max_minutes" type="number" min="0" max="14400" required pattern="^\d+$"> minutes <span></span></span></div>
 <div><label for="runtime_min_minutes">Runtime min: </label>
-	<input id="runtime_min_minutes" type="number" min="0" max="14400" required pattern="^\d+$"> minutes <span></span></div>
+	<span class="nobr"><input id="runtime_min_minutes" type="number" min="0" max="14400" required pattern="^\d+$"> minutes <span></span></span></div>
 <div><label for="runtime_max_minutes">Runtime max: </label>
-	<input id="runtime_max_minutes" type="number" min="0" max="14400" required pattern="^\d+$"> minutes <span></span></div>
+	<span class="nobr"><input id="runtime_max_minutes" type="number" min="0" max="14400" required pattern="^\d+$"> minutes <span></span></span></div>
 
 <div><label for="startup_beeps">Beep all receivers on startup:</label>
-	<input id="startup_beeps" type="checkbox" checked></div>
+	<span class="nobr"><input id="startup_beeps" type="checkbox" checked></div>
+<br>
+
+Default values which may be overwritten below:
+<div><label for="shock_min_duration_ms">Shock min duration: </label>
+	<span class="nobr"><input id="shock_min_duration_ms" type="number" min="0" max="10000" required pattern="^\d+$"> ms <span></span></span></div>
+<div><label for="shock_max_duration_ms">Shock max duration: </label>
+	<span class="nobr"><input id="shock_max_duration_ms" type="number" min="0" max="10000" required pattern="^\d+$"> ms <span></span></span></div>
+<div><label for="shock_min_power_percent">Shock min power: </label>
+	<span class="nobr"><input id="shock_min_power_percent" type="number" min="0" max="100" required pattern="^\d+$"> % <span></span></span></div>
+<div><label for="shock_max_power_percent">Shock max power: </label>
+	<span class="nobr"><input id="shock_max_power_percent" type="number" min="0" max="100" required pattern="^\d+$"> % <span></span></span></div>
+</fieldset>
+
+<template id="receiver-template">
+<fieldset>
+<legend>Receiver</legend>
+
+<div><label for="shock_min_duration_ms">Shock min duration: </label>
+	<span class="nobr"><input id="shock_min_duration_ms" type="number" min="0" max="10000" pattern="^\d+$"> ms <span></span></span></div>
+<div><label for="shock_max_duration_ms">Shock max duration: </label>
+	<span class="nobr"><input id="shock_max_duration_ms" type="number" min="0" max="10000" pattern="^\d+$"> ms <span></span></span></div>
+<div><label for="shock_min_power_percent">Shock min power: </label>
+	<span class="nobr"><input id="shock_min_power_percent" type="number" min="0" max="100" pattern="^\d+$"> % <span></span></span></div>
+<div><label for="shock_max_power_percent">Shock max power: </label>
+	<span class="nobr"><input id="shock_max_power_percent" type="number" min="0" max="100" pattern="^\d+$"> % <span></span></span></div>
+
+</fieldset>
+</template>
+<div id="receivers"></div>
+
 </form>
 <br>
 
 <button id="start"> ▶️ Start / Restart</button>
 <button id="stop"> ⏏️ Stop</button>
-<button id="reload">🔄 Reload</button>
 
 <p>Status: <span id="randomizerstatus"></span><br>
 (when this page was last refreshed).</p>

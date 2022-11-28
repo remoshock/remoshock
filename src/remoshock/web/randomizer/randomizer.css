@@ -1,10 +1,19 @@
 label {
-	width: 10em;
+	width: 11em;
 	display: inline-block;
+}
+
+fieldset {
+	margin-bottom: 1em;
+	max-width: 25em;
 }
 
 input, select {
 	width: 5em;
+}
+
+input:invalid {
+	border-color: #F00;
 }
 
 input:invalid+span:after {
@@ -16,4 +25,8 @@ input:invalid+span:after {
 button {
 	padding: .5em 1em;
 	margin-right: 1em;
+}
+
+.nobr {
+	white-space: nowrap;
 }

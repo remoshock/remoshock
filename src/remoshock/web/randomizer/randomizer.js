@@ -13,6 +13,7 @@ import { UIFramework } from "../resources/uiframework.js"
 class Randomizer {
 
 	#uiFramework;
+	#numberOfReceivers
 
 	/**
 	 * initialize remoshock api, asks for the current configuration and status
@@ -24,6 +25,10 @@ class Randomizer {
 
 		globalThis.remoshock = new Remoshock();
 		await remoshock.init();
+		this.#numberOfReceivers = remoshock.config.receivers.length;
+		for (let i = 1; i <= this.#numberOfReceivers; i++) {
+			this.addReceiver(i);
+		}
 		let config = await remoshock.readRandomizer();
 		this.#updateUserInterface(config);
 
@@ -37,9 +42,26 @@ class Randomizer {
 		document.getElementById("stop").addEventListener("click", () => {
 			this.stop();
 		})
-		document.getElementById("reload").addEventListener("click", () => {
-			window.location.reload();
-		})
+	}
+
+	/**
+	 * adds a receiver to the web page
+	 *
+	 * @param index index number of the receiver t oadd
+	 */
+	addReceiver(index) {
+		let receiverTemplate = document.getElementById("receiver-template");
+		let clone = receiverTemplate.content.cloneNode(true);
+		clone.querySelector("legend").innerText = "Receiver " + remoshock.config.receivers[index - 1].name;
+		let inputs = clone.querySelectorAll("input");
+		for (let input of inputs) {
+			input.setAttribute("id", "r" + index + "." + input.getAttribute("id"))
+		}
+		let labels = clone.querySelectorAll("label");
+		for (let label of labels) {
+			label.setAttribute("for", "r" + index + "." + label.getAttribute("for"))
+		}
+		document.getElementById("receivers").appendChild(clone);
 	}
 
 
@@ -67,6 +89,39 @@ class Randomizer {
 			minElement.setCustomValidity("");
 			maxElement.setCustomValidity("");
 		}
+
+		// Check receiver specific configuration against default configuration
+		let pos = id.indexOf(".");
+		if (pos > -1)  {
+			id = id.substring(pos + 1);
+		}
+		minId = id.replace("_max_", "_min_");
+		maxId = id.replace("_min_", "_max_");
+		minElement = document.getElementById(minId);
+		maxElement = document.getElementById(maxId);
+		for (let i = 1; i <= this.#numberOfReceivers; i++) {
+			let receiverMinElement = document.getElementById("r" + i + "."+ minId);
+			let receiverMaxElement = document.getElementById("r" + i + "."+ maxId);
+			if (!receiverMinElement) {
+				// no a receiver specifict configuration setting
+				return;
+			}
+			
+			let minValue = parseInt(receiverMinElement.value || minElement.value, 10);
+			let maxValue = parseInt(receiverMaxElement.value || maxElement.value, 10);
+			if (parseInt(receiverMinElement.value, 10) > maxValue)  {
+				receiverMinElement.setCustomValidity("Min value must be smaller than max value.");
+			} else {
+				receiverMinElement.setCustomValidity("");
+			}
+			if (minValue > parseInt(receiverMaxElement.value, 10))  {
+				receiverMaxElement.setCustomValidity("Min value must be smaller than max value.");
+			} else {
+				receiverMaxElement.setCustomValidity("");
+			}
+			
+		}
+
 	}
 
 	/**
