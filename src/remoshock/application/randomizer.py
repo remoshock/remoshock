@@ -29,7 +29,7 @@ class RemoshockRandomizer:
                    "runtime_min_minutes", "runtime_max_minutes")
 
     CONFIG_OVERRIDABLE_KEYS = ("shock_min_duration_ms", "shock_max_duration_ms",
-                   "shock_min_power_percent", "shock_max_power_percent")
+                               "shock_min_power_percent", "shock_max_power_percent")
 
     def __init__(self):
         self.threadEvent = None
@@ -92,7 +92,7 @@ class RemoshockRandomizer:
                     if hasattr(receiver_properties, "random_" + key):
                         value = getattr(receiver_properties, "random_" + key)
                         if value is not None:
-                            self.cfg["r" + str(receiver) + "." + key] = value 
+                            self.cfg["r" + str(receiver) + "." + key] = value
 
         except configparser.NoOptionError as e:
             print(e)
@@ -278,7 +278,7 @@ class RemoshockRandomizer:
 
         with lock:
             self.stop_in_server_mode()
-            
+
             for key in self.CONFIG_KEYS:
                 self.cfg[key] = int(config[key], base=10)
             for receiver in range(1, len(self.remoshock.receivers) + 1):
