@@ -28,6 +28,9 @@ class RemoshockRandomizer:
                    "start_delay_min_minutes", "start_delay_max_minutes",
                    "runtime_min_minutes", "runtime_max_minutes")
 
+    CONFIG_OVERRIDABLE_KEYS = ("shock_min_duration_ms", "shock_max_duration_ms",
+                   "shock_min_power_percent", "shock_max_power_percent")
+
     def __init__(self):
         self.threadEvent = None
         self.cfg = {}
@@ -82,6 +85,15 @@ class RemoshockRandomizer:
         try:
             for key in self.CONFIG_KEYS:
                 self.cfg[key] = self.remoshock.config.getint(self.args.section, key)
+
+            for receiver in range(1, len(self.remoshock.receivers) + 1):
+                receiver_properties = self.remoshock.get_receiver_properties(receiver)
+                for key in self.CONFIG_OVERRIDABLE_KEYS:
+                    if hasattr(receiver_properties, "random_" + key):
+                        value = getattr(receiver_properties, "random_" + key)
+                        if value is not None:
+                            self.cfg["r" + str(receiver) + "." + key] = value 
+
         except configparser.NoOptionError as e:
             print(e)
             sys.exit(1)
@@ -165,11 +177,10 @@ class RemoshockRandomizer:
 
     def get_overridable_config(self, receiver, key):
         """gets a configuration value which may be overridden in the receiver section"""
-        receiver_properties = self.remoshock.get_receiver_properties(receiver)
-        if hasattr(receiver_properties, "random_" + key):
-            res = getattr(receiver_properties, "random_" + key)
-            if res is not None:
-                return res
+
+        real_key = "r" + str(receiver) + "." + key
+        if real_key in self.cfg:
+            return self.cfg[real_key]
 
         return self.cfg[key]
 
@@ -267,9 +278,17 @@ class RemoshockRandomizer:
 
         with lock:
             self.stop_in_server_mode()
-
+            
             for key in self.CONFIG_KEYS:
                 self.cfg[key] = int(config[key], base=10)
+            for receiver in range(1, len(self.remoshock.receivers) + 1):
+                for key in self.CONFIG_OVERRIDABLE_KEYS:
+                    real_key = "r" + str(receiver) + "." + key
+                    if real_key in config:
+                        self.cfg[real_key] = int(config[real_key], base=10)
+                    else:
+                        self.cfg.pop(real_key, None)
+
             self.cfg["skip_startup_beeps"] = bool(config["skip_startup_beeps"])
 
             self.error = ""
