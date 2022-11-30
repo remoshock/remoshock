@@ -134,6 +134,20 @@ class Randomizer {
 		this.#uiFramework.load(config);
 		document.getElementById("randomizerstatus").textContent = config["status"];
 		document.getElementsByTagName("body")[0].classList.remove("hidden");
+		
+		if (this.#nonEmptyInput(document.getElementById("receivers"))) {
+			document.getElementById("receiver-details").open = true;
+		}
+	}
+
+	#nonEmptyInput(parent) {
+		let inputs = parent.querySelectorAll("input");
+		for (let input of inputs) {
+			if (input.value.length > 0) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 

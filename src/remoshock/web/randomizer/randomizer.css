@@ -27,6 +27,10 @@ button {
 	margin-right: 1em;
 }
 
+summary {
+	cursor: pointer;	
+}
+
 .nobr {
 	white-space: nowrap;
 }
