@@ -29,11 +29,13 @@ class RemoshockRandomizer:
                    "runtime_min_minutes", "runtime_max_minutes")
 
     CONFIG_OVERRIDABLE_KEYS = ("shock_min_duration_ms", "shock_max_duration_ms",
-                               "shock_min_power_percent", "shock_max_power_percent")
+                               "shock_min_power_percent", "shock_max_power_percent",
+                               "probability_weight")
 
     def __init__(self):
         self.threadEvent = None
         self.cfg = {}
+        self.probability_weights = []
         self.error = ""
 
 
@@ -88,6 +90,7 @@ class RemoshockRandomizer:
 
             for receiver in range(1, len(self.remoshock.receivers) + 1):
                 receiver_properties = self.remoshock.get_receiver_properties(receiver)
+                self.probability_weights.append(receiver_properties.random_probability_weight)
                 for key in self.CONFIG_OVERRIDABLE_KEYS:
                     if hasattr(receiver_properties, "random_" + key):
                         value = getattr(receiver_properties, "random_" + key)
@@ -213,7 +216,7 @@ class RemoshockRandomizer:
                             self.threadEvent = None
                     return
 
-                receiver = random.randrange(len(self.remoshock.receivers)) + 1
+                receiver = random.choices(range(1, len(self.remoshock.receivers) + 1), weights=(self.probability_weights), k=1)[0]
                 action = self.__determine_action()
 
                 power = random.randint(

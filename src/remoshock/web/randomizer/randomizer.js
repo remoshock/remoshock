@@ -143,8 +143,14 @@ class Randomizer {
 	#nonEmptyInput(parent) {
 		let inputs = parent.querySelectorAll("input");
 		for (let input of inputs) {
-			if (input.value.length > 0) {
-				return true;
+			if (input.id.endsWith("probability_weight")) {
+				if (input.value != 1) {
+					return true;
+				}
+			} else {
+				if (input.value.length > 0) {
+					return true;
+				}
 			}
 		}
 		return false;

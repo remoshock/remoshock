@@ -225,6 +225,8 @@ runtime_max_minutes = 600
         receiver_static_config = """
 #limit_shock_max_power_percent = 100
 #limit_shock_max_duration_ms = 10000
+
+#random_probability_weight = 1
 #random_shock_min_duration_ms = 500
 #random_shock_max_duration_ms = 500
 #random_shock_min_power_percent = 10

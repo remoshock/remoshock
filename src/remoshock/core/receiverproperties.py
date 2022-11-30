@@ -14,10 +14,11 @@ class ReceiverProperties:
                  beep_shock_delay_ms=1000,
                  limit_shock_max_duration_ms=1000,
                  limit_shock_max_power_percent=100,
+                 random_probability_weight=1,
                  random_shock_min_duration_ms=None,
                  random_shock_max_duration_ms=None,
                  random_shock_min_power_percent=None,
-                 random_shock_max_power_percent=None
+                 random_shock_max_power_percent=None,
                  ):
         """
         creates a ReceiverProperties object
@@ -36,6 +37,7 @@ class ReceiverProperties:
         @param beep_shock_delay_ms            delay between beep and shock for Action.BEEPSHOCK
         @param limit_shock_max_duration_ms    hard limit for shock duration
         @param limit_shock_max_power_percent  hard limit for shock power
+        @param random_probability_weight      randomizer setting to weight probability
         @param random_shock_min_duration_ms   randomizer setting for this device: minimal duration of a shock
         @param random_shock_max_duration_ms   randomizer setting for this device: maximal duration of a shock
         @param random_shock_min_power_percent randomizer setting for this device: minimal power of a shock
@@ -60,6 +62,7 @@ class ReceiverProperties:
         self.limit_shock_max_duration_ms = limit_shock_max_duration_ms
         self.limit_shock_max_power_percent = limit_shock_max_power_percent
 
+        self.random_probability_weight = random_probability_weight
         self.random_shock_min_duration_ms = random_shock_min_duration_ms
         self.random_shock_max_duration_ms = random_shock_max_duration_ms
         self.random_shock_min_power_percent = random_shock_min_power_percent
