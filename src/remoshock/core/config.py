@@ -29,7 +29,6 @@ class ConfigManager:
     def __init__(self, args):
         self.__tokens = []
 
-        print((str(args)))
         if "configfile" in args and args.configfile is not None:
             self.config_filename = args.configfile
             if not os.path.exists(args.configfile):
@@ -220,6 +219,7 @@ start_delay_min_minutes = 0
 start_delay_max_minutes = 0
 runtime_min_minutes = 600
 runtime_max_minutes = 600
+probability_weight = 1
 """
 
         receiver_static_config = """

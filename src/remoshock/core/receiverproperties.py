@@ -14,7 +14,7 @@ class ReceiverProperties:
                  beep_shock_delay_ms=1000,
                  limit_shock_max_duration_ms=1000,
                  limit_shock_max_power_percent=100,
-                 random_probability_weight=1,
+                 random_probability_weight=None,
                  random_shock_min_duration_ms=None,
                  random_shock_max_duration_ms=None,
                  random_shock_min_power_percent=None,

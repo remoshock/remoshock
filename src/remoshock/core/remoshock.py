@@ -54,7 +54,7 @@ class Remoshock:
             beep_shock_delay_ms = self.config.getint(section, "beep_shock_delay_ms", fallback=1000)
             limit_shock_max_power_percent = self.config.getint(section, "limit_shock_max_power_percent", fallback=100)
             limit_shock_max_duration_ms = self.config.getint(section, "limit_shock_max_duration_ms", fallback=10000)
-            random_probability_weight = self.config.getint(section, "random_probability_weight", fallback=1)
+            random_probability_weight = self.config.getint(section, "random_probability_weight", fallback=None)
             random_shock_min_duration_ms = self.config.getint(section, "random_shock_min_duration_ms", fallback=None)
             random_shock_max_duration_ms = self.config.getint(section, "random_shock_max_duration_ms", fallback=None)
             random_shock_min_power_percent = self.config.getint(section, "random_shock_min_power_percent", fallback=None)

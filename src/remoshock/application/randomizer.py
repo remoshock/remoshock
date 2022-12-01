@@ -26,7 +26,8 @@ class RemoshockRandomizer:
                    "shock_min_power_percent", "shock_max_power_percent",
                    "pause_min_s", "pause_max_s",
                    "start_delay_min_minutes", "start_delay_max_minutes",
-                   "runtime_min_minutes", "runtime_max_minutes")
+                   "runtime_min_minutes", "runtime_max_minutes",
+                   "probability_weight")
 
     CONFIG_OVERRIDABLE_KEYS = ("shock_min_duration_ms", "shock_max_duration_ms",
                                "shock_min_power_percent", "shock_max_power_percent",
@@ -90,7 +91,10 @@ class RemoshockRandomizer:
 
             for receiver in range(1, len(self.remoshock.receivers) + 1):
                 receiver_properties = self.remoshock.get_receiver_properties(receiver)
-                self.probability_weights.append(receiver_properties.random_probability_weight)
+                probability_weight = receiver_properties.random_probability_weight
+                if probability_weight is None:
+                    probability_weight = self.cfg["probability_weight"]
+                self.probability_weights.append(probability_weight)
                 for key in self.CONFIG_OVERRIDABLE_KEYS:
                     if hasattr(receiver_properties, "random_" + key):
                         value = getattr(receiver_properties, "random_" + key)
