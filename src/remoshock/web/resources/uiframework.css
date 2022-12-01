@@ -7,7 +7,21 @@ body {
 }
 
 .appshell-content {
-	margin: 1em;
+	margin-top: 1em;
+}
+
+.content-with-margin {
+	margin: 0 1em;
+}
+
+@media screen and (orientation:landscape) {
+	.appshell-content {
+		margin: 1em;
+	}
+
+	.content-with-margin {
+		margin: 0 0;
+	}
 }
 
 .appshell-header {

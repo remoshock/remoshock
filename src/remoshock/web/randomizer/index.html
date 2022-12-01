@@ -66,7 +66,7 @@ Default values, which may be overwritten below:
 <div><label for="shock_max_power_percent">Shock max power: </label>
 	<span class="nobr"><input id="shock_max_power_percent" type="number" min="0" max="100" pattern="^\d+$"> % <span></span></span></div>
 <div><label for="probability_weight">Probability weight: </label>
-	<span class="nobr"><input id="probability_weight" type="number" min="1" required pattern="^\d+$"> <span></span></span></div>
+	<span class="nobr"><input id="probability_weight" type="number" min="0" required pattern="^\d+$"> <span></span></span></div>
 
 </fieldset>
 </template>
@@ -80,11 +80,13 @@ Default values, which may be overwritten below:
 </form>
 <br>
 
-<button id="start"> ▶️ Start / Restart</button>
-<button id="stop"> ⏏️ Stop</button>
+<div class="content-with-margin">
+	<button id="start"> ▶️ Start / Restart</button>
+	<button id="stop"> ⏏️ Stop</button>
 
-<p>Status: <span id="randomizerstatus"></span><br>
-(when this page was last refreshed).</p>
+	<p>Status: <span id="randomizerstatus"></span><br>
+	(when this page was last refreshed).</p>
+</div>
 
 </div>
 
