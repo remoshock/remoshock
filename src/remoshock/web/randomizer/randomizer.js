@@ -134,7 +134,11 @@ class Randomizer {
 		this.#uiFramework.load(config);
 		document.getElementById("randomizerstatus").textContent = config["status"];
 		document.getElementsByTagName("body")[0].classList.remove("hidden");
-		
+		for (let i = 1; i <= this.#numberOfReceivers; i++) {
+			if (!config["r" + i + ".probability_weight"]) {
+				document.getElementById("r" + i + ".probability_weight").value = config["probability_weight"];
+			}
+		}
 		if (this.#nonEmptyInput(document.getElementById("receivers"))) {
 			document.getElementById("receiver-details").open = true;
 		}

@@ -219,7 +219,6 @@ start_delay_min_minutes = 0
 start_delay_max_minutes = 0
 runtime_min_minutes = 600
 runtime_max_minutes = 600
-probability_weight = 1
 """
 
         receiver_static_config = """
