@@ -16,6 +16,7 @@ from remoshock.receiver.arshock import ArduinoManager
 from remoshock.receiver.dogtra import Dogtra
 from remoshock.receiver.pac import Pac
 from remoshock.receiver.patpett150 import PatpetT150
+from remoshock.receiver.pawanti import Pawanti
 from remoshock.receiver.petrainer import Petrainer
 from remoshock.receiver.wodondog import Wodondog
 from remoshock.receiver.wodondogb import WodondogB
@@ -85,12 +86,14 @@ class Remoshock:
             print("Error parsing configuration file section " + section + ": " + str(e))
             sys.exit(1)
 
-        if receiver_type.lower() == "dogtra200ncp":  # and self.args.experimental:
+        if receiver_type.lower() == "dogtra200ncp" and self.args.experimental:
             receiver = Dogtra(receiver_properties, code, channel)
-        elif receiver_type.lower() == "patpett150":
-            receiver = PatpetT150(receiver_properties, code, channel)
         elif receiver_type.lower() == "pac":
             receiver = Pac(receiver_properties, code, channel)
+        elif receiver_type.lower() == "patpett150":
+            receiver = PatpetT150(receiver_properties, code, channel)
+        elif receiver_type.lower() == "pawanti" and self.args.experimental:
+            receiver = Pawanti(receiver_properties, code, channel)
         elif receiver_type.lower() == "petrainer":
             receiver = Petrainer(receiver_properties, code, channel)
         elif receiver_type.lower() == "wodondog":
