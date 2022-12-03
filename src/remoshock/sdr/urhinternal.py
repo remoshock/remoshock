@@ -190,11 +190,15 @@ class Sender:
                 print("ERROR: enter_async_send_mode failed")
                 return False
 
+            start = time.time()
             while not send_config.sending_is_finished():
                 try:
                     time.sleep(0.01)
                 except KeyboardInterrupt:
                     pass
+                if time.time() - start > 15:
+                    print("ERROR: send did not complete")
+                    break
             log("send completed")
         finally:
             time.sleep(0.2)
