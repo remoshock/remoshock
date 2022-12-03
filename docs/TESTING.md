@@ -298,8 +298,9 @@ Receiver 4:
 <td>27.</td>
 <td>Press "Start/Restart"</td>
 <td>
-- There is no beep on start self test
-- There are more log entries for receiver 1 than receiver 2.
+
+- There is no "beep on start" self-test
+- There are more log entries for receiver 2 than receiver 1.
 - There are no log entries for receiver 3 and receiver 4.
 - Receiver 1 is between 250ms and 750ms at 10%-20%
 - Receiver 2 is between 1000ms and 2000ms at 1%-9%
