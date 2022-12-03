@@ -134,22 +134,19 @@ class Randomizer {
 		this.#uiFramework.load(config);
 		document.getElementById("randomizerstatus").textContent = config["status"];
 		document.getElementsByTagName("body")[0].classList.remove("hidden");
-		for (let i = 1; i <= this.#numberOfReceivers; i++) {
-			if (!config["r" + i + ".probability_weight"]) {
-				document.getElementById("r" + i + ".probability_weight").value = config["probability_weight"];
-			}
-		}
-		if (this.#nonEmptyInput(document.getElementById("receivers"))) {
+		if (this.#nonEmptyInput(config, document.getElementById("receivers"))) {
 			document.getElementById("receiver-details").open = true;
 		}
 	}
 
-	#nonEmptyInput(parent) {
+	#nonEmptyInput(config, parent) {
 		let inputs = parent.querySelectorAll("input");
 		for (let input of inputs) {
 			if (input.id.endsWith("probability_weight")) {
-				if (input.value != 1) {
-					return true;
+				if (input.value.length !== 0 || config["probability_weight"] != 1) {
+					if (input.value != 1) {
+						return true;
+					}
 				}
 			} else {
 				if (input.value.length > 0) {
