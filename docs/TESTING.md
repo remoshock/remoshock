@@ -151,7 +151,7 @@ Press the shock button for the first Wodondog receiver.</td>
 <tr>
 <td>15.</td>
 <td>Select application menu entry "Randomizer"</td>
-<td>The randomizer configuration page is shown. Status: inactive</td>
+<td>The randomizer configuration page is shown. The receiver specific settings are collapsed. Status: inactive</td>
 </tr>
 
 
@@ -240,10 +240,72 @@ runtime_max_minutes = 3
 - There are BEEPSHOCK-message for all 4 collars
 - Power varies between 5% and 10%
 - Duration varies between the two exact values 250ms and 500ms
-- The last BEEPSHOCK-message is between 120s and 185ms of the first BEEPSHOCK-message
+- The last BEEPSHOCK-message is between 120s and 185s of the first BEEPSHOCK-message
 - The programm ends with "Runtime completed".
 </td>
 </tr>
+
+<tr>
+<td>25.</td>
+<td>Run <code>remoshockserver</code></td>
+<td>-</td>
+</tr>
+
+<tr>
+<td>26.</td>
+<td>Select application menu entry "Randomizer"</td>
+<td>-</td>
+</tr>
+
+<tr>
+<td>27.</td>
+<td>
+Beep all receivers on startup: [_]<br>
+
+Receiver 1:
+<ul>
+<li> Shock min duration: 250ms
+<li> Shock max duration: 750ms
+<li> Shock min power: 10%
+<li> Shock max power: 20%
+<li> Probability weight: 1
+</ul>
+
+Receiver 2:
+<ul>
+<li> Shock min duration: 1000ms
+<li> Shock max duration: 2000ms
+<li> Shock min power: 1%
+<li> Shock max power: 9%
+<li> Probability weight: 5
+</ul>
+
+Receiver 3:
+<ul>
+<li> Probability weight: 0
+</ul>
+
+Receiver 4:
+<ul>
+<li> Probability weight: 
+</ul>
+
+</td>
+<td>When "Shock min duration: 1000ms" is entered for Receiver 2, a red ! is shown. It disappears after "Shock max duration: 2000ms" is entered</td>
+</tr>
+
+<tr>
+<td>27.</td>
+<td>Press "Start/Restart"</td>
+<td>
+- There is no beep on start self test
+- There are more log entries for receiver 1 than receiver 2.
+- There are no log entries for receiver 3 and receiver 4.
+- Receiver 1 is between 250ms and 750ms at 10%-20%
+- Receiver 2 is between 1000ms and 2000ms at 1%-9%
+</td>
+</tr>
+
 
 </table>
 
