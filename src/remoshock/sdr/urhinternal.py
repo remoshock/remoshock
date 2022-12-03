@@ -146,7 +146,7 @@ class Sender:
         gain = 20 if self.args.gain is None else self.args.gain
         if_gain = 20 if self.args.if_gain is None else self.args.if_gain
 
-        hackrf.TIMEOUT = 0
+        hackrf.TIMEOUT = 0.01
         hackrf.set_freq(self.args.frequency)
         hackrf.set_sample_rate(self.args.sample_rate)
         hackrf.set_baseband_filter_bandwidth(bandwidth)
@@ -187,7 +187,7 @@ class Sender:
             ret = hackrf.start_tx_mode(send_config.get_data_to_send)
             log("hackrf.start_tx_mode")
             if ret != 0:
-                print("ERROR: enter_async_send_mode failed")
+                self.error += "ERROR: enter_async_send_mode failed\n"
                 return False
 
             start = time.time()
@@ -197,7 +197,7 @@ class Sender:
                 except KeyboardInterrupt:
                     pass
                 if time.time() - start > 15:
-                    print("ERROR: send did not complete")
+                    self.error += "ERROR: send did not complete\n"
                     break
             log("send completed")
         finally:
@@ -245,9 +245,11 @@ class UrhInternalSender(SdrSender):
             self.sender.reset()
 
             with HidePrintIfNotVerbose(self.verbose):
+                self.sender.error = ""
                 samples = self.sender.modulate_messages(data)
                 self.sender.send(samples)
-
+            if self.sender.error != "":
+                print(self.sender.error)
 
 if __name__ == '__main__':
     sender = Sender()
