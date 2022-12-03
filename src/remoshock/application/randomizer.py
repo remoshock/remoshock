@@ -33,6 +33,8 @@ class RemoshockRandomizer:
                                "probability_weight")
 
     def __init__(self):
+        self.cli = False
+        self.thread = None
         self.threadEvent = None
         self.cfg = {}
         self.probability_weights = []
@@ -93,16 +95,18 @@ class RemoshockRandomizer:
                 self.cfg["probability_weight"] = self.remoshock.config.getint(self.args.section, "probability_weight")
 
             for receiver in range(1, len(self.remoshock.receivers) + 1):
+
                 receiver_properties = self.remoshock.get_receiver_properties(receiver)
-                probability_weight = receiver_properties.random_probability_weight
-                if probability_weight is None:
-                    probability_weight = self.cfg["probability_weight"]
-                self.probability_weights.append(probability_weight)
                 for key in self.CONFIG_OVERRIDABLE_KEYS:
                     if hasattr(receiver_properties, "random_" + key):
                         value = getattr(receiver_properties, "random_" + key)
                         if value is not None:
                             self.cfg["r" + str(receiver) + "." + key] = value
+
+                probability_weight = receiver_properties.random_probability_weight
+                if probability_weight is None:
+                    probability_weight = self.cfg["probability_weight"]
+                self.cfg["r" + str(receiver) + "." + "probability_weight"] = probability_weight
 
         except configparser.NoOptionError as e:
             print(e)
@@ -167,9 +171,12 @@ class RemoshockRandomizer:
                 print("Testing receiver " + str(i))
                 self.remoshock.command(i, Action.BEEP, 0, 250)
                 time.sleep(1)
-            print("Beep command sent to all known receivers. Starting randomizer... Press Ctrl+c to stop.")
+            print("Beep command sent to all known receivers. Starting randomizer...")
         else:
-            print("Starting randomizer... Press Ctrl+c to stop.")
+            print("Starting randomizer...")
+
+        if self.cli:
+            print("Press Ctrl+c to stop.")
 
 
     def __determine_action(self):
@@ -195,10 +202,20 @@ class RemoshockRandomizer:
         return self.cfg[key]
 
 
+    def init_probability_weight(self):
+        """initializes the probability weight array"""
+        self.probability_weights.clear()
+        for receiver in range(1, len(self.remoshock.receivers) + 1):
+            probability_weight = self.get_overridable_config(receiver, "probability_weight")
+            self.probability_weights.append(probability_weight)
+
+
     def __execute(self, threadEvent):
         """the loop in which all the action happens"""
 
         try:
+            self.init_probability_weight()
+
             start_delay_s = random.randint(self.cfg["start_delay_min_minutes"] * 60, self.cfg["start_delay_max_minutes"] * 60)
 
             if start_delay_s > 0:
@@ -206,6 +223,7 @@ class RemoshockRandomizer:
                 if threadEvent.wait(start_delay_s):
                     print("Randomizer canceled")
                     with lock:
+                        print("Locked")
                         if self.threadEvent == threadEvent:
                             self.threadEvent = None
                     return
@@ -254,6 +272,7 @@ class RemoshockRandomizer:
 
     def start(self):
         """starts up remoshockrnd"""
+        self.cli = True
         self.__parse_args()
         self.__boot_remoshock()
         self.__load_config()
@@ -268,7 +287,6 @@ class RemoshockRandomizer:
 
     def prepare_in_server_mode(self, remoshock):
         """prepares remoshockrnd for being used by the REST server"""
-
         self.__parse_args()
         self.remoshock = remoshock
         self.__load_config()
@@ -276,19 +294,20 @@ class RemoshockRandomizer:
 
     def stop_in_server_mode(self):
         """stops the randomizer run"""
-
         with lock:
             if (self.threadEvent):
                 self.threadEvent.set()
+        if self.thread is not None:
+            self.thread.join()
 
 
     def start_in_server_mode(self, config):
         """updates non-persistent configuration and starts a new run.
         If there is already a thread running, it will be stopped"""
 
-        with lock:
-            self.stop_in_server_mode()
+        self.stop_in_server_mode()
 
+        with lock:
             for key in self.CONFIG_KEYS:
                 self.cfg[key] = int(config[key], base=10)
             for receiver in range(1, len(self.remoshock.receivers) + 1):
@@ -308,8 +327,8 @@ class RemoshockRandomizer:
 
             # start thread
             self.threadEvent = threading.Event()
-            thread = threading.Thread(target=self.__run_in_thread, args=(self.threadEvent, ))
-            thread.start()
+            self.thread = threading.Thread(target=self.__run_in_thread, args=(self.threadEvent, ))
+            self.thread.start()
         return ""
 
 
