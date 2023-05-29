@@ -5,10 +5,10 @@
 import collections
 import configparser
 import os
+import random
 import secrets
 import string
 import sys
-
 
 class MultiReceiverSectionSupport(collections.OrderedDict):
     """This class adds an index number at the end of each [receiver] section."""
@@ -56,7 +56,7 @@ class ConfigManager:
         return ''.join(secrets.choice(charset) for _ in range(8))
 
 
-    def __generate_transmitter_code(self, length):
+    def __generate_binary_transmitter_code(self, length):
         """creates a transmitter_code that is probably unique to this installation.
 
         @param length number of bits
@@ -67,6 +67,20 @@ class ConfigManager:
         charset = "01"
         while True:
             token = ''.join(secrets.choice(charset) for _ in range(length))
+            if token not in self.__tokens:
+                self.__tokens.append(token)
+                return token
+
+    def __generate_decimal_transmitter_code(self, length):
+        """creates a transmitter_code that is probably unique to this installation.
+
+        @param length number of bits
+        """
+        # we ensure that transmitter codes are unique with this loop
+        # because collisions are more likely than one would expect
+        # for a 2 digit value because of the birthday paradox.
+        while True:
+            token = str(random.randint(10, 10**length))
             if token not in self.__tokens:
                 self.__tokens.append(token)
                 return token
@@ -116,7 +130,9 @@ class ConfigManager:
                 print("  3 Petrainer")
                 print("  4 Wodondog 433 Mhz with receiver flashlight")
                 print("  5 Wodondog 433 Mhz without receiver flashlight")
-                receiver_type = self.__input_number("Which type is receiver " + str(i) + "? ", 0, 1, 5)
+                print("  6 Dogtra 200 NCP")
+                print("  7 Dogtra 600 NCP")
+                receiver_type = self.__input_number("Which type is receiver " + str(i) + "? ", 0, 1, 7)
                 types.append(receiver_type - 1)
 
             config = self.__generate_configuration(sdr, types)
@@ -187,7 +203,27 @@ name=WodondogB[number]
 color=[color]
 transmitter_code=[transmitter_code_16bit]
 channel=1
+""",
+
+            """
+[receiver]
+type=dogtra200ncp
+name=Dogtra 200 NCP[number]
+color=[color]
+transmitter_code=[transmitter_code_2digits]
+channel=1
 """
+,
+
+            """
+[receiver]
+type=dogtra600ncp
+name=Dogtra 600 NCP[number]
+color=[color]
+transmitter_code=[transmitter_code_2digits]
+channel=1
+"""
+
         ]
         config = """
 #
@@ -240,8 +276,9 @@ runtime_max_minutes = 600
             receiver_config = receiver_type_configs[receiver_type]
             receiver_config = receiver_config.replace("[number]", str(i + 1))
             receiver_config = receiver_config.replace("[color]", str(colors[i % len(colors)]))
-            receiver_config = receiver_config.replace("[transmitter_code_9bit]", self.__generate_transmitter_code(9))
-            receiver_config = receiver_config.replace("[transmitter_code_16bit]", self.__generate_transmitter_code(16))
+            receiver_config = receiver_config.replace("[transmitter_code_2digits]", self.__generate_decimal_transmitter_code(2))
+            receiver_config = receiver_config.replace("[transmitter_code_9bit]", self.__generate_binary_transmitter_code(9))
+            receiver_config = receiver_config.replace("[transmitter_code_16bit]", self.__generate_binary_transmitter_code(16))
             config = config + receiver_config + receiver_static_config
             i = i + 1
 
