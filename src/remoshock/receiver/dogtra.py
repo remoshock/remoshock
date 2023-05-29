@@ -12,7 +12,7 @@ lock = threading.RLock()
 
 
 class Dogtra(Receiver):
-    end_one = True
+    dogtra200 = True
 
     """communication with Dogtra collars"""
     power_mapping = [
@@ -29,12 +29,22 @@ class Dogtra(Receiver):
         255]
 
 
-    def __init__(self, receiver_properties, transmitter_code, channel):
+    def __init__(self, receiver_properties, transmitter_code, channel, model):
         super().__init__(receiver_properties)
         self.receiver_properties.capabilities(action_light=False, action_beep=False, action_vibrate=True, action_shock=True)
         self.receiver_properties.timings(duration_min_ms=250, duration_increment_ms=250, awake_time_s=0)  # TODO
         self.transmitter_code = transmitter_code
+
+        try:
+            if not transmitter_code is None and len(transmitter_code) > 1 and len(transmitter_code) < 5:
+                self.transmitter_code = format(int(transmitter_code), "012b")
+        except ValueError:
+            # error will be reported in validate_config()
+            pass
+
         self.channel = channel
+        if model == "600ncp":
+            self.dogtra200 = False
 
 
     def validate_config(self):
@@ -42,7 +52,7 @@ class Dogtra(Receiver):
 
         if re.fullmatch("^[01]{12}$", self.transmitter_code) is None:
             print("ERROR: Invalid transmitter_code \"" + self.transmitter_code + "\" in remoshock.ini.")
-            print("The transmitter_code must be sequence of length 12 consisting of the characters 0 and 1")
+            print("The transmitter_code must be either the number on the sticker or a sequence of length 12 consisting of the characters 0 and 1")
             return False
 
         if self.channel < 1 or self.channel > 1:
@@ -108,11 +118,12 @@ class Dogtra(Receiver):
         for _ in range(0, intensity + 1):
             res = res + "1"
 
-        if self.end_one:
+        if self.dogtra200:
             res = res + "01"
+            return res.ljust(22, "0")
         else:
             res = res + "00"
-        return res.ljust(22, "0")
+            return res.ljust(27, "0")
 
 
     def encode_for_transmission(self, data):
@@ -121,7 +132,7 @@ class Dogtra(Receiver):
         This methods adds the synchronization prefix as well as the fillers
         between each bit in the first part of the message."""
 
-        if self.end_one:
+        if self.dogtra200:
             prefix = "11100"
         else:
             prefix = "1111100"
@@ -137,17 +148,29 @@ class Dogtra(Receiver):
         """sends messages over the air using the SDR sender.
 
         @param messages messages that have already been encoded for transmission"""
-        self.sender.send(
-            frequency=27.1e6,
-            sample_rate=2e6,
-            carrier_frequency=27.1e6,
-            modulation_type="FSK",
-            samples_per_symbol=1500,
-            low_frequency=41e3,
-            high_frequency=46e3,
-            pause=262924,
-            data=messages)
-
+        
+        if self.dogtra200:
+            self.sender.send(
+                frequency=27.1e6,
+                sample_rate=2e6,
+                carrier_frequency=27.1e6,
+                modulation_type="FSK",
+                samples_per_symbol=1500,
+                low_frequency=41e3,
+                high_frequency=46e3,
+                pause=262924,
+                data=messages)
+        else:
+            self.sender.send(
+                frequency=27e6,
+                sample_rate=2e6,
+                carrier_frequency=27e6,
+                modulation_type="FSK",
+                samples_per_symbol=1200,
+                low_frequency=91e3,
+                high_frequency=95e3,
+                pause=262924,
+                data=messages)
 
     def command(self, action, power, duration):
         """sends a command to the receiver.
@@ -185,5 +208,8 @@ class Dogtra(Receiver):
         for _ in range(0, round(duration / 60)):
             message = message + message_template
 
-        start_of_transmission = "11111110000000111111100000000000"
+        if self.dogtra200:
+            start_of_transmission = "11111110000000111111100000000000"
+        else:
+            start_of_transmission = "111111100000001111111000000000000"
         self.send(start_of_transmission + message.strip())
