@@ -86,10 +86,8 @@ class Remoshock:
             print("Error parsing configuration file section " + section + ": " + str(e))
             sys.exit(1)
 
-        if receiver_type.lower() == "dogtra200ncp":
-            receiver = Dogtra(receiver_properties, code, channel, "200ncp")
-        elif receiver_type.lower() == "dogtra600ncp":
-            receiver = Dogtra(receiver_properties, code, channel, "600ncp")
+        if receiver_type.lower() == "dogtra200ncp" or receiver_type.lower() == "dogtra600ncp":
+            receiver = Dogtra(receiver_properties, code, channel)
         elif receiver_type.lower() == "pac":
             receiver = Pac(receiver_properties, code, channel)
         elif receiver_type.lower() == "patpett150":

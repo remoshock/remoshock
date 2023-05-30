@@ -29,7 +29,7 @@ class Dogtra(Receiver):
         255]
 
 
-    def __init__(self, receiver_properties, transmitter_code, channel, model):
+    def __init__(self, receiver_properties, transmitter_code, channel):
         super().__init__(receiver_properties)
         self.receiver_properties.capabilities(action_light=False, action_beep=False, action_vibrate=True, action_shock=True)
         self.receiver_properties.timings(duration_min_ms=250, duration_increment_ms=250, awake_time_s=0)  # TODO
@@ -43,7 +43,7 @@ class Dogtra(Receiver):
             pass
 
         self.channel = channel
-        if model == "600ncp":
+        if receiver_properties.receiver_type == "600ncp":
             self.dogtra200 = False
 
 
