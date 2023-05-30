@@ -10,6 +10,7 @@ import secrets
 import string
 import sys
 
+
 class MultiReceiverSectionSupport(collections.OrderedDict):
     """This class adds an index number at the end of each [receiver] section."""
 
@@ -212,8 +213,7 @@ name=Dogtra 200 NCP[number]
 color=[color]
 transmitter_code=[transmitter_code_2digits]
 channel=1
-"""
-,
+""",
 
             """
 [receiver]
@@ -223,7 +223,6 @@ color=[color]
 transmitter_code=[transmitter_code_2digits]
 channel=1
 """
-
         ]
         config = """
 #

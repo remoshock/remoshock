@@ -36,7 +36,7 @@ class Dogtra(Receiver):
         self.transmitter_code = transmitter_code
 
         try:
-            if not transmitter_code is None and len(transmitter_code) > 1 and len(transmitter_code) < 5:
+            if transmitter_code is not None and len(transmitter_code) > 1 and len(transmitter_code) < 5:
                 self.transmitter_code = format(int(transmitter_code), "012b")
         except ValueError:
             # error will be reported in validate_config()
@@ -148,7 +148,7 @@ class Dogtra(Receiver):
         """sends messages over the air using the SDR sender.
 
         @param messages messages that have already been encoded for transmission"""
-        
+
         if self.dogtra200:
             self.sender.send(
                 frequency=27.1e6,
