@@ -42,9 +42,11 @@ class Dogtra(Receiver):
             # error will be reported in validate_config()
             pass
 
+        print(self.transmitter_code)
+
         self.channel = channel
         if receiver_properties.receiver_type == "600ncp":
-            self.dogtra200 = False
+            self.end_one = False
 
 
     def validate_config(self):
@@ -149,7 +151,7 @@ class Dogtra(Receiver):
 
         @param messages messages that have already been encoded for transmission"""
 
-        if self.dogtra200:
+        if self.end_one:
             self.sender.send(
                 frequency=27.1e6,
                 sample_rate=2e6,
@@ -189,8 +191,8 @@ class Dogtra(Receiver):
         message = ""
         if action == Action.BEEPSHOCK:
             message_template = self.encode_for_transmission(self.generate(self.transmitter_code, 50, 1))
-            delay = self.receiver_properties.beep_shock_delay_ms / 1000
-            message = message_template + message_template + message_template + "/" + str(delay) + "s "
+            delay = self.receiver_properties.beep_shock_delay_ms
+            message = message_template + message_template + message_template + "/" + str(delay) + "ms "
 
         beep = 0
         if action == Action.BEEP or action == Action.VIBRATE:
@@ -208,7 +210,7 @@ class Dogtra(Receiver):
         for _ in range(0, round(duration / 60)):
             message = message + message_template
 
-        if self.dogtra200:
+        if self.end_one:
             start_of_transmission = "11111110000000111111100000000000"
         else:
             start_of_transmission = "111111100000001111111000000000000"

@@ -148,8 +148,8 @@ class Pac(Receiver):
 
         message = ""
         if action == Action.BEEPSHOCK:
-            delay = self.receiver_properties.beep_shock_delay_ms / 1000
-            message = self.encode_for_transmission(self.generate(self.transmitter_code, 0, self.button, 1)) + "/" + str(delay) + "s "
+            delay = self.receiver_properties.beep_shock_delay_ms
+            message = self.encode_for_transmission(self.generate(self.transmitter_code, 0, self.button, 1)) + "/" + str(delay) + "ms "
 
         beep = 0
         if action == Action.BEEP or action == Action.VIBRATE:

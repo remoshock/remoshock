@@ -215,7 +215,8 @@ class Pawanti(Receiver):
 
         if action == Action.BEEPSHOCK:
             message_template = self.encode_for_transmission(self.generate(Action.BEEP, 1))
-            message = message + message_template + message_template + message_template + "/1.1s "
+            delay = self.receiver_properties.beep_shock_delay_ms + 100
+            message = message + message_template + message_template + message_template + "/" + str(delay) + "ms "
             action = Action.SHOCK
 
         if action == Action.LIGHT:

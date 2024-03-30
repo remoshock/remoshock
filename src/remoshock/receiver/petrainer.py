@@ -137,8 +137,8 @@ class Petrainer(Receiver):
         message = ""
         if action == Action.BEEPSHOCK:
             message = self.encode_for_transmission(self.generate(Action.BEEP, 1))
-            delay = self.receiver_properties.beep_shock_delay_ms / 1000 + 0.1
-            message = message + " " + message + " " + message + "/" + str(delay) + "s "
+            delay = self.receiver_properties.beep_shock_delay_ms + 100
+            message = message + " " + message + " " + message + "/" + str(delay) + "ms "
             action = Action.SHOCK
 
         if duration <= 500:
