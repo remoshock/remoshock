@@ -322,11 +322,11 @@ class RemoshockMock(Remoshock):
     """A mock used for testing without requiring any SDR hardware."""
 
 
-    def _process_command(self, _receiver, action, _power, duration, _beep_shock_delay_ms=None):
+    def _process_command(self, _receiver, action, _power, duration, beep_shock_delay_ms=None):
         """wait but do nothing, because this is a mock only"""
 
         if action == Action.BEEPSHOCK:
-            time.sleep(1.2)
+            time.sleep((beep_shock_delay_ms or 1000) / 1000 + 0.2)
         time.sleep(duration / 1000)
 
 
