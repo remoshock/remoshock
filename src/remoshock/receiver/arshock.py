@@ -1,5 +1,5 @@
 #
-# Copyright nilswinter 2020-2021. License: AGPL
+# Copyright nilswinter 2020-2025. License: AGPL
 # _____________________________________________
 
 
@@ -79,13 +79,13 @@ class ArduinoBasedReceiver(Receiver):
         self.index = arduino_manager.register_receiver(self.receiver_type.value, self.arg1, self.arg2, self.arg3)
 
 
-    def command(self, action, power, duration):
+    def command(self, action, power, duration, beep_shock_delay_ms=None):
         if action == Action.KEEPAWAKE:
             return
 
         if action == Action.BEEPSHOCK:
             self.arduino_manager.command(Action.BEEP, self.index, 0, 0)
-            time.sleep(self.receiver_properties.beep_shock_delay_ms / 1000)
+            time.sleep((beep_shock_delay_ms or self.receiver_properties.beep_shock_delay_ms) / 1000)
             action = Action.SHOCK
         self.arduino_manager.command(action, self.index, power, duration)
 

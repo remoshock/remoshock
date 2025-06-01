@@ -218,7 +218,7 @@ class Pawanti(Receiver):
             data=messages)
 
 
-    def command(self, action, power, duration):
+    def command(self, action, power, duration, beep_shock_delay_ms=None):
         """sends a command to the receiver.
 
         A command may consist of several messages.
@@ -236,7 +236,7 @@ class Pawanti(Receiver):
 
         if action == Action.BEEPSHOCK:
             message_template = self.encode_for_transmission(self.generate(Action.BEEP, 1))
-            delay = self.receiver_properties.beep_shock_delay_ms + 100
+            delay = (beep_shock_delay_ms or self.receiver_properties.beep_shock_delay_ms) + 100
             message = message + message_template + message_template + message_template + "/" + str(delay) + "ms "
             action = Action.SHOCK
 

@@ -1,5 +1,5 @@
 #
-# Copyright nilswinter 2020-2021. License: AGPL
+# Copyright nilswinter 2020-2025. License: AGPL
 # _____________________________________________
 
 
@@ -32,7 +32,7 @@ class Receiver:
         """
 
 
-    def command(self, action, power, duration):
+    def command(self, action, power, duration, beep_shock_delay_ms=None):
         """transmit a command to the receiver, sub-classes will do something useful here"""
 
 

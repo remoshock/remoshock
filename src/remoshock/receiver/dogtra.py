@@ -1,5 +1,5 @@
 #
-# Copyright nilswinter 2020-2021. License: AGPL
+# Copyright nilswinter 2020-2025. License: AGPL
 # _____________________________________________
 
 import re
@@ -174,7 +174,7 @@ class Dogtra(Receiver):
                 pause=262924,
                 data=messages)
 
-    def command(self, action, power, duration):
+    def command(self, action, power, duration, beep_shock_delay_ms=None):
         """sends a command to the receiver.
 
         A command may consist of several messages, e. g. one message
@@ -191,7 +191,7 @@ class Dogtra(Receiver):
         message = ""
         if action == Action.BEEPSHOCK:
             message_template = self.encode_for_transmission(self.generate(self.transmitter_code, 50, 1))
-            delay = self.receiver_properties.beep_shock_delay_ms
+            delay = beep_shock_delay_ms or self.receiver_properties.beep_shock_delay_ms
             message = message_template + message_template + message_template + "/" + str(delay) + "ms "
 
         beep = 0
