@@ -173,7 +173,6 @@ class RemoshockRandomizer:
         to verify that all receivers are turned on and setup correctly"""
         if "skip_startup_beeps" not in self.cfg or not self.cfg["skip_startup_beeps"]:
             for i in range(1, len(self.remoshock.receivers) + 1):
-                logging.info("Testing receiver " + str(i))
                 self.remoshock.command(i, Action.BEEP, 0, 250)
                 time.sleep(1)
             logging.info("Beep command sent to all known receivers. Starting randomizer...")
@@ -325,6 +324,7 @@ class RemoshockRandomizer:
                     else:
                         self.cfg.pop(real_key, None)
 
+            self.cfg["beep_shock_delay_ms"] = int(config["beep_shock_delay_ms"] or 1500)
             self.cfg["skip_startup_beeps"] = bool(config["skip_startup_beeps"])
 
             self.error = ""

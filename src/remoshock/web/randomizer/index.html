@@ -51,6 +51,8 @@ Default values, which may be overwritten below:
 	<span class="nobr"><input id="shock_min_power_percent" type="number" min="0" max="100" required pattern="^\d+$"> % <span></span></span></div>
 <div><label for="shock_max_power_percent">Shock max power: </label>
 	<span class="nobr"><input id="shock_max_power_percent" type="number" min="0" max="100" required pattern="^\d+$"> % <span></span></span></div>
+<div><label for="probability_weight">Beep shock delay: </label>
+	<span class="nobr"><input id="beep_shock_delay_ms" type="number" min="0" required pattern="^\d+$"> ms <span></span></span></div>
 <input id="probability_weight" type="hidden">
 </fieldset>
 
@@ -59,13 +61,15 @@ Default values, which may be overwritten below:
 <legend>Receiver</legend>
 
 <div><label for="shock_min_duration_ms">Shock min duration: </label>
-	<span class="nobr"><input id="shock_min_duration_ms" type="number" min="0" max="10000" pattern="^\d+$"> ms <span></span></span></div>
+	<span class="nobr"><input id="shock_min_duration_ms" type="number" min="0" max="10000" pattern="^\d*$"> ms <span></span></span></div>
 <div><label for="shock_max_duration_ms">Shock max duration: </label>
-	<span class="nobr"><input id="shock_max_duration_ms" type="number" min="0" max="10000" pattern="^\d+$"> ms <span></span></span></div>
+	<span class="nobr"><input id="shock_max_duration_ms" type="number" min="0" max="10000" pattern="^\d*$"> ms <span></span></span></div>
 <div><label for="shock_min_power_percent">Shock min power: </label>
-	<span class="nobr"><input id="shock_min_power_percent" type="number" min="0" max="100" pattern="^\d+$"> % <span></span></span></div>
+	<span class="nobr"><input id="shock_min_power_percent" type="number" min="0" max="100" pattern="^\d*$"> % <span></span></span></div>
 <div><label for="shock_max_power_percent">Shock max power: </label>
-	<span class="nobr"><input id="shock_max_power_percent" type="number" min="0" max="100" pattern="^\d+$"> % <span></span></span></div>
+	<span class="nobr"><input id="shock_max_power_percent" type="number" min="0" max="100" pattern="^\d*$"> % <span></span></span></div>
+<div><label for="probability_weight">Beep shock delay: </label>
+	<span class="nobr"><input id="beep_shock_delay_ms" type="number" min="0" pattern="^\d*$"> ms <span></span></span></div>
 <div><label for="probability_weight">Probability weight: </label>
 	<span class="nobr"><input id="probability_weight" type="number" min="0" required pattern="^\d+$"> <span></span></span></div>
 
