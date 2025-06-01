@@ -60,6 +60,7 @@ class Remoshock:
             random_shock_max_duration_ms = self.config.getint(section, "random_shock_max_duration_ms", fallback=None)
             random_shock_min_power_percent = self.config.getint(section, "random_shock_min_power_percent", fallback=None)
             random_shock_max_power_percent = self.config.getint(section, "random_shock_max_power_percent", fallback=None)
+            random_beep_shock_delay_ms = self.config.getint(section, "random_beep_shock_delay_ms", fallback=None)
 
             receiver_properties = ReceiverProperties(
                 receiver_type=receiver_type, name=name, color=color,
@@ -70,7 +71,8 @@ class Remoshock:
                 random_shock_min_duration_ms=random_shock_min_duration_ms,
                 random_shock_max_duration_ms=random_shock_max_duration_ms,
                 random_shock_min_power_percent=random_shock_min_power_percent,
-                random_shock_max_power_percent=random_shock_max_power_percent
+                random_shock_max_power_percent=random_shock_max_power_percent,
+                random_beep_shock_delay_ms=random_beep_shock_delay_ms
             )
 
             code = self.config.get(section, "transmitter_code")
@@ -227,7 +229,7 @@ class Remoshock:
             i = i + 1
 
 
-    def _process_command(self, receiver, action, power, duration):
+    def _process_command(self, receiver, action, power, duration, beep_shock_delay_ms=None):
         """sends a command to the indicated receiver
 
         @param action action to perform (e. g. BEEP)
@@ -236,10 +238,10 @@ class Remoshock:
         @param duration duration in ms
         """
         with lock:
-            self.receivers[receiver - 1].command(action, power, duration)
+            self.receivers[receiver - 1].command(action, power, duration, beep_shock_delay_ms)
 
 
-    def command(self, receiver, action, power, duration):
+    def command(self, receiver, action, power, duration, beep_shock_delay_ms=None):
         """sends a command to the indicated receiver
 
         @param action action to perform (e. g. BEEP)
@@ -281,7 +283,7 @@ class Remoshock:
             normalized_duration = max(duration_min_ms, round(duration / duration_increment_ms) * duration_increment_ms)
             logging.info("receiver: " + str(receiver) + ", action: " + action.name + ", power: " + str(power) + "%, duration: " + str(normalized_duration) + "ms")
 
-        self._process_command(receiver, action, power, normalized_duration)
+        self._process_command(receiver, action, power, normalized_duration, beep_shock_delay_ms)
 
 
     def get_receiver_properties(self, receiver):
@@ -320,7 +322,7 @@ class RemoshockMock(Remoshock):
     """A mock used for testing without requiring any SDR hardware."""
 
 
-    def _process_command(self, _receiver, action, _power, duration):
+    def _process_command(self, _receiver, action, _power, duration, _beep_shock_delay_ms=None):
         """wait but do nothing, because this is a mock only"""
 
         if action == Action.BEEPSHOCK:

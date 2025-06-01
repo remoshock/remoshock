@@ -30,6 +30,7 @@ class RemoshockRandomizer:
 
     CONFIG_OVERRIDABLE_KEYS = ("shock_min_duration_ms", "shock_max_duration_ms",
                                "shock_min_power_percent", "shock_max_power_percent",
+                               "beep_shock_delay_ms",
                                "probability_weight")
 
     def __init__(self):
@@ -89,6 +90,8 @@ class RemoshockRandomizer:
         try:
             for key in self.CONFIG_KEYS:
                 self.cfg[key] = self.remoshock.config.getint(self.args.section, key)
+
+            self.cfg["beep_shock_delay_ms"] = self.remoshock.config.getint(self.args.section, "beep_shock_delay_ms", fallback=1500)
 
             self.cfg["probability_weight"] = 1
             if "probability_weight" in self.remoshock.config:
@@ -153,6 +156,7 @@ class RemoshockRandomizer:
         self.__parameter_range_check("start_delay_max_minutes", 0, 7 * 24 * 60)
         self.__parameter_range_check("runtime_min_minutes", 0, 365 * 24 * 60)
         self.__parameter_range_check("runtime_max_minutes", 0, 365 * 24 * 60)
+        self.__parameter_range_check("beep_shock_delay_ms", 0, 10000)
         self.__parameter_min_smaller_max_check("shock_min_duration_ms", "shock_max_duration_ms")
         self.__parameter_min_smaller_max_check("shock_min_power_percent", "shock_max_power_percent")
         self.__parameter_min_smaller_max_check("pause_min_s", "pause_max_s")
@@ -256,7 +260,9 @@ class RemoshockRandomizer:
                         self.get_overridable_config(receiver, "shock_max_duration_ms")
                     )
 
-                self.remoshock.command(receiver, action, power, duration)
+                beep_shock_delay_ms = self.get_overridable_config(receiver, "beep_shock_delay_ms")
+
+                self.remoshock.command(receiver, action, power, duration, beep_shock_delay_ms)
                 current_time = datetime.datetime.now()
 
             print("Runtime completed.")

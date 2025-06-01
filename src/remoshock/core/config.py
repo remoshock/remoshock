@@ -254,6 +254,7 @@ start_delay_min_minutes = 0
 start_delay_max_minutes = 0
 runtime_min_minutes = 600
 runtime_max_minutes = 600
+beep_shock_delay_ms = 1500
 """
 
         receiver_static_config = """
