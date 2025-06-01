@@ -5,6 +5,7 @@
 import argparse
 import configparser
 import datetime
+import logging
 import random
 import sys
 import threading
@@ -172,15 +173,15 @@ class RemoshockRandomizer:
         to verify that all receivers are turned on and setup correctly"""
         if "skip_startup_beeps" not in self.cfg or not self.cfg["skip_startup_beeps"]:
             for i in range(1, len(self.remoshock.receivers) + 1):
-                print("Testing receiver " + str(i))
+                logging.info("Testing receiver " + str(i))
                 self.remoshock.command(i, Action.BEEP, 0, 250)
                 time.sleep(1)
-            print("Beep command sent to all known receivers. Starting randomizer...")
+            logging.info("Beep command sent to all known receivers. Starting randomizer...")
         else:
-            print("Starting randomizer...")
+            logging.info("Starting randomizer...")
 
         if self.cli:
-            print("Press Ctrl+c to stop.")
+            logging.info("Press Ctrl+c to stop.")
 
 
     def __determine_action(self):
@@ -223,11 +224,11 @@ class RemoshockRandomizer:
             start_delay_s = random.randint(self.cfg["start_delay_min_minutes"] * 60, self.cfg["start_delay_max_minutes"] * 60)
 
             if start_delay_s > 0:
-                print("Waiting according to start_delay_min_minutes and start_delay_max_minutes...")
+                logging.info("Waiting according to start_delay_min_minutes and start_delay_max_minutes...")
                 if threadEvent.wait(start_delay_s):
-                    print("Randomizer canceled")
+                    logging.info("Randomizer canceled")
                     with lock:
-                        print("Locked")
+                        logging.debug("Locked")
                         if self.threadEvent == threadEvent:
                             self.threadEvent = None
                     return
@@ -239,7 +240,7 @@ class RemoshockRandomizer:
             while (current_time - start_time).total_seconds() < runtime_s:
                 wait_time_s = random.randint(self.cfg["pause_min_s"], self.cfg["pause_max_s"])
                 if threadEvent.wait(wait_time_s):
-                    print("Randomizer canceled")
+                    logging.info("Randomizer canceled")
                     with lock:
                         if self.threadEvent == threadEvent:
                             self.threadEvent = None
@@ -265,14 +266,14 @@ class RemoshockRandomizer:
                 self.remoshock.command(receiver, action, power, duration, beep_shock_delay_ms)
                 current_time = datetime.datetime.now()
 
-            print("Runtime completed.")
+            logging.info("Runtime completed.")
 
             with lock:
                 if self.threadEvent == threadEvent:
                     self.threadEvent = None
 
         except KeyboardInterrupt:
-            print("Stopped by Ctrl+c.")
+            logging.warn("Stopped by Ctrl+c.")
             sys.exit(0)
 
 
@@ -284,7 +285,7 @@ class RemoshockRandomizer:
         self.__load_config()
         self.__validate_configuration()
         if (self.error != ""):
-            print(self.error)
+            logging.error(self.error)
             sys.exit(1)
         powermanager.inhibit()
         self.__test_receivers()
@@ -357,5 +358,5 @@ def main():
     try:
         RemoshockRandomizer().start()
     except KeyboardInterrupt:
-        print("Stopped by Ctrl+c.")
+        logging.warn("Stopped by Ctrl+c.")
         sys.exit(0)
