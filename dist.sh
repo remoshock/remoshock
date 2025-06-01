@@ -36,3 +36,4 @@ rm -rf $TARGET_DIR
 cd $PROJECT_DIR
 rm -rf src/remoshock.egg-info/; python3 -m build
 
+# python3 -m twine upload dist/*

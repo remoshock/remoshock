@@ -16,7 +16,6 @@ setuptools.setup(
     author_email = 'nils.winter@yahoo.com',
     classifiers = [
         'Programming Language :: Python :: 3',
-        'License :: OSI Approved :: GNU Affero General Public License v3',
         'Operating System :: POSIX :: Linux',
     ],
     description = 'Computer based shock-collar remote control with "evil" features.',
@@ -31,7 +30,7 @@ setuptools.setup(
     long_description = long_description,
     long_description_content_type = 'text/markdown',
     license="GNU Affero General Public License v3 (AGPL)",
-    license_files = ('docs/LICENSE.md'),
+    license_files = ['docs/LICENSE.md'],
     package_data={
       '': ['*'],
     },
