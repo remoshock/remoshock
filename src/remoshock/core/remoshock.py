@@ -4,6 +4,7 @@
 
 import configparser
 import logging
+import os
 import sys
 import time
 import threading
@@ -192,9 +193,14 @@ class Remoshock:
         - initialize configured receivers
         """
         logging.basicConfig(
-            format='%(asctime)s %(levelname)-8s %(message)s',
+            format="%(asctime)s %(levelname)-8s %(message)s",
             level=logging.INFO,
-            datefmt='%Y-%m-%d %H:%M:%S')
+            datefmt="%H:%M:%S",
+            handlers=[
+                logging.FileHandler(os.getenv("HOME") + "/remoshock.log"),
+                logging.StreamHandler()
+            ],
+            force=True)
 
         self._setup_from_config()
         arduino_required = False
@@ -336,9 +342,14 @@ class RemoshockMock(Remoshock):
         using this mock"""
 
         logging.basicConfig(
-            format='%(asctime)s %(levelname)-8s %(message)s',
+            format="%(asctime)s %(levelname)-8s %(message)s",
             level=logging.INFO,
-            datefmt='%Y-%m-%d %H:%M:%S')
+            datefmt="%H:%M:%S",
+            handlers=[
+                logging.FileHandler(os.getenv("HOME") + "/remoshock.log"),
+                logging.StreamHandler()
+            ],
+            force=True)
 
         self._setup_from_config()
         print("Loaded mock")
