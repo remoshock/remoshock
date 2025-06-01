@@ -1,11 +1,12 @@
 #!/usr/bin/python3
 #
-# Copyright nilswinter 2020-2022. License: AGPL
+# Copyright nilswinter 2020-2025. License: AGPL
 # _____________________________________________
 
 
 import re
 import threading
+import time
 
 from remoshock.core.action import Action
 from remoshock.receiver.receiver import Receiver
@@ -44,6 +45,8 @@ class Pawanti(Receiver):
             print("The transmitter_code must be sequence of length 24 consisting of the characters 0 and 1")
             return False
 
+        # TODO: remove False
+        # False and
         if self.transmitter_code != "011001010000000000001011" and self.transmitter_code != "011000000000000000001011":
             print("ERROR: Unsupported transmitter_code \"" + self.transmitter_code + "\" in remoshock.ini.")
             print("The transmitter_code must be either 011001010000000000001011 or 011000000000000000001011")
@@ -155,6 +158,31 @@ class Pawanti(Receiver):
                 "1001010": "1110",  # noqa: E241
             }
             return checksum_table[action_code + intensity_code]
+        elif self.transmitter_code == "011100000000000000001011":
+            checksum_table = {
+                "0110000": "0001",  # noqa: E241
+                "0100001": "0101",  # noqa: E241
+                "0100010": "0100",  # noqa: E241
+                "0100011": "0111",  # noqa: E241
+                "0100100": "0110",  # noqa: E241
+                "0100101": "1010",  # noqa: E241
+                "0100110": "1011",  # noqa: E241
+                "0100111": "1000",  # noqa: E241
+                "0101000": "1001",  # noqa: E241
+                "0101001": "1110",  # noqa: E241
+                "0010001": "0110",  # noqa: E241
+                "0010010": "1000",  # noqa: E241
+                "0010011": "0010",  # noqa: E241
+                "0010100": "0011",  # noqa: E241
+                "0010101": "",  # noqa: E241
+                "0010110": "",  # noqa: E241
+                "0010111": "",  # noqa: E241
+                "0011000": "",  # noqa: E241
+                "0011001": "",  # noqa: E241
+                "1000101": "",  # noqa: E241
+                "1001010": "",  # noqa: E241
+            }
+            return checksum_table[action_code + intensity_code]
         print("ERROR: Unsupported transmitter_code")
         return "0000"
 
@@ -165,12 +193,6 @@ class Pawanti(Receiver):
 
         This methods adds the synchronization prefix as well as the fillers
         between each bit."""
-
-        filler = "01"
-        res = ""
-        for bit in data:
-            res = res + filler + bit
-        # print(res)
 
         prefix = "00000000000000000000000000000000000"
         filler = "0011"
@@ -210,7 +232,6 @@ class Pawanti(Receiver):
             action = Action.VIBRATE
             power = 0
             duration = 250
-
         message = "01010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101"
 
         if action == Action.BEEPSHOCK:
@@ -230,13 +251,8 @@ class Pawanti(Receiver):
 
         repeats = round((duration - 500) / 48 + 5)
 
-        message_template = self.encode_for_transmission(self.generate(action, power))
-        for _ in range(0, repeats):
-            message = message + message_template
-
-        self.send(message)
-
         """
+        message = "01010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101"
         for self.checksum in range(0, 16):
             message_template = self.encode_for_transmission(self.generate(action, power))
             for _ in range(0, repeats):
@@ -245,16 +261,21 @@ class Pawanti(Receiver):
         self.send(message)
         """
 
-        """
-        for self.checksum in range(0, 16):
-            self.checksum = 13
-
-            time.sleep(1)
-            #input()
+        if True:
             print(self.checksum)
-            message = "01010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101"
             message_template = self.encode_for_transmission(self.generate(action, power))
             for _ in range(0, repeats):
                 message = message + message_template
             self.send(message)
-        """
+
+        else:
+            for self.checksum in range(0, 16):
+    
+                time.sleep(.2)
+                #input()
+                print(self.checksum)
+                message = "01010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101"
+                message_template = self.encode_for_transmission(self.generate(action, power))
+                for _ in range(0, repeats):
+                    message = message + message_template
+                self.send(message)
