@@ -120,7 +120,7 @@ class Dogtra(Receiver):
         for _ in range(0, intensity + 1):
             res = res + "1"
 
-        if self.dogtra200:
+        if self.end_one:
             res = res + "01"
             return res.ljust(22, "0")
         else:
@@ -134,7 +134,7 @@ class Dogtra(Receiver):
         This methods adds the synchronization prefix as well as the fillers
         between each bit in the first part of the message."""
 
-        if self.dogtra200:
+        if self.end_one:
             prefix = "11100"
         else:
             prefix = "1111100"
