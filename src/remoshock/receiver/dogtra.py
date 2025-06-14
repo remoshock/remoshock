@@ -12,7 +12,7 @@ lock = threading.RLock()
 
 
 class Dogtra(Receiver):
-    dogtra200 = True
+    end_one = True
 
     """communication with Dogtra collars"""
     power_mapping = [
