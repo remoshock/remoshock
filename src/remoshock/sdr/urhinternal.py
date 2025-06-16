@@ -137,11 +137,14 @@ class Sender:
         Logger.save_log_level()
 
         self.args = args
-        hackrf.setup(None)
         self.reset()
 
 
     def reset(self):
+        ready = hackrf.setup(self.args.device_identifier)
+        if ready < 0 and ready > -1000:
+            logger.error("Could not open HackRF device. Please check if it is connected and not used by another program.")
+            return False
         bandwidth = self.args.sample_rate if self.args.bandwidth is None else self.args.bandwidth
         gain = 20 if self.args.gain is None else self.args.gain
         if_gain = 20 if self.args.if_gain is None else self.args.if_gain
@@ -153,6 +156,7 @@ class Sender:
         hackrf.set_rf_gain(gain)
         hackrf.set_if_tx_gain(if_gain)
         hackrf.TIMEOUT = 0.1
+        return True
 
 
     def modulate_messages(self, messages):
@@ -253,12 +257,13 @@ class UrhInternalSender(SdrSender):
             self.sender.args.sample_rate = sample_rate
             self.sender.args.frequency = frequency
 
-            with HidePrintIfNotVerbose(self.verbose):
-                self.sender.error = ""
-                samples = self.sender.modulate_messages(data)
-                self.sender.send(samples)
-            if self.sender.error != "":
-                logging.error(self.sender.error)
+            if self.sender.reset():
+                with HidePrintIfNotVerbose(self.verbose):
+                    self.sender.error = ""
+                    samples = self.sender.modulate_messages(data)
+                    self.sender.send(samples)
+                if self.sender.error != "":
+                    logging.error(self.sender.error)
 
 if __name__ == '__main__':
     sender = Sender()
