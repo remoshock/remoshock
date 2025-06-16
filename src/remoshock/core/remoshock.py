@@ -4,6 +4,7 @@
 
 import configparser
 import logging
+import logging.handlers
 import os
 import sys
 import time
@@ -82,11 +83,11 @@ class Remoshock:
             if channel is None:
                 button = self.config.getint(section, "button", fallback=None)
                 if button is not None:
-                    print("ERROR: Please rename parameter \"button\" to \"channel\" in remoshock.ini")
+                    logging.error("Please rename parameter \"button\" to \"channel\" in remoshock.ini")
                     return None
             channel = self.config.getint(section, "channel")
         except ValueError as e:
-            print("Error parsing configuration file section " + section + ": " + str(e))
+            logging.error("Error parsing configuration file section " + section + ": " + str(e))
             sys.exit(1)
 
         if receiver_type.lower() == "dogtra200ncp" or receiver_type.lower() == "dogtra600ncp":
@@ -104,7 +105,7 @@ class Remoshock:
         elif receiver_type.lower() == "wodondogb":
             receiver = WodondogB(receiver_properties, code, channel)
         else:
-            print("ERROR: Unknown receiver type \"" + receiver_type + "\" in remoshock.ini. Supported types: pac, patpett150, petrainer, wodondog, wodondogb")
+            logging.error("Unknown receiver type \"" + receiver_type + "\" in remoshock.ini. Supported types: pac, patpett150, petrainer, wodondog, wodondogb")
             return None
 
         if receiver.validate_config():
@@ -192,16 +193,7 @@ class Remoshock:
         - initialize arshock, if required by a configured receiver
         - initialize configured receivers
         """
-        logging.basicConfig(
-            format="%(asctime)s %(levelname)-8s %(message)s",
-            level=logging.INFO,
-            datefmt="%H:%M:%S",
-            handlers=[
-                logging.FileHandler(os.getenv("HOME") + "/remoshock.log"),
-                logging.StreamHandler()
-            ],
-            force=True)
-
+        self._start_logging()
         self._setup_from_config()
         arduino_required = False
         sdr_required = False
@@ -233,6 +225,22 @@ class Remoshock:
                 scheduler().schedule_task(periodic_task)
 
             i = i + 1
+
+
+    def _start_logging(self):
+        """configures the logging system"""
+
+        logging.basicConfig(
+            format="%(asctime)s %(levelname)-8s %(message)s",
+            level=logging.INFO,
+            datefmt="%H:%M:%S",
+            handlers=[
+                logging.handlers.RotatingFileHandler(os.getenv("HOME") + "/remoshock.log", maxBytes=10000000, backupCount=5),
+                logging.StreamHandler()
+            ],
+            force=True)
+        logging.info("-------------------------------------------------------------------")
+        logging.info("Remoshock started")
 
 
     def _process_command(self, receiver, action, power, duration, beep_shock_delay_ms=None):
@@ -341,15 +349,7 @@ class RemoshockMock(Remoshock):
         initialize anything because they will never be accessed
         using this mock"""
 
-        logging.basicConfig(
-            format="%(asctime)s %(levelname)-8s %(message)s",
-            level=logging.INFO,
-            datefmt="%H:%M:%S",
-            handlers=[
-                logging.FileHandler(os.getenv("HOME") + "/remoshock.log"),
-                logging.StreamHandler()
-            ],
-            force=True)
+        self._start_logging()
 
         self._setup_from_config()
         print("Loaded mock")

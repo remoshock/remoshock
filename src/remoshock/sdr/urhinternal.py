@@ -34,7 +34,7 @@ except ModuleNotFoundError:
     print("sudo apt install python3-pip python3-pyqt5; sudo pip3 install urh")
     print()
     print("If URH is installed, you may try to use the command line interface")
-    print("instead of internal invokation by editing remoshock.ini:")
+    print("instead of internal invocation by editing remoshock.ini:")
     print("sdr=HackRFcli")
     print();
     sys.exit(1)
@@ -187,7 +187,7 @@ class Sender:
             ret = hackrf.start_tx_mode(send_config.get_data_to_send)
             log("hackrf.start_tx_mode")
             if ret != 0:
-                self.error += "ERROR: enter_async_send_mode failed\n"
+                logging.error("enter_async_send_mode failed")
                 return False
 
             start = time.time()
@@ -197,7 +197,7 @@ class Sender:
                 except KeyboardInterrupt:
                     pass
                 if time.time() - start > 15:
-                    self.error += "ERROR: send did not complete\n"
+                    logging.error("send did not complete")
                     break
             log("send completed")
         finally:
@@ -227,7 +227,17 @@ class UrhInternalSender(SdrSender):
         global log_enabled
         log_enabled = verbose
         self.verbose = verbose
+        self.restore_loging_config()
         self.sender = Sender()
+
+
+    def restore_loging_config(self):
+        """On loading URH, it overrides log-level names with color codes.
+        Those color codes mess up the logfile, so we remove them again."""
+
+        logging.addLevelName(logging.WARNING, "WARN")
+        logging.addLevelName(logging.ERROR, "ERROR")
+        logging.addLevelName(logging.CRITICAL, "CRITICAL")
 
 
     def send(self, frequency, sample_rate, carrier_frequency, 
@@ -242,14 +252,13 @@ class UrhInternalSender(SdrSender):
             self.sender.args.parameters = [low_frequency, high_frequency]
             self.sender.args.sample_rate = sample_rate
             self.sender.args.frequency = frequency
-            self.sender.reset()
 
             with HidePrintIfNotVerbose(self.verbose):
                 self.sender.error = ""
                 samples = self.sender.modulate_messages(data)
                 self.sender.send(samples)
             if self.sender.error != "":
-                print(self.sender.error)
+                logging.error(self.sender.error)
 
 if __name__ == '__main__':
     sender = Sender()
