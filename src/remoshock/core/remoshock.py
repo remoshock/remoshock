@@ -223,7 +223,7 @@ class Remoshock:
         """configures the logging system"""
 
         logging.basicConfig(
-            format="%(asctime)s %(levelname)-8s %(message)s",
+            format="%(asctime)s %(levelname)-5s %(message)s",
             level=logging.INFO,
             datefmt="%H:%M:%S",
             handlers=[
@@ -231,6 +231,7 @@ class Remoshock:
                 logging.StreamHandler()
             ],
             force=True)
+        logging.addLevelName(logging.WARNING, "WARN")
         logging.info("-------------------------------------------------------------------")
         logging.info("Remoshock starting")
         logging.info("")
@@ -283,12 +284,12 @@ class Remoshock:
 
         if self.debug_duration_in_message_count:
             normalized_duration = duration
-            logging.info("Action: receiver: " + str(receiver) + ", action: " + action.name + ", power: " + str(power) + "%, duration: " + str(normalized_duration) + "n")
+            logging.info("Receiver: " + str(receiver) + ", Action: " + action.name + ", Power: " + str(power) + "%, Duration: " + str(normalized_duration) + "n")
         else:
             duration_increment_ms = receiver_properties.duration_increment_ms
             duration_min_ms = receiver_properties.duration_min_ms
             normalized_duration = max(duration_min_ms, round(duration / duration_increment_ms) * duration_increment_ms)
-            logging.info("Action: receiver: " + str(receiver) + ", action: " + action.name + ", power: " + str(power) + "%, duration: " + str(normalized_duration) + "ms")
+            logging.info("Receiver: " + str(receiver) + ", Action: " + action.name + ", Power: " + str(power) + "%, Duration: " + str(normalized_duration) + "ms")
 
         self._process_command(receiver, action, power, normalized_duration, beep_shock_delay_ms)
 
