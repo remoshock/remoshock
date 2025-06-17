@@ -42,7 +42,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             else:
                 filehandler = FileHandler(self)
                 filehandler.serve_file()
-        except BrokenPipeError as ex:
+        except BrokenPipeError:
             logging.warn("Browser disconnected")
         except Exception as ex:
             logging.error("".join(traceback.TracebackException.from_exception(ex).format()))
@@ -61,7 +61,7 @@ class RequestHandler(BaseHTTPRequestHandler):
                 resthandler.serve_rest()
             else:
                 self.answer_html(500, "POST is only valid for REST services")()
-        except BrokenPipeError as ex:
+        except BrokenPipeError:
             logging.warn("Browser disconnected")
         except Exception as ex:
             logging.error("".join(traceback.TracebackException.from_exception(ex).format()))
