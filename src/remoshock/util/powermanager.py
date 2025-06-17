@@ -4,6 +4,7 @@
 
 import logging
 
+
 def inhibit():
     """tries to inhibit automatic power save mode (hibernation).
 
