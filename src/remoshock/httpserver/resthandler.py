@@ -1,8 +1,12 @@
 #
-# Copyright nilswinter 2020-2022. License: AGPL
+# Copyright nilswinter 2020-2025. License: AGPL
 # _____________________________________________
 
 import json
+import logging
+import os
+import shutil
+
 from urllib.parse import parse_qsl, urlparse
 
 from remoshock.core.action import Action
@@ -25,7 +29,7 @@ class RestHandler:
             self.requesthandler.end_headers()
             self.requesthandler.wfile.write(json.dumps(data).encode('utf-8'))
         except BrokenPipeError:
-            print("Browser disconnected")
+            logging.warn("Browser disconnected")
 
 
 
@@ -44,7 +48,7 @@ class RestHandler:
                 if parts[0].lower() == "bearer":
                     if parts[1] == expected_token:
                         return True
-            print("Invalid authentication header or invalid Bearer token.")
+            logging.warn("Invalid authentication header or invalid Bearer token.")
 
         if "token" in params:
             return params["token"] == expected_token
@@ -83,6 +87,17 @@ class RestHandler:
         return params
 
 
+    def handle_log(self):
+        """sends the logfile to the client"""
+        self.requesthandler.send_response(200)
+        self.requesthandler.send_header("Content-Type", "text/plain")
+        self.requesthandler.send_header("Content-Security-Policy", "default-src 'self'")
+        self.requesthandler.send_header("Cache-Control", "no-cache, no-store, must-revalidate")
+        self.requesthandler.end_headers()
+        with open(os.getenv("HOME") + "/remoshock.log", "rb") as content:
+            shutil.copyfileobj(content, self.requesthandler.wfile)
+
+
     def serve_rest(self):
         """serves a rest request"""
 
@@ -115,6 +130,9 @@ class RestHandler:
                     self.answer_json(404, {"status": "unknown service for randomizer"})
                     return
             self.answer_json(200, self.requesthandler.randomizer.get_status_and_config())
+
+        elif path.startswith("/remoshock/log"):
+            self.handle_log()
 
         else:
             self.answer_json(404, {"status": "unknown service"})
