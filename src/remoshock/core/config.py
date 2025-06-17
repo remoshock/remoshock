@@ -1,9 +1,10 @@
 #
-# Copyright nilswinter 2020-2021. License: AGPL
+# Copyright nilswinter 2020-2025. License: AGPL
 # _____________________________________________
 
 import collections
 import configparser
+import logging
 import os
 import random
 import secrets
@@ -33,10 +34,10 @@ class ConfigManager:
         if "configfile" in args and args.configfile is not None:
             self.config_filename = args.configfile
             if not os.path.exists(args.configfile):
-                print("Error configuration file " + args.configfile + " does not exists.")
-                print("If you do not specific a configuration file, the default configuration file")
-                print("at ~/.config/remoshock.ini will be used. If that file does not exist, ")
-                print("the setup wizzard will create it for you.")
+                logging.error("Error configuration file " + args.configfile + " does not exists.")
+                logging.error("If you do not specific a configuration file, the default configuration file")
+                logging.error("at ~/.config/remoshock.ini will be used. If that file does not exist, ")
+                logging.error("the setup wizzard will create it for you.")
                 sys.exit(1)
         else:
             self.config_filename = self.__determine_config_folder() + "/remoshock.ini"
@@ -315,7 +316,7 @@ beep_shock_delay_ms = 1500
     def __read_configuration_from_file(self):
         """reads the configuration from remoshock.ini"""
 
-        print("Using configuration file " + self.config_filename)
+        logging.info("Using configuration file " + self.config_filename)
         config = configparser.ConfigParser(defaults=None, dict_type=MultiReceiverSectionSupport,
                                            strict=False, default_section="default")
         config.read(self.config_filename, "UTF-8")

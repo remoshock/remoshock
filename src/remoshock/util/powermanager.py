@@ -1,7 +1,8 @@
 #
-# Copyright nilswinter 2020-2021. License: AGPL
+# Copyright nilswinter 2020-2025. License: AGPL
 # _____________________________________________
 
+import logging
 
 def inhibit():
     """tries to inhibit automatic power save mode (hibernation).
@@ -37,5 +38,6 @@ def inhibit():
         pass
 
     if not successful:
-        print("Please disable power save mode in your operating system settings,")
-        print("to prevent your computer from going into hibernation after a certain period without user interaction.")
+        logging.info("Please disable power save mode in your operating system settings, to prevent")
+        logging.info("your computer from going into hibernation after a certain period without user interaction.")
+        logging.info("")

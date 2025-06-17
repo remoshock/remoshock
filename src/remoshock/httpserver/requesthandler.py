@@ -1,8 +1,9 @@
 #
-# Copyright nilswinter 2020-2022. License: AGPL
+# Copyright nilswinter 2020-2025. License: AGPL
 # _____________________________________________
 
 import html
+import logging
 import sys
 import traceback
 from http.server import BaseHTTPRequestHandler
@@ -25,7 +26,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(html.escape(text).encode('utf-8'))
         except BrokenPipeError:
-            print("Browser disconnected")
+            logging.warn("Browser disconnected")
 
 
     def do_GET(self):
@@ -42,7 +43,7 @@ class RequestHandler(BaseHTTPRequestHandler):
                 filehandler = FileHandler(self)
                 filehandler.serve_file()
         except Exception as ex:
-            print("".join(traceback.TracebackException.from_exception(ex).format()))
+            logging.error("".join(traceback.TracebackException.from_exception(ex).format()))
             self.answer_html(500, str(sys.exc_info()[0]) + ": " + str(sys.exc_info()[1]))
 
 
@@ -59,7 +60,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             else:
                 self.answer_html(500, "POST is only valid for REST services")()
         except Exception as ex:
-            print("".join(traceback.TracebackException.from_exception(ex).format()))
+            logging.error("".join(traceback.TracebackException.from_exception(ex).format()))
             self.answer_html(500, str(sys.exc_info()[0]) + ": " + str(sys.exc_info()[1]))
 
 

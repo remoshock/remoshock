@@ -1,8 +1,9 @@
 #
-# Copyright nilswinter 2020-2021. License: AGPL
+# Copyright nilswinter 2020-2025. License: AGPL
 # _____________________________________________
 
 import http
+import logging
 import ssl
 import sys
 from remoshock.httpserver.requesthandler import RequestHandler
@@ -21,9 +22,8 @@ class HttpServer:
         """starts the webserver on the tcp-port which is configured in remoshock.ini"""
 
         port = self.remoshock.config.getint("global", "web_port", fallback=7777)
-        print()
-        print("Open http://127.0.0.1:" + str(port) + "/#token=" + self.remoshock.config.get("global", "web_authentication_token"))
-        print()
+        logging.info("Listening on http://127.0.0.1:" + str(port) + "/#token=" + self.remoshock.config.get("global", "web_authentication_token"))
+        logging.info("")
 
         server = http.server.ThreadingHTTPServer(('0.0.0.0', port), RequestHandler)
         certfile = self.remoshock.config.get("global", "web_server_certfile", fallback=None)

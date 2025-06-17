@@ -167,6 +167,8 @@ class RemoshockRandomizer:
             self.__receiver_parameter_min_smaller_max_check(receiver, "shock_min_duration_ms", "shock_max_duration_ms")
             self.__receiver_parameter_min_smaller_max_check(receiver, "shock_min_power_percent", "shock_max_power_percent")
 
+    def __log_start_settings(self):
+        logging.info("Starting Randomizer with the following settings: " + str(dict(self.cfg)))
 
     def __test_receivers(self):
         """sends a beep command to all registered receivers to allow users
@@ -287,6 +289,7 @@ class RemoshockRandomizer:
             logging.error(self.error)
             sys.exit(1)
         powermanager.inhibit()
+        self.__log_start_settings()
         self.__test_receivers()
         self.__execute(threading.Event())
 
@@ -340,6 +343,7 @@ class RemoshockRandomizer:
 
 
     def __run_in_thread(self, threadEvent):
+        self.__log_start_settings()
         self.__test_receivers()
         self.__execute(threadEvent)
 

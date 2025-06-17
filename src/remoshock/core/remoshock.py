@@ -1,5 +1,5 @@
 #
-# Copyright nilswinter 2020-2021. License: AGPL
+# Copyright nilswinter 2020-2025. License: AGPL
 # _____________________________________________
 
 import configparser
@@ -123,38 +123,31 @@ class Remoshock:
         if "sdr" in self.args and self.args.sdr is not None:
             sdr = self.args.sdr
         if sdr is None:
-            print()
-            print("SDR (software defined radio) hardware is required to send radio signals.")
-            print()
-            print("Please edit remoshock.ini and add an entry sdr=... in the [global] section.")
-            print()
-            print("Supported devices are (upper/lower case is important):")
-            print("HackRF, LimeSDR")
-            print()
+            logging.error("SDR (software defined radio) hardware is required to send radio signals.")
+            logging.error("Please edit remoshock.ini and add an entry sdr=... in the [global] section.")
+            logging.error("")
+            logging.error("Supported devices are (upper/lower case is important):")
+            logging.error("HackRF, LimeSDR")
+            logging.error("")
             sys.exit(1)
 
-        print()
-        print("Please make sure your SDR sending hardware is connected and ready. Avoid USB hubs.")
+        logging.info("Please make sure your SDR sending hardware is connected and ready. Avoid USB hubs.")
+        logging.info("")
 
         if sdr.lower() == "hackrf":
-            print()
-            print("We are using internal URH invokation for HackRF. This is recommanded because it")
-            print("prevents a one second delay. But it might cause Python errors, if the URH version is")
-            print("incompatible. In this case, please specify srd=hackrfcli in remoshock.ini")
-            print()
-            print("If the device is not connected or not ready, driver initialization will fail right now")
-            print("...")
+            logging.info("We are using internal URH invokation for HackRF. This is recommanded because it")
+            logging.info("prevents a one second delay. But it might cause Python errors, if the URH version is")
+            logging.info("incompatible. In this case, please specify srd=hackrfcli in remoshock.ini")
+            logging.info("")
 
             from remoshock.sdr.urhinternal import UrhInternalSender
             sender = UrhInternalSender(self.args.verbose)
-            print("Yeah! Driver initialized successfully.")
-            print()
             return sender
 
         if sdr.lower() == "hackrfcli":
             sdr = "HackRF"
 
-        print("Using " + sdr + " via urh_cli")
+        logging.info("Using " + sdr + " via urh_cli")
         from remoshock.sdr.urhcli import UrhCliSender
         return UrhCliSender(sdr, self.args.verbose)
 
@@ -171,15 +164,14 @@ class Remoshock:
                         if receiver is not None:
                             receivers.append(receiver)
                     except configparser.NoOptionError as e:
-                        print("Error reading configuration file: " + str(e))
+                        logging.error("Error reading configuration file: " + str(e))
 
             if len(receivers) == 0:
-                print()
-                print("ERROR: No valid receivers configured in remoshock.ini")
+                logging.error("No valid receivers configured in remoshock.ini")
                 sys.exit(1)
             self.receivers = receivers
         except configparser.NoOptionError as e:
-            print(e)
+            logging.error(e)
             sys.exit(1)
 
 
@@ -240,7 +232,8 @@ class Remoshock:
             ],
             force=True)
         logging.info("-------------------------------------------------------------------")
-        logging.info("Remoshock started")
+        logging.info("Remoshock starting")
+        logging.info("")
 
 
     def _process_command(self, receiver, action, power, duration, beep_shock_delay_ms=None):
@@ -290,12 +283,12 @@ class Remoshock:
 
         if self.debug_duration_in_message_count:
             normalized_duration = duration
-            logging.info("receiver: " + str(receiver) + ", action: " + action.name + ", power: " + str(power) + "%, duration: " + str(normalized_duration) + "n")
+            logging.info("Action: receiver: " + str(receiver) + ", action: " + action.name + ", power: " + str(power) + "%, duration: " + str(normalized_duration) + "n")
         else:
             duration_increment_ms = receiver_properties.duration_increment_ms
             duration_min_ms = receiver_properties.duration_min_ms
             normalized_duration = max(duration_min_ms, round(duration / duration_increment_ms) * duration_increment_ms)
-            logging.info("receiver: " + str(receiver) + ", action: " + action.name + ", power: " + str(power) + "%, duration: " + str(normalized_duration) + "ms")
+            logging.info("Action: receiver: " + str(receiver) + ", action: " + action.name + ", power: " + str(power) + "%, duration: " + str(normalized_duration) + "ms")
 
         self._process_command(receiver, action, power, normalized_duration, beep_shock_delay_ms)
 
@@ -352,4 +345,4 @@ class RemoshockMock(Remoshock):
         self._start_logging()
 
         self._setup_from_config()
-        print("Loaded mock")
+        logging.info("Loaded mock")

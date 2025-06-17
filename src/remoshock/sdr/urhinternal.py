@@ -28,15 +28,15 @@ if os.path.isdir(SRC_DIR):
 try:
     from urh.signalprocessing.IQArray import IQArray
 except ModuleNotFoundError:
-    print()
-    print("ERROR: Could not import urh")
-    print("Please install Universal Radio Hacker:")
-    print("sudo apt install python3-pip python3-pyqt5; sudo pip3 install urh")
-    print()
-    print("If URH is installed, you may try to use the command line interface")
-    print("instead of internal invocation by editing remoshock.ini:")
-    print("sdr=HackRFcli")
-    print();
+    logging.error("")
+    logging.error("ERROR: Could not import urh")
+    logging.error("Please install Universal Radio Hacker:")
+    logging.error("sudo apt install python3-pip python3-pyqt5; sudo pip3 install urh")
+    logging.error("")
+    logging.error("If URH is installed, you may try to use the command line interface")
+    logging.error("instead of internal invocation by editing remoshock.ini:")
+    logging.error("sdr=HackRFcli")
+    logging.error("");
     sys.exit(1)
 
 from urh.util import util
