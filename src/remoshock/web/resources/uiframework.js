@@ -24,7 +24,9 @@ export class UIFramework {
 		<div class="appshell-navpopup">
 			<a class="appshell-navlink" href="/remote/">Remote</a>
 			<a class="appshell-navlink" href="/randomizer/">Randomizer</a>
-			<a class="appshell-navlink" href="/gamepad/">Gamepad (Experimental)</a>
+			<a class="appshell-navlink" href="/gamepad/">Gamepad</a>
+			<hr>
+			<a class="appshell-navlink" href="/admin/log.html">Log</a>
 			<hr>
 			<a class="appshell-navlink" href="https://remoshock.github.io/applications.html">Documentation</a>
 		</div>
