@@ -167,6 +167,27 @@ class Remoshock {
 		return await this.#readResponseWithErrorPopup(response);
 	}
 
+
+	/**
+	 * reads the randomizer status and configuration
+	 *
+	 * @return status and temporary config
+	 */
+	async readLog() {
+		let url = this.urlprefix + "/log";
+		let response = await fetch(url, {
+			headers: {
+				Authorization: "Bearer " + this.authenticationToken
+			}
+		});
+		if (response.status == 200) {
+			return await response.text();
+		}
+		let message = await response.text();
+		alert("Error returned by server: \n" + message);
+		return null;
+	}
+
 	/**
 	 * stops the randomizer
 	 */
