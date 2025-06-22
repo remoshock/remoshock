@@ -37,7 +37,7 @@ class ConfigManager:
                 logging.error("Error configuration file " + args.configfile + " does not exists.")
                 logging.error("If you do not specific a configuration file, the default configuration file")
                 logging.error("at ~/.config/remoshock.ini will be used. If that file does not exist, ")
-                logging.error("the setup wizzard will create it for you.")
+                logging.error("the setup wizard will create it for you.")
                 sys.exit(1)
         else:
             self.config_filename = self.__determine_config_folder() + "/remoshock.ini"
@@ -124,6 +124,8 @@ class ConfigManager:
             number_of_receivers = self.__input_number("How many receivers do you have? [1] ", 1, 0, 100)
             types = []
 
+            pairable_receiver = False
+
             for i in range(1, number_of_receivers + 1):
                 print()
                 print("Type of receiver " + str(i))
@@ -134,17 +136,33 @@ class ConfigManager:
                 print("  5 Wodondog 433 Mhz without receiver flashlight")
                 print("  6 Dogtra 200 NCP")
                 print("  7 Dogtra 600 NCP")
+                code = "0"
                 receiver_type = self.__input_number("Which type is receiver " + str(i) + "? ", 0, 1, 7)
-                types.append(receiver_type - 1)
+                if receiver_type >= 6 and receiver_type <= 7:
+                    print()
+                    print("This device has a static transmitter code, which cannot be changed.")
+                    print("There is a sticker on the transmitter and/or receiver with a short number.")
+                    print("Please do not confuse the transmitter code with the serial number.")
+                    code = str(self.__input_number("What is the transmitter code? ", 0, 1, 99999))
+                else:
+                    pairable_receiver = True
+
+                types.append((receiver_type - 1, code))
 
             config = self.__generate_configuration(sdr, types)
             self.__write_default_configuration(config)
-            print()
-            print("Default configuration was written with random transmitter codes.")
-            print("If you know the code of your transmitter, you can edit the configuration file to use it.")
-            print()
-            print("Please reset your receiver into pairing mode and run remoshockcli --receiver 1")
-            print()
+            if pairable_receiver:
+                print()
+                print("Configuration was written with random transmitter codes.")
+                print("If you know the code of your transmitter, you can edit the configuration file to use it.")
+                print()
+                print("Please reset your receiver into pairing mode and run remoshockcli --receiver 1")
+                print()
+            else:
+                print()
+                print("You can edit the configuration file to change the transmitter code.")
+                print()
+
             sys.exit(0)
         except KeyboardInterrupt:
             print()
@@ -212,7 +230,7 @@ channel=1
 type=dogtra200ncp
 name=Dogtra 200 NCP[number]
 color=[color]
-transmitter_code=[transmitter_code_2digits]
+transmitter_code=[transmitter_code_entered]
 channel=1
 """,
 
@@ -221,7 +239,7 @@ channel=1
 type=dogtra600ncp
 name=Dogtra 600 NCP[number]
 color=[color]
-transmitter_code=[transmitter_code_2digits]
+transmitter_code=[transmitter_code_entered]
 channel=1
 """
         ]
@@ -273,10 +291,11 @@ beep_shock_delay_ms = 1500
         config = config.replace("[web_authentication_token]", self.__generate_web_authentication_token())
 
         i = 0
-        for receiver_type in receiver_types:
+        for (receiver_type, code) in receiver_types:
             receiver_config = receiver_type_configs[receiver_type]
             receiver_config = receiver_config.replace("[number]", str(i + 1))
             receiver_config = receiver_config.replace("[color]", str(colors[i % len(colors)]))
+            receiver_config = receiver_config.replace("[transmitter_code_entered]", code)
             receiver_config = receiver_config.replace("[transmitter_code_2digits]", self.__generate_decimal_transmitter_code(2))
             receiver_config = receiver_config.replace("[transmitter_code_9bit]", self.__generate_binary_transmitter_code(9))
             receiver_config = receiver_config.replace("[transmitter_code_16bit]", self.__generate_binary_transmitter_code(16))
