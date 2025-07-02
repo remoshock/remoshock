@@ -43,7 +43,6 @@ class RemoshockServer:
                             version=VERSION)
 
         self.args = parser.parse_args()
-        print(self.args)
 
     def __boot_remoshock(self):
         """starts up the remoshock infrastructure"""
@@ -59,7 +58,6 @@ class RemoshockServer:
     def start(self):
         """starts up remoshockserver"""
         self.__parse_args()
-        print(self.args)
         self.__boot_remoshock()
         powermanager.inhibit()
         randomizer = RemoshockRandomizer()
