@@ -55,7 +55,10 @@ class RemoshockRandomizer:
                             help=argparse.SUPPRESS)
         parser.add_argument("--sdr",
                             help=argparse.SUPPRESS)
-
+        parser.add_argument("--enable-feature",
+                            choices=["restart"],
+                            nargs="+",
+                            help=argparse.SUPPRESS)
         parser.add_argument("-C", "--configfile",
                             help="custom configuration file. Defaults to ~/.config/remoshock.ini")
         parser.add_argument("-S", "--settingsfile",

@@ -89,6 +89,7 @@ class RestHandler:
 
     def handle_log(self):
         """sends the logfile to the client"""
+
         self.requesthandler.send_response(200)
         self.requesthandler.send_header("Content-Type", "text/plain")
         self.requesthandler.send_header("Content-Security-Policy", "default-src 'self'")
@@ -96,6 +97,20 @@ class RestHandler:
         self.requesthandler.end_headers()
         with open(os.getenv("HOME") + "/remoshock.log", "rb") as content:
             shutil.copyfileobj(content, self.requesthandler.wfile)
+
+
+
+    def handle_restart(self):
+        """shuts the server down, assuming systemd will restart it"""
+
+        if self.requesthandler.args.enable_feature is not None \
+                and "restart" in self.requesthandler.args.enable_feature:
+            logging.info("Restarting remoshock server")
+            self.answer_json(200, {"status": "ok"})
+            os._exit(3)
+        else:
+            logging.warn("Restarting remoshock server not allowed, feature not enabled")
+            self.answer_json(200, {"status": "not enabled"})
 
 
     def serve_rest(self):
@@ -133,6 +148,9 @@ class RestHandler:
 
         elif path.startswith("/remoshock/log"):
             self.handle_log()
+
+        elif path.startswith("/remoshock/admin/restart"):
+            self.handle_restart()
 
         else:
             self.answer_json(404, {"status": "unknown service"})
