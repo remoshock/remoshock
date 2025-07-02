@@ -42,8 +42,6 @@ class Dogtra(Receiver):
             # error will be reported in validate_config()
             pass
 
-        print(self.transmitter_code)
-
         self.channel = channel
         if receiver_properties.receiver_type == "600ncp":
             self.end_one = False
