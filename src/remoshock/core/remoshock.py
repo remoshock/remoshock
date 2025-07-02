@@ -286,12 +286,12 @@ class Remoshock:
 
         if self.debug_duration_in_message_count:
             normalized_duration = duration
-            logging.info("Receiver {:>1} {:9} at {:>3}% for {:>4}n by {:}".format(receiver, action.name, power, normalized_duration, source))
+            logging.info("Receiver {:>1} {:9} at {:>3} % for {:>4} n by {:}".format(receiver, action.name, power, normalized_duration, source))
         else:
             duration_increment_ms = receiver_properties.duration_increment_ms
             duration_min_ms = receiver_properties.duration_min_ms
             normalized_duration = max(duration_min_ms, round(duration / duration_increment_ms) * duration_increment_ms)
-            logging.info("Receiver {:>1} {:9} at {:>3}% for {:>4}ms by {:}".format(receiver, action.name, power, normalized_duration, source))
+            logging.info("Receiver {:>1} {:9} at {:>3} % for {:>4} ms by {:}".format(receiver, action.name, power, normalized_duration, source))
 
         self._process_command(receiver, action, power, normalized_duration, beep_shock_delay_ms)
 
