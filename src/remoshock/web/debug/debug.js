@@ -35,7 +35,7 @@ class Debugger {
 		for (let i = 1; i < 1000; i++) {
 			for (let j = 1; j < 4; j++) {
 				output.innerText = i + " . " + j;
-				await remoshock.command(1, "SHOCK", 40, i);
+				await remoshock.command(1, "SHOCK", 40, i, "debug");
 				await remoshock.sleep(3000 + (i*10));
 			}
 		}

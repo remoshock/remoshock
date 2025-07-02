@@ -122,7 +122,7 @@ class Remote {
 		overlay.classList.add("wait");
 
 		// send command to the server
-		let res = await remoshock.command(receiver.dataset.receiver, action, power, duration);
+		let res = await remoshock.command(receiver.dataset.receiver, action, power, duration, "remote");
 
 		// haptic feedback
 		if (navigator.vibrate) { 

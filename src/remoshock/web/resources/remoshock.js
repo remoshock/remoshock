@@ -106,13 +106,14 @@ class Remoshock {
 	 * @param power  power level 0-100
 	 * @param duration duration in ms
 	 */
-	command(receiver, action, power, duration) {
+	command(receiver, action, power, duration, source) {
 		let url = this.urlprefix + "/command"
 		let command = {
 			"receiver": receiver,
 			"action": action,
 			"power": power,
-			"duration": duration
+			"duration": duration,
+			"source": source
 		}
 		return this.#postJson(url, command);
 	}

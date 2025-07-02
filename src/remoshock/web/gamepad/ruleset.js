@@ -61,7 +61,8 @@ export class Ruleset {
 				parseInt(this.#appConfig.receiver, 10),
 				this.#appConfig.action,
 				parseInt(this.#appConfig.shock_power_percent, 10),
-				parseInt(this.#appConfig.duration_ms, 10));
+				parseInt(this.#appConfig.duration_ms, 10),
+				"game");
 			this.#ui.stopIndicating("punishing");
 			this.#punishmentInProgress = false
 			this.#lastPunishmentTime = currentTime;
