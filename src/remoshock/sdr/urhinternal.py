@@ -208,8 +208,6 @@ class Sender:
             time.sleep(0.2)
             hackrf.stop_tx_mode()
         log("send mode stopped")
-        self.reset()
-        log("send reset done")
 
 
     def shutdown_device(self):
