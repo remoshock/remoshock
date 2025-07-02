@@ -63,11 +63,12 @@ class RestHandler:
         receiver = int(params["receiver"])
         power = int(params["power"])
         duration = int(params["duration"])
+        source = params["source"] if "source" in params else "client"
 
         if action not in [Action.LIGHT, Action.BEEP, Action.VIBRATE, Action.SHOCK, Action.BEEPSHOCK]:
             raise Exception("Invalid action")
 
-        self.requesthandler.remoshock.command(receiver, action, power, duration)
+        self.requesthandler.remoshock.command(receiver, action, power, duration, "web-" + source)
 
 
     def read_parameters(self):

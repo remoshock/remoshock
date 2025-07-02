@@ -11,7 +11,7 @@ class CommandTask(Task):
     """A remoshock-command task that can be scheduled"""
 
 
-    def __init__(self, timestamp, identifier, group_identifier, remoshock, receiver, action, power, duration):
+    def __init__(self, timestamp, identifier, group_identifier, remoshock, receiver, action, power, duration, source):
         """a schedulable task object
 
         @param timestamp when this task should be executed
@@ -30,6 +30,7 @@ class CommandTask(Task):
         self.action = action
         self.power = power
         self.duration = duration
+        self.source = source
 
 
     def __call__(self):
@@ -41,4 +42,4 @@ class CommandTask(Task):
         delayed = (datetime.datetime.now() - self.timestamp).total_seconds()
         if delayed > 30:
             return
-        self.remoshock.command(self.receiver, self.action, self.power, self.duration)
+        self.remoshock.command(self.receiver, self.action, self.power, self.duration, self.source)

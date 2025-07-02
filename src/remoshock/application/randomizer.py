@@ -178,7 +178,7 @@ class RemoshockRandomizer:
         to verify that all receivers are turned on and setup correctly"""
         if "skip_startup_beeps" not in self.cfg or not self.cfg["skip_startup_beeps"]:
             for i in range(1, len(self.remoshock.receivers) + 1):
-                self.remoshock.command(i, Action.BEEP, 0, 250)
+                self.remoshock.command(i, Action.BEEP, 0, 250, "randomizer-check")
                 time.sleep(1)
             logging.info("Beep command sent to all known receivers. Starting randomizer...")
         else:
@@ -267,7 +267,7 @@ class RemoshockRandomizer:
 
                 beep_shock_delay_ms = self.get_overridable_config(receiver, "beep_shock_delay_ms")
 
-                self.remoshock.command(receiver, action, power, duration, beep_shock_delay_ms)
+                self.remoshock.command(receiver, action, power, duration, "randomizer", beep_shock_delay_ms)
                 current_time = datetime.datetime.now()
 
             logging.info("Runtime completed.")

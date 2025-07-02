@@ -74,7 +74,7 @@ class RemoshockCli:
     def __process_action(self):
         """sends the specified command to the specified receiver"""
         action = Action[self.args.action]
-        self.remoshock.command(self.args.receiver, action, self.args.power, self.args.duration)
+        self.remoshock.command(self.args.receiver, action, self.args.power, self.args.duration, "cli")
 
 
     def start(self):

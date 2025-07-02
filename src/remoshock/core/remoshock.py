@@ -212,7 +212,7 @@ class Remoshock:
             # schedule keep awake timer
             awake_time_s = receiver.receiver_properties.awake_time_s
             if awake_time_s > 0:
-                command_task = CommandTask(None, None, None, self, i, Action.KEEPAWAKE, 0, 250)
+                command_task = CommandTask(None, None, None, self, i, Action.KEEPAWAKE, 0, 250, "keepalive")
                 periodic_task = PeriodicTask(awake_time_s / 2 - 5, command_task)
                 scheduler().schedule_task(periodic_task)
 
@@ -249,13 +249,15 @@ class Remoshock:
             self.receivers[receiver - 1].command(action, power, duration, beep_shock_delay_ms)
 
 
-    def command(self, receiver, action, power, duration, beep_shock_delay_ms=None):
+    def command(self, receiver, action, power, duration, source="client", beep_shock_delay_ms=None):
         """sends a command to the indicated receiver
 
         @param action action to perform (e. g. BEEP)
         @param receiver number of receiver to use
         @param power power level (1-100)
         @param duration duration in ms
+        @param source source of the command (e. g. web, cli, ...)
+        @param beep_shock_delay_ms delay in ms for beepshock command
         """
 
         if receiver < 1 or receiver > len(self.receivers):
@@ -284,12 +286,12 @@ class Remoshock:
 
         if self.debug_duration_in_message_count:
             normalized_duration = duration
-            logging.info("Receiver: " + str(receiver) + ", Action: " + action.name + ", Power: " + str(power) + "%, Duration: " + str(normalized_duration) + "n")
+            logging.info("Receiver {:>1} {:9} at {:>3}% for {:>4}n by {:}".format(receiver, action.name, power, normalized_duration, source))
         else:
             duration_increment_ms = receiver_properties.duration_increment_ms
             duration_min_ms = receiver_properties.duration_min_ms
             normalized_duration = max(duration_min_ms, round(duration / duration_increment_ms) * duration_increment_ms)
-            logging.info("Receiver: " + str(receiver) + ", Action: " + action.name + ", Power: " + str(power) + "%, Duration: " + str(normalized_duration) + "ms")
+            logging.info("Receiver {:>1} {:9} at {:>3}% for {:>4}ms by {:}".format(receiver, action.name, power, normalized_duration, source))
 
         self._process_command(receiver, action, power, normalized_duration, beep_shock_delay_ms)
 
