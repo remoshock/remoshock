@@ -54,11 +54,11 @@ class Remote {
 		clone.querySelector("h2").innerText = receiver.name;
 
 		// power
-		clone.querySelector(".power_input").value = 5;
+		clone.querySelector(".power_input").value = 20;
 		clone.querySelector(".power_input").max
 			= receiver.limit_shock_max_power_percent || 100;
 
-		clone.querySelector(".power_range").value = 5;
+		clone.querySelector(".power_range").value = 20;
 		clone.querySelector(".power_range").max
 			= receiver.limit_shock_max_power_percent || 100;
 
