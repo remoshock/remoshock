@@ -26,7 +26,7 @@ export class UserInterface {
 
 	constructor() {
 		this.#uiFramework = new UIFramework();
-		this.#uiFramework.renderAppShell("Gamepad (Experimental)");
+		this.#uiFramework.renderAppShell("Gamepad");
 		document.getElementById("mapping").addEventListener("click", () => {
 			window.location = "/gamepad/mapping.html";
 		});
