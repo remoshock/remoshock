@@ -312,17 +312,18 @@ class Remoshock:
         for section in self.config.sections():
             if not section.startswith("#") and not section.startswith("receiver") and not section == "global":
                 config[section] = dict(self.config[section])
-        result['applications'] = config
+        result["applications"] = config
 
         settings = {}
         for section in self.config_manager.settings.sections():
             settings[section] = dict(self.config_manager.settings[section])
-        result['settings'] = settings
+        settings["enable_feature"] = self.args.enable_feature
+        result["settings"] = settings
 
         receivers = []
         for receiver in self.receivers:
             receivers.append(receiver.receiver_properties.__dict__)
-        result['receivers'] = receivers
+        result["receivers"] = receivers
 
         return result
 
