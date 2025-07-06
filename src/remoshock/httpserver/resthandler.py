@@ -151,7 +151,8 @@ class RestHandler:
             self.handle_log()
 
         elif path.startswith("/remoshock/admin/restart"):
-            self.handle_restart()
+            if method == "POST":
+                self.handle_restart()
 
         else:
             self.answer_json(404, {"status": "unknown service"})
