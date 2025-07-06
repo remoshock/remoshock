@@ -218,6 +218,16 @@ class Remoshock {
 		}
 		this.config = await response.json()
 	}
+
+
+	/**
+	 * restarts the server
+	 */
+	async restartServer() {
+		let url = this.urlprefix + "/admin/restart";
+		let response = await this.#postJson(url, {});
+		return await this.#readResponseWithErrorPopup(response);
+	}
 }
 
 // explicitly export class to support ES module imports
