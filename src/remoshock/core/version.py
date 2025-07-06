@@ -1,5 +1,5 @@
 #
-# Copyright nilswinter 2020-2021. License: AGPL
+# Copyright nilswinter 2020-2025. License: AGPL
 # _____________________________________________
 
 
@@ -7,4 +7,4 @@
 
 # pylint: disable=C0326
 # flake8: noqa
-VERSION="0.83"
+VERSION="0.84"
