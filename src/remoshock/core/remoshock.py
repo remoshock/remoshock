@@ -62,7 +62,8 @@ class Remoshock:
             random_shock_max_duration_ms = self.config.getint(section, "random_shock_max_duration_ms", fallback=None)
             random_shock_min_power_percent = self.config.getint(section, "random_shock_min_power_percent", fallback=None)
             random_shock_max_power_percent = self.config.getint(section, "random_shock_max_power_percent", fallback=None)
-            random_beep_shock_delay_ms = self.config.getint(section, "random_beep_shock_delay_ms", fallback=None)
+            random_beep_shock_min_delay_ms = self.config.getint(section, "random_beep_shock_min_delay_ms", fallback=None)
+            random_beep_shock_max_delay_ms = self.config.getint(section, "random_beep_shock_max_delay_ms", fallback=None)
 
             receiver_properties = ReceiverProperties(
                 receiver_type=receiver_type, name=name, color=color,
@@ -74,7 +75,8 @@ class Remoshock:
                 random_shock_max_duration_ms=random_shock_max_duration_ms,
                 random_shock_min_power_percent=random_shock_min_power_percent,
                 random_shock_max_power_percent=random_shock_max_power_percent,
-                random_beep_shock_delay_ms=random_beep_shock_delay_ms
+                random_beep_shock_min_delay_ms=random_beep_shock_min_delay_ms,
+                random_beep_shock_max_delay_ms=random_beep_shock_max_delay_ms
             )
 
             code = self.config.get(section, "transmitter_code")
@@ -291,7 +293,8 @@ class Remoshock:
             duration_increment_ms = receiver_properties.duration_increment_ms
             duration_min_ms = receiver_properties.duration_min_ms
             normalized_duration = max(duration_min_ms, round(duration / duration_increment_ms) * duration_increment_ms)
-            logging.info("{:9} receiver {:>1} at {:>3} % for {:>4} ms by {:}".format(action.name, receiver, power, normalized_duration, source))
+            logging.info("{:9} receiver {:>1} at {:>3} % for {:>4} ms with beepshock delay {:>4} by {:}"
+                         .format(action.name, receiver, power, normalized_duration, beep_shock_delay_ms or 0, source))
 
         self._process_command(receiver, action, power, normalized_duration, beep_shock_delay_ms)
 

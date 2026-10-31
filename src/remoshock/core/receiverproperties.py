@@ -19,7 +19,8 @@ class ReceiverProperties:
                  random_shock_max_duration_ms=None,
                  random_shock_min_power_percent=None,
                  random_shock_max_power_percent=None,
-                 random_beep_shock_delay_ms=None
+                 random_beep_shock_min_delay_ms=None,
+                 random_beep_shock_max_delay_ms=None,
                  ):
         """
         creates a ReceiverProperties object
@@ -69,7 +70,8 @@ class ReceiverProperties:
         self.random_shock_max_duration_ms = random_shock_max_duration_ms
         self.random_shock_min_power_percent = random_shock_min_power_percent
         self.random_shock_max_power_percent = random_shock_max_power_percent
-        self.random_beep_shock_delay_ms = random_beep_shock_delay_ms
+        self.random_beep_shock_min_delay_ms = random_beep_shock_min_delay_ms
+        self.random_beep_shock_max_delay_ms = random_beep_shock_max_delay_ms
 
 
     def capabilities(self, action_light=False, action_beep=False, action_vibrate=False, action_shock=False):
